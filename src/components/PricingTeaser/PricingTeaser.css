@@ -1,0 +1,554 @@
+.pricing-section {
+  background: linear-gradient(180deg, #fff 0%, #f8fafc 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.pricing-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 4rem;
+  padding: 0.5rem;
+  background: white;
+  border-radius: 2rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  max-width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.pricing-toggle span {
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  color: #64748b;
+  transition: all 0.2s ease;
+}
+
+.pricing-toggle span.active {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.save-badge {
+  background: linear-gradient(135deg, #20BDAA 0%, #1AA192 100%);
+  color: white;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 1rem;
+  margin-left: 0.5rem;
+  font-weight: 600;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 3rem;
+  height: 1.75rem;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #e2e8f0;
+  transition: 0.4s;
+  border-radius: 2rem;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 1.25rem;
+  width: 1.25rem;
+  left: 0.25rem;
+  bottom: 0.25rem;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background: linear-gradient(135deg, #20BDAA 0%, #1AA192 100%);
+}
+
+input:checked + .slider:before {
+  transform: translateX(1.25rem);
+}
+
+.pricing-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.pricing-card {
+  background: white;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  position: relative;
+  border: 1px solid rgba(32, 189, 170, 0.1);
+}
+
+.pricing-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.pricing-card.harmony {
+  background: linear-gradient(135deg, #0A2540 0%, #1E3A5F 100%);
+  color: white;
+}
+
+.pricing-card.prelude {
+  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+}
+
+.pricing-card.copilot {
+  background: linear-gradient(135deg, #20BDAA 0%, #1AA192 100%);
+  color: white;
+}
+
+.icon-badge {
+  width: 48px;
+  height: 48px;
+  background: rgba(32, 189, 170, 0.1);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  color: #20BDAA;
+  transition: all 0.3s ease;
+}
+
+.pricing-card:hover .icon-badge {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.harmony .icon-badge,
+.copilot .icon-badge {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.enterprise-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.pricing-card-header {
+  padding: 2rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(32, 189, 170, 0.1);
+}
+
+.harmony .pricing-card-header,
+.copilot .pricing-card-header {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.pricing-card-header h3 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+  position: relative;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.pricing-card.prelude h3 {
+  background: linear-gradient(135deg, #20BDAA 0%, #1AA192 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 2px 10px rgba(32, 189, 170, 0.2);
+}
+
+.pricing-card.copilot h3,
+.pricing-card.harmony h3 {
+  color: white;
+  background: none;
+  -webkit-background-clip: initial;
+  -webkit-text-fill-color: initial;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.pricing-card:hover h3 {
+  transform: scale(1.05);
+}
+
+.card-subtitle {
+  font-size: 1rem;
+  color: #64748b;
+  margin-top: 0.75rem;
+  font-weight: 500;
+}
+
+.harmony .card-subtitle,
+.copilot .card-subtitle {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.price {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.currency {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.amount {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.period {
+  font-size: 1.125rem;
+  color: #64748b;
+}
+
+.harmony .period,
+.copilot .period {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.billed-annually {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-top: 0.5rem;
+}
+
+.harmony .billed-annually,
+.copilot .billed-annually {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.pricing-features {
+  padding: 2rem;
+}
+
+.feature-title {
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.pricing-features ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pricing-features li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  color: #64748b;
+}
+
+.harmony .pricing-features li,
+.copilot .pricing-features li {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.pricing-features li svg {
+  color: #20BDAA;
+}
+
+.harmony .pricing-features li svg,
+.copilot .pricing-features li svg {
+  color: white;
+}
+
+.pricing-footer {
+  padding: 2rem;
+  text-align: center;
+  border-top: 1px solid rgba(32, 189, 170, 0.1);
+}
+
+.harmony .pricing-footer,
+.copilot .pricing-footer {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.cta-button {
+  width: 100%;
+  padding: 1rem 2rem;
+  border-radius: 2rem;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  background: linear-gradient(135deg, #20BDAA 0%, #1AA192 100%);
+  color: white;
+  border: none;
+}
+
+.copilot .cta-button {
+  background: white;
+  color: #20BDAA;
+}
+
+.enterprise-button {
+  width: 100%;
+  padding: 1rem 2rem;
+  border-radius: 2rem;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  background: transparent;
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(32, 189, 170, 0.3);
+}
+
+.copilot .cta-button:hover {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.enterprise-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.no-credit-card {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.harmony .enterprise-contact,
+.copilot .no-credit-card {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.pricing-faq {
+  max-width: 1200px;
+  margin: 8rem auto 0;
+  padding: 4rem;
+  background: linear-gradient(135deg, rgba(32, 189, 170, 0.05) 0%, rgba(32, 189, 170, 0.02) 100%);
+  border-radius: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.pricing-faq::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(32, 189, 170, 0.2) 50%, transparent 100%);
+}
+
+.pricing-faq h3 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 4rem;
+  background: linear-gradient(135deg, #0A2540 0%, #1E3A5F 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: relative;
+}
+
+.pricing-faq h3::after {
+  content: '';
+  position: absolute;
+  bottom: -1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, #20BDAA 0%, #1AA192 100%);
+  border-radius: 4px;
+}
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3rem;
+}
+
+.faq-item {
+  background: white;
+  padding: 2rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(32, 189, 170, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.faq-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, #20BDAA 0%, #1AA192 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.faq-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+}
+
+.faq-item:hover::before {
+  opacity: 1;
+}
+
+.faq-item h4 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0A2540;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.faq-icon {
+  width: 32px;
+  height: 32px;
+  background: rgba(32, 189, 170, 0.1);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #20BDAA;
+  flex-shrink: 0;
+}
+
+.faq-item p {
+  color: #5F6C7B;
+  line-height: 1.7;
+  margin: 0;
+  padding-left: 3rem;
+}
+
+.faq-contact {
+  text-align: center;
+  margin-top: 4rem;
+  padding-top: 3rem;
+  border-top: 1px solid rgba(32, 189, 170, 0.1);
+}
+
+.faq-contact p {
+  font-size: 1.25rem;
+  color: #5F6C7B;
+  margin-bottom: 1.5rem;
+}
+
+.faq-contact-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: linear-gradient(135deg, #20BDAA 0%, #1AA192 100%);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 100px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(32, 189, 170, 0.2);
+}
+
+.faq-contact-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(32, 189, 170, 0.3);
+}
+
+@media (max-width: 1200px) {
+  .pricing-cards {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .pricing-card-header h3 {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .faq-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .pricing-faq {
+    padding: 3rem 2rem;
+    margin-top: 6rem;
+  }
+  
+  .pricing-faq h3 {
+    font-size: 2rem;
+    margin-bottom: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .pricing-toggle {
+    flex-direction: column;
+    padding: 1rem;
+  }
+  
+  .pricing-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .faq-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .pricing-faq {
+    padding: 2rem 1.5rem;
+    margin-top: 4rem;
+  }
+  
+  .faq-item {
+    padding: 1.5rem;
+  }
+  
+  .faq-item h4 {
+    font-size: 1.125rem;
+  }
+}
