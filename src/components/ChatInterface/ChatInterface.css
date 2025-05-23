@@ -115,7 +115,7 @@
   position: relative;
   font-size: 16px;
   line-height: 1.6;
-  white-space: pre-wrap;
+  white-space: pre-line;
   transition: all 0.3s ease;
 }
 
