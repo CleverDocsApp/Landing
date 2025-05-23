@@ -96,43 +96,26 @@ const ChatInterface: React.FC = () => {
     }]);
   };
 
-  const processInput = async () => {
-    setIsProcessing(true);
-    setCurrentStep(0);
-    setShowNote(false);
-    setShowFollowUp(false);
-    setShowHumor(false);
-    setShowCta(false);
+ const processInput = async () => {
+  if (inputValue.trim() === '') return;
+  addMessage(inputValue, 'user');
+  setInputValue('');
+  setIsProcessing(true);
 
-    // Add user's input as a message
-    addMessage(inputValue, 'user');
-    setInputValue('');
-
-    // Process each step with delay
-    for (let i = 0; i < progressSteps.length; i++) {
-      setCurrentStep(i);
-      await new Promise(resolve => setTimeout(resolve, 800));
-    }
-
-    // Show the generated note
-    setShowNote(true);
+  try {
+    const res = await fetch("/.netlify/functions/chatbot", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: inputValue })
+    });
+    const data = await res.json();
+    addMessage(data.reply, 'bot');
+  } catch (error) {
+    addMessage("Lo siento, hubo un error al contactar con el asistente.", 'bot');
+  } finally {
     setIsProcessing(false);
-
-    // Show follow-up message after note
-    setTimeout(() => {
-      setShowFollowUp(true);
-      
-      // Show humor message
-      setTimeout(() => {
-        setShowHumor(true);
-        
-        // Finally show CTA
-        setTimeout(() => {
-          setShowCta(true);
-        }, 1000);
-      }, 1000);
-    }, 1000);
-  };
+  }
+};
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
