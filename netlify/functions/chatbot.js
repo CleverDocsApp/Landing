@@ -4,7 +4,7 @@ exports.handler = async function(event, context) {
   const body = JSON.parse(event.body);
   const userMessage = body.message;
 
-  const apiKey = "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";
+  const apiKey = process.env.OPENAI_API_KEY;
 
   const payload = {
     model: "gpt-3.5-turbo",
