@@ -14,7 +14,9 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
         </div>
       )}
       <div className="message-content">
-        <p>{message.text}</p>
+        <div style={{ whiteSpace: 'pre-line', color: 'inherit' }}>
+          {message.text}
+        </div>
       </div>
     </div>
   );
