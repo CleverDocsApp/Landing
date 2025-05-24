@@ -67,21 +67,21 @@ const ChatInterface: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatMessagesRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
-    if (chatMessagesRef.current) {
-      const { scrollHeight, clientHeight } = chatMessagesRef.current;
-      const maxScroll = scrollHeight - clientHeight;
-      const currentScroll = chatMessagesRef.current.scrollTop;
-      const isNearBottom = maxScroll - currentScroll < 100;
+const scrollToBottom = () => {
+  const el = chatMessagesRef.current;
+  if (!el) return;
 
-      if (isNearBottom) {
-        chatMessagesRef.current.scrollTo({
-          top: scrollHeight,
-          behavior: 'smooth'
-        });
-      }
-    }
-  };
+  const { scrollHeight, scrollTop, clientHeight } = el;
+  const nearBottom = scrollHeight - scrollTop - clientHeight < 100;
+
+  // Solo auto-scroll si el usuario ya está cerca del fondo
+  if (nearBottom) {
+    el.scrollTo({
+      top: scrollHeight,
+      behavior: 'smooth'
+    });
+  }
+};
 
   useEffect(() => {
     scrollToBottom();
