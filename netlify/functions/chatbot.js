@@ -1,5 +1,3 @@
-* === /netlify/functions/chatbot.js === */
-
 const fetch = require("node-fetch");
 
 exports.handler = async function(event, context) {
@@ -38,13 +36,16 @@ exports.handler = async function(event, context) {
     });
 
     const data = await response.json();
-    const reply = data.choices[0].message.content;
+    console.log("🧠 OpenAI raw response:", JSON.stringify(data));
+
+    const reply = data?.choices?.[0]?.message?.content;
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ reply })
+      body: JSON.stringify({ reply: reply || "⚠️ GPT no devolvió respuesta válida." })
     };
   } catch (error) {
+    console.error("❌ Error en chatbot.js:", error);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: "Error al contactar a OpenAI." })
