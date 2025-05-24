@@ -108,8 +108,9 @@ const ChatInterface: React.FC = () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message: inputValue })
     });
-    const data = await res.json();
-    addMessage(data.reply, 'bot');
+   const data = await res.json();
+console.log("Respuesta del bot GPT:", data.reply);
+addMessage(data.reply || '⚠️ Respuesta vacía', 'bot');
   } catch (error) {
     addMessage("Lo siento, hubo un error al contactar con el asistente.", 'bot');
   } finally {
