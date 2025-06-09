@@ -1,3 +1,4 @@
+/* === HEADER STYLES === */
 .site-header {
   position: fixed;
   top: 0;
@@ -25,21 +26,43 @@
   justify-content: space-between;
 }
 
+/* === LOGO AREA === */
 .logo {
   display: flex;
   align-items: center;
   gap: 8px;
   transition: transform 0.3s ease;
+  min-height: 48px;
 }
 
 .logo:hover {
   transform: translateY(-2px);
 }
 
-.logo-icon {
-  color: #20BDAA;
+/* LOGO dinámico SVG */
+.logo-img {
+  height: 48px;
+  width: auto;
+  max-width: 160px;
+  max-height: 100%;
+  display: inline-block;
+  object-fit: contain;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
+.logo-img.scrolled {
+  display: none;
+}
+
+.site-header.scrolled .logo-img {
+  display: none;
+}
+
+.site-header.scrolled .logo-img.scrolled {
+  display: inline-block;
+}
+
+/* Texto legado (si queda) */
 .logo-text {
   font-weight: 700;
   font-size: 20px;
@@ -50,6 +73,7 @@
   color: #0A2540;
 }
 
+/* === NAVIGATION === */
 .main-nav ul {
   display: flex;
   list-style: none;
@@ -86,6 +110,7 @@
   width: 100%;
 }
 
+/* === ACTION BUTTONS === */
 .header-actions {
   display: flex;
   align-items: center;
@@ -122,33 +147,17 @@
   box-shadow: 0 4px 12px rgba(32, 189, 170, 0.3);
 }
 
+/* === RESPONSIVE === */
 @media (max-width: 768px) {
   .main-nav {
     display: none;
   }
-  
+
   .header-actions {
     gap: 12px;
   }
-  
+
   .login-link {
     display: none;
   }
-/* LOGO dinámico según scroll */
-.logo-img {
-  height: 40px;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.logo-img.scrolled {
-  display: none;
-}
-
-.site-header.scrolled .logo-img {
-  display: none;
-}
-
-.site-header.scrolled .logo-img.scrolled {
-  display: inline;
-}
 }
