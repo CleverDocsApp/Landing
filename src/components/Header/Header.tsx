@@ -37,10 +37,23 @@ const Header: React.FC = () => {
   return (
     <header className={`site-header ${scrolled ? 'scrolled' : ''}`}>
       <div className="header-container">
-        <div className="logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ cursor: 'pointer' }}>
-          <Activity size={24} className="logo-icon" />
-          <span className="logo-text">On Klinic</span>
-        </div>
+       <div
+  className="logo"
+  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+  style={{ cursor: 'pointer' }}
+>
+  <img
+    src="/images/logo-default.svg"
+    alt="On Klinic"
+    className="logo-img"
+  />
+  <img
+    src="/images/logo-scrolled.svg"
+    alt="On Klinic Scrolled"
+    className="logo-img scrolled"
+  />
+</div>
+
         
         <nav className="main-nav">
           <ul>
