@@ -8,11 +8,15 @@ interface ChatMessageProps {
 const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   return (
     <div className={`message ${message.sender === 'bot' ? 'bot-message' : 'user-message'}`}>
-      {message.sender === 'bot' && (
-        <div className="avatar">
-          <span>OK</span>
-        </div>
-      )}
+     {message.sender === 'bot' && (
+  <div className="avatar">
+    <img
+      src="/images/chat-avatar.svg"
+      alt="On Klinic bot"
+      className="chat-avatar"
+    />
+  </div>
+)}
       <div className="message-content">
         {/* Esta línea es clave: asegura que los saltos de línea y el contenido completo se muestren */}
         <div style={{ whiteSpace: 'pre-line', color: 'inherit' }}>
