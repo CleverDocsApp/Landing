@@ -87,7 +87,9 @@ const ChatInterface: React.FC = () => {
           <ChatMessage key={msg.id} message={msg} />
         ))}
         {isTyping && (
-          <div className="chat-message bot">🟢 On Klinic is typing...</div>
+          <div className="chat-message bot">
+            🟢 On Klinic is typing...
+          </div>
         )}
       </div>
 
