@@ -55,6 +55,56 @@
   );
 }
 
+/* 💬 Mensajes */
+
+.message {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.user-message {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.user-message .message-content {
+  background: linear-gradient(135deg, #20BDAA 0%, #1AA192 100%);
+  color: white;
+  padding: 12px 16px;
+  border-radius: 18px 18px 0 18px;
+  max-width: 75%;
+}
+
+.bot-message {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.bot-message .message-content {
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+  padding: 12px 16px;
+  border-radius: 18px 18px 18px 0;
+  max-width: 75%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 👤 Avatar bot */
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  background: #20BDAA;
+  border-radius: 50%;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .chat-input {
   padding: 24px 32px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
