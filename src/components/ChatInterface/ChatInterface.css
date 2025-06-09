@@ -93,15 +93,20 @@
 .avatar {
   width: 40px;
   height: 40px;
-  background: linear-gradient(135deg, #20BDAA 0%, #1AA192 100%);
-  border-radius: 12px;
-  color: white;
-  font-weight: bold;
-  font-size: 14px;
+  background-color: #DEE6E6;
+  border-radius: 50%;
+  padding: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(32, 189, 170, 0.3);
+  box-shadow: 0 4px 12px rgba(32, 189, 170, 0.2);
+}
+
+.avatar img.chat-avatar {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 50%;
 }
 
 /* Indicador de escritura */
