@@ -72,20 +72,15 @@ const ChatInterface: React.FC = () => {
 
   return (
     <div className="chat-interface">
-      <div className="messages-container">
+      <div className="chat-messages">
         {messages.map((msg) => (
           <ChatMessage key={msg.id} message={msg} />
         ))}
-
         {isTyping && (
-          <div className="chat-message bot">
-            🟢 On Klinic está redactando...
-          </div>
+          <div className="chat-message bot">🟢 On Klinic is typing...</div>
         )}
-
         <div ref={messagesEndRef} />
       </div>
-
       <div className="chat-input">
         <input
           type="text"
