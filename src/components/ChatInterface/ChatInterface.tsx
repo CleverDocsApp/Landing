@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Bot, Send } from 'lucide-react';
+import { Send } from 'lucide-react';
 import ChatMessage from './ChatMessage';
 import { Message } from '../../types/chat';
 import './ChatInterface.css';
@@ -19,12 +19,8 @@ const ChatInterface: React.FC = () => {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   useEffect(() => {
-    scrollToBottom();
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
   const handleSend = async () => {
@@ -72,6 +68,16 @@ const ChatInterface: React.FC = () => {
 
   return (
     <div className="chat-interface">
+      <div className="chat-header">
+        <div className="chat-header-left">
+          <span role="img" aria-label="bot">🤖</span>
+          <div>
+            <div className="chat-header-title">On Klinic AI Assistant</div>
+            <div className="chat-header-subtitle">Your documentation partner</div>
+          </div>
+        </div>
+      </div>
+
       <div className="chat-messages">
         {messages.map((msg) => (
           <ChatMessage key={msg.id} message={msg} />
@@ -81,6 +87,7 @@ const ChatInterface: React.FC = () => {
         )}
         <div ref={messagesEndRef} />
       </div>
+
       <div className="chat-input">
         <input
           type="text"
