@@ -94,7 +94,7 @@
   width: 40px;
   height: 40px;
   background-color: #DEE6E6;
-  border-radius: 50%;
+  border-radius: 12px;
   padding: 4px;
   display: flex;
   align-items: center;
@@ -106,7 +106,7 @@
   width: 100%;
   height: auto;
   object-fit: contain;
-  border-radius: 50%;
+  border-radius: 8px; /* suave, no redondo */
 }
 
 /* Indicador de escritura */
