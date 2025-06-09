@@ -14,7 +14,6 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
         </div>
       )}
       <div className="message-content">
-        {/* Esta línea es clave: asegura que los saltos de línea y el contenido completo se muestren */}
         <div style={{ whiteSpace: 'pre-line', color: 'inherit' }}>
           {message.text}
         </div>
