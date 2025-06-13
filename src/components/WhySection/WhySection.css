@@ -2,6 +2,12 @@
   background: linear-gradient(180deg, #fff 0%, #f8fafc 100%);
   position: relative;
   overflow: hidden;
+  transition: background-color 0.8s ease-in-out;
+  padding-top: 48px; /* Reduced from default */
+}
+
+.why-section-dark-initial {
+  background: var(--secondary) !important;
 }
 
 .why-section::before {

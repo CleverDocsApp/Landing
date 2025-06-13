@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Header from './components/Header/Header';
 import ChatInterface from './components/ChatInterface/ChatInterface';
 import WhySection from './components/WhySection/WhySection';
@@ -9,7 +9,10 @@ import PricingTeaser from './components/PricingTeaser/PricingTeaser';
 import Footer from './components/Footer/Footer';
 
 function App() {
-  React.useEffect(() => {
+  const whySectionRef = useRef<HTMLElement>(null);
+  const [isScrolledPastHero, setIsScrolledPastHero] = useState(false);
+
+  useEffect(() => {
     document.title = 'On Klinic - AI Assistant for Mental Health Clinicians';
     
     const observer = new IntersectionObserver((entries) => {
@@ -21,13 +24,35 @@ function App() {
     }, { threshold: 0.1 });
 
     document.querySelectorAll('.section-title').forEach((el) => observer.observe(el));
+
+    // Scroll handler for transition effect
+    const handleScroll = () => {
+      if (whySectionRef.current) {
+        const rect = whySectionRef.current.getBoundingClientRect();
+        const threshold = window.innerHeight * 0.7; // Trigger when section is 70% visible
+        
+        if (rect.top <= threshold) {
+          setIsScrolledPastHero(true);
+        } else {
+          setIsScrolledPastHero(false);
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Check initial state
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   return (
     <div className="app min-h-screen bg-gradient-to-br from-secondary to-secondary-light">
       <Header />
       <main className="relative">
-        <div className="container mx-auto px-4 pt-20 md:pt-32 pb-16 md:pb-32">
+        {/* Hero Section with reduced bottom padding */}
+        <div className="container mx-auto px-4 pt-20 md:pt-32 pb-8 md:pb-12">
           <div className="flex flex-col md:flex-col-reverse">
             <div className="mb-8 md:mb-16 animate-slide-up order-2 md:order-1">
               <ChatInterface />
@@ -39,9 +64,7 @@ function App() {
                 <div className="absolute -top-12 -right-12 w-24 h-24 bg-primary opacity-10 rounded-full blur-3xl animate-pulse-slow hidden md:block"></div>
               </h1>
 
-              {/* Containers unificados con estilos similares */}
               <div className="hero-description-container max-w-4xl mx-auto space-y-4">
-                {/* Primer container - mantiene el estilo original con subrayado */}
                 <div className="hero-primary-description relative">
                   <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent rounded-2xl blur-xl"></div>
                   <p className="relative text-lg md:text-xl lg:text-xl text-gray-100 leading-relaxed font-medium px-6 py-3 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
@@ -55,7 +78,6 @@ function App() {
                   </p>
                 </div>
                 
-                {/* Segundo container - mantiene el estilo italic */}
                 <div className="hero-secondary-description relative">
                   <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent rounded-2xl blur-xl"></div>
                   <p className="relative text-base md:text-lg lg:text-lg text-gray-200 leading-relaxed font-medium italic px-6 py-3 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
@@ -71,8 +93,9 @@ function App() {
           </div>
         </div>
 
-        <div className="bg-white">
-          <WhySection />
+        {/* Sections with transition effect */}
+        <div className={`transition-container ${isScrolledPastHero ? 'scrolled' : ''}`}>
+          <WhySection ref={whySectionRef} isScrolledPastHero={isScrolledPastHero} />
           <TestimonialsSection />
           <MetricsSection />
           <FeaturesSection />

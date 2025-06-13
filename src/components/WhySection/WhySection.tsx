@@ -1,40 +1,51 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { CheckCircle, Clock, TrendingUp } from 'lucide-react';
 import './WhySection.css'; 
 
-const WhySection: React.FC = () => {
+interface WhySectionProps {
+  isScrolledPastHero: boolean;
+}
+
+const WhySection = forwardRef<HTMLElement, WhySectionProps>(({ isScrolledPastHero }, ref) => {
   return (
-    <section className="why-section">
-      <div className="container mx-auto px-4 py-24">
+    <section 
+      ref={ref}
+      className={`why-section ${!isScrolledPastHero ? 'why-section-dark-initial' : ''}`}
+    >
+      <div className="container mx-auto px-4 py-16">
         
-        {/* Título principal con el estilo original */}
         <div className="text-center mb-6">
-          <h2 className="section-title mt-4">
+          <h2 className={`section-title mt-4 transition-colors duration-500 ${
+            !isScrolledPastHero ? 'text-white' : 'text-gray-900'
+          }`}>
             <span className="block md:hidden">Smart Documentation & Peace of Mind</span>
             <span className="hidden md:block">
               Smart Documentation,<br />
-              <span className="gradient-text">Peace of Mind</span>
+              <span className={`gradient-text transition-all duration-500 ${
+                !isScrolledPastHero ? 'text-white-override' : ''
+              }`}>Peace of Mind</span>
             </span>
           </h2>
         </div>
 
-        {/* Subtítulo en color oscuro */}
         <div className="text-center mb-2">
-          <span className="text-gray-900 font-semibold tracking-wider uppercase text-sm">
+          <span className={`font-semibold tracking-wider uppercase text-sm transition-colors duration-500 ${
+            !isScrolledPastHero ? 'text-gray-300' : 'text-gray-900'
+          }`}>
             Why Choose On Klinic?
           </span>
         </div>
 
-        {/* Párrafo explicativo */}
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <p className="text-gray-700 text-lg leading-relaxed">
+          <p className={`text-lg leading-relaxed transition-colors duration-500 ${
+            !isScrolledPastHero ? 'text-gray-200' : 'text-gray-700'
+          }`}>
             Unlike generic tools, OnKlinic is purpose-built for mental health documentation. <br />
             Whether you're in private practice or managing a clinic, OnKlinic adapts to your needs <br />
             while ensuring clinical, legal, and ethical standards are met.
           </p>
         </div>
 
-        {/* Feature Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           <div className="feature-card group" data-aos="fade-up" data-aos-delay="0">
             <div className="icon-wrapper group-hover:scale-110">
@@ -67,24 +78,31 @@ const WhySection: React.FC = () => {
           </div>
         </div>
 
-        {/* Estadísticas decorativas */}
         <div className="flex flex-col md:flex-row justify-center gap-6 md:gap-24 text-center mt-16">
           <div className="flex flex-col items-center">
             <span className="text-4xl md:text-5xl font-bold text-primary mb-2 gradient-text">10+</span>
-            <span className="text-lg md:text-xl text-gray-600">hours saved weekly</span>
+            <span className={`text-lg md:text-xl transition-colors duration-500 ${
+              !isScrolledPastHero ? 'text-gray-300' : 'text-gray-600'
+            }`}>hours saved weekly</span>
           </div>
           <div className="flex flex-col items-center">
             <span className="text-4xl md:text-5xl font-bold text-primary mb-2 gradient-text">98%</span>
-            <span className="text-lg md:text-xl text-gray-600">compliance rate</span>
+            <span className={`text-lg md:text-xl transition-colors duration-500 ${
+              !isScrolledPastHero ? 'text-gray-300' : 'text-gray-600'
+            }`}>compliance rate</span>
           </div>
           <div className="flex flex-col items-center">
             <span className="text-4xl md:text-5xl font-bold text-primary mb-2 gradient-text">50%</span>
-            <span className="text-lg md:text-xl text-gray-600">more approvals</span>
+            <span className={`text-lg md:text-xl transition-colors duration-500 ${
+              !isScrolledPastHero ? 'text-gray-300' : 'text-gray-600'
+            }`}>more approvals</span>
           </div>
         </div>
       </div>
     </section>
   );
-};
+});
+
+WhySection.displayName = 'WhySection';
 
 export default WhySection;
