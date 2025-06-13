@@ -73,10 +73,9 @@ const ChatInterface: React.FC = () => {
   return (
     <div className="chat-interface">
       <div className="chat-header">
-        <div className="chat-header-left">
-          <div>
-            <div className="chat-header-title">Ask Anything. Get Real Answers.</div>
-            <div className="chat-header-subtitle">Your documentation partner</div>
+        <div className="chat-header-content">
+          <div className="chat-header-title-enhanced">
+            Ask Anything. Get Real Answers.
           </div>
         </div>
       </div>
