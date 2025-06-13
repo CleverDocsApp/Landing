@@ -5,22 +5,26 @@ const WhySection: React.FC = () => {
   return (
     <section className="why-section">
       <div className="container mx-auto px-4 py-24">
-        {/* Nuevo título principal */}
+        
+        {/* Título principal con el estilo original */}
         <div className="text-center mb-6">
-          <h2 className="section-title text-primary text-3xl md:text-4xl font-bold leading-snug">
-            Smart Documentation,<br />
-            <span className="gradient-text">Peace of Mind</span>
+          <h2 className="section-title mt-4">
+            <span className="block md:hidden">Smart Documentation & Peace of Mind</span>
+            <span className="hidden md:block">
+              Smart Documentation,<br />
+              <span className="gradient-text">Peace of Mind</span>
+            </span>
           </h2>
         </div>
 
-        {/* Subtítulo "Why Choose On Klinic?" con el mismo color */}
-        <div className="text-center mb-4">
-          <h3 className="text-primary font-semibold tracking-wider uppercase text-sm md:text-base">
+        {/* Subtítulo en color oscuro */}
+        <div className="text-center mb-2">
+          <span className="text-gray-900 font-semibold tracking-wider uppercase text-sm">
             Why Choose On Klinic?
-          </h3>
+          </span>
         </div>
 
-        {/* Texto explicativo */}
+        {/* Párrafo explicativo */}
         <div className="text-center max-w-3xl mx-auto mb-12">
           <p className="text-gray-700 text-lg leading-relaxed">
             Unlike generic tools, On Klinic is purpose-built for mental health documentation.
@@ -29,7 +33,7 @@ const WhySection: React.FC = () => {
           </p>
         </div>
 
-        {/* Cards */}
+        {/* Feature Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           <div className="feature-card group" data-aos="fade-up" data-aos-delay="0">
             <div className="icon-wrapper group-hover:scale-110">
