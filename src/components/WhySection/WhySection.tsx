@@ -27,8 +27,8 @@ const WhySection: React.FC = () => {
         {/* Párrafo explicativo */}
         <div className="text-center max-w-3xl mx-auto mb-12">
           <p className="text-gray-700 text-lg leading-relaxed">
-            Unlike generic tools, OnKlinic is purpose-built for mental health documentation.
-            Whether you're in private practice or managing a clinic, OnKlinic adapts to your needs
+            Unlike generic tools, OnKlinic is purpose-built for mental health documentation. <br />
+            Whether you're in private practice or managing a clinic, OnKlinic adapts to your needs <br />
             while ensuring clinical, legal, and ethical standards are met.
           </p>
         </div>
