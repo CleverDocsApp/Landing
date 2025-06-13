@@ -95,7 +95,7 @@ body {
   transform: translateY(0);
 }
 
-/* Estilos mejorados para el hero */
+/* Estilos refinados para el hero con tamaños más finos */
 .hero-description-container {
   animation: slideUp 0.8s ease-out 0.3s both;
 }
@@ -103,13 +103,15 @@ body {
 .hero-main-description {
   animation: slideInFromLeft 0.8s ease-out 0.5s both;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  line-height: 1.4;
+  line-height: 1.5;
+  font-weight: 400; /* Más fino */
 }
 
 .hero-main-description span.text-primary {
   position: relative;
   display: inline-block;
   animation: textGlow 3s ease-in-out infinite;
+  font-weight: 600; /* Mantener énfasis pero más sutil */
 }
 
 .hero-secondary-description {
@@ -124,6 +126,8 @@ body {
   box-shadow: 
     0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 0 20px rgba(32, 189, 170, 0.1);
+  font-weight: 400; /* Más fino */
+  line-height: 1.6;
 }
 
 .hero-secondary-description p:hover {
@@ -134,17 +138,17 @@ body {
   border-color: rgba(32, 189, 170, 0.3);
 }
 
-/* Responsive improvements */
+/* Responsive improvements con tamaños más refinados */
 @media (max-width: 768px) {
   .hero-main-description {
-    font-size: 1.25rem;
-    line-height: 1.5;
+    font-size: 1.125rem; /* Reducido de 1.25rem */
+    line-height: 1.6;
   }
   
   .hero-secondary-description p {
-    font-size: 1rem;
+    font-size: 0.95rem; /* Reducido de 1rem */
     padding: 1rem;
-    line-height: 1.6;
+    line-height: 1.7;
   }
   
   .hero-description-container {
@@ -154,11 +158,11 @@ body {
 
 @media (max-width: 640px) {
   .hero-main-description {
-    font-size: 1.125rem;
+    font-size: 1rem; /* Reducido de 1.125rem */
   }
   
   .hero-secondary-description p {
-    font-size: 0.95rem;
+    font-size: 0.875rem; /* Reducido de 0.95rem */
     padding: 0.875rem;
   }
 }
