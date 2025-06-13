@@ -34,22 +34,33 @@ function App() {
             </div>
 
             <div className="text-center mb-8 md:mb-16 animate-slide-up order-1 md:order-2">
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white mb-4 md:mb-6 relative">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white mb-6 md:mb-8 relative">
                 You Care, <span className="gradient-text">We Chart</span>
                 <div className="absolute -top-12 -right-12 w-24 h-24 bg-primary opacity-10 rounded-full blur-3xl animate-pulse-slow hidden md:block"></div>
               </h1>
 
-              {/* Bloque de texto actualizado */}
-              <div className="hero-intro-text">
-                <p className="text-lg md:text-xl lg:text-2xl text-gray-200 max-w-3xl mx-auto leading-relaxed">
-                  The intelligent assistant that helps you chart faster—without compromising clinical quality.
+              {/* Texto mejorado con mejor estilo visual */}
+              <div className="hero-description-container max-w-4xl mx-auto">
+                <p className="hero-main-description text-xl md:text-2xl lg:text-3xl text-gray-100 leading-relaxed mb-4 font-medium">
+                  The intelligent assistant that helps you{' '}
+                  <span className="text-primary font-semibold relative">
+                    chart faster
+                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary opacity-60 rounded-full"></span>
+                  </span>
+                  —without compromising{' '}
+                  <span className="text-white font-semibold">clinical quality</span>.
                 </p>
-                <p className="italic-line text-lg md:text-xl lg:text-2xl text-gray-200 max-w-3xl mx-auto leading-relaxed">
-                  <span style={{ color: '#20BDAA', fontWeight: 'bold' }}>
-                    Built for mental health professionals
-                  </span>{' '}
-                  who want documentation that’s compliant, coherent, and easy to complete.
-                </p>
+                
+                <div className="hero-secondary-description relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent rounded-2xl blur-xl"></div>
+                  <p className="relative text-lg md:text-xl lg:text-2xl text-gray-200 leading-relaxed font-medium italic px-6 py-4 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
+                    <span className="text-primary font-bold not-italic">Built for mental health professionals</span>{' '}
+                    who want documentation that's{' '}
+                    <span className="text-white font-semibold">compliant</span>,{' '}
+                    <span className="text-white font-semibold">coherent</span>, and{' '}
+                    <span className="text-white font-semibold">easy to complete</span>.
+                  </p>
+                </div>
               </div>
             </div>
           </div>

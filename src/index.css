@@ -40,6 +40,21 @@
   100% { background-position: 0% 50%; }
 }
 
+@keyframes textGlow {
+  0%, 100% { text-shadow: 0 0 10px rgba(32, 189, 170, 0.3); }
+  50% { text-shadow: 0 0 20px rgba(32, 189, 170, 0.6), 0 0 30px rgba(32, 189, 170, 0.4); }
+}
+
+@keyframes slideInFromLeft {
+  from { transform: translateX(-30px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInFromRight {
+  from { transform: translateX(30px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -80,20 +95,78 @@ body {
   transform: translateY(0);
 }
 
+/* Estilos mejorados para el hero */
+.hero-description-container {
+  animation: slideUp 0.8s ease-out 0.3s both;
+}
+
+.hero-main-description {
+  animation: slideInFromLeft 0.8s ease-out 0.5s both;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  line-height: 1.4;
+}
+
+.hero-main-description span.text-primary {
+  position: relative;
+  display: inline-block;
+  animation: textGlow 3s ease-in-out infinite;
+}
+
+.hero-secondary-description {
+  animation: slideInFromRight 0.8s ease-out 0.7s both;
+  margin-top: 1.5rem;
+}
+
+.hero-secondary-description p {
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 0 20px rgba(32, 189, 170, 0.1);
+}
+
+.hero-secondary-description p:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 8px 25px -5px rgba(0, 0, 0, 0.1),
+    0 0 30px rgba(32, 189, 170, 0.2);
+  border-color: rgba(32, 189, 170, 0.3);
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  .hero-main-description {
+    font-size: 1.25rem;
+    line-height: 1.5;
+  }
+  
+  .hero-secondary-description p {
+    font-size: 1rem;
+    padding: 1rem;
+    line-height: 1.6;
+  }
+  
+  .hero-description-container {
+    padding: 0 0.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-main-description {
+    font-size: 1.125rem;
+  }
+  
+  .hero-secondary-description p {
+    font-size: 0.95rem;
+    padding: 0.875rem;
+  }
+}
+
 [data-aos] {
   opacity: 1;
   transform: translateY(0);
   transition: all 0.6s ease-out;
-}
-
-.hero-intro-text p {
-  display: block;
-  text-align: center;
-  margin-bottom: 0.5rem;
-}
-
-.hero-intro-text p.italic-line {
-  font-style: italic;
 }
 
 [data-aos].aos-animate {
