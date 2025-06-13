@@ -10,9 +10,7 @@ const WhyOnKlinic: React.FC = () => {
           <h2 className="section-title">You Care, We Chart.</h2>
           <p className="section-subtitle">
             On Klinic is the AI assistant that helps mental health professionals focus on{' '}
-             <span style={{ color: '#20BDAA', fontWeight: 'bold' }}>
-              patients, not paperwork.
-              </span>  
+              <span className="hero-title">patients, not paperwork.</span>
           </p>
         </div>
         
