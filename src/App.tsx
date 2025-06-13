@@ -39,18 +39,23 @@ function App() {
                 <div className="absolute -top-12 -right-12 w-24 h-24 bg-primary opacity-10 rounded-full blur-3xl animate-pulse-slow hidden md:block"></div>
               </h1>
 
-              {/* Texto refinado con tamaños más finos */}
-              <div className="hero-description-container max-w-4xl mx-auto">
-                <p className="hero-main-description text-lg md:text-xl lg:text-2xl text-gray-100 leading-relaxed mb-4 font-medium">
-                  The intelligent assistant that helps you{' '}
-                  <span className="text-primary font-semibold relative">
-                    chart faster
-                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary opacity-60 rounded-full"></span>
-                  </span>
-                  —without compromising{' '}
-                  <span className="text-white font-semibold">clinical quality</span>.
-                </p>
+              {/* Containers unificados con estilos similares */}
+              <div className="hero-description-container max-w-4xl mx-auto space-y-6">
+                {/* Primer container - mantiene el estilo original con subrayado */}
+                <div className="hero-primary-description relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent rounded-2xl blur-xl"></div>
+                  <p className="relative text-lg md:text-xl lg:text-2xl text-gray-100 leading-relaxed font-medium px-6 py-4 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
+                    The intelligent assistant that helps you{' '}
+                    <span className="text-primary font-semibold relative">
+                      chart faster
+                      <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary opacity-60 rounded-full"></span>
+                    </span>
+                    —without compromising{' '}
+                    <span className="text-white font-semibold">clinical quality</span>.
+                  </p>
+                </div>
                 
+                {/* Segundo container - mantiene el estilo italic */}
                 <div className="hero-secondary-description relative">
                   <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent rounded-2xl blur-xl"></div>
                   <p className="relative text-base md:text-lg lg:text-xl text-gray-200 leading-relaxed font-medium italic px-6 py-4 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">

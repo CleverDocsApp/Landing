@@ -95,30 +95,26 @@ body {
   transform: translateY(0);
 }
 
-/* Estilos refinados para el hero con tamaños más finos */
+/* Estilos unificados para ambos containers del hero */
 .hero-description-container {
   animation: slideUp 0.8s ease-out 0.3s both;
 }
 
-.hero-main-description {
-  animation: slideInFromLeft 0.8s ease-out 0.5s both;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  line-height: 1.5;
-  font-weight: 400; /* Más fino */
+.hero-primary-description,
+.hero-secondary-description {
+  transition: all 0.3s ease;
 }
 
-.hero-main-description span.text-primary {
-  position: relative;
-  display: inline-block;
-  animation: textGlow 3s ease-in-out infinite;
-  font-weight: 600; /* Mantener énfasis pero más sutil */
+.hero-primary-description {
+  animation: slideInFromLeft 0.8s ease-out 0.5s both;
 }
 
 .hero-secondary-description {
   animation: slideInFromRight 0.8s ease-out 0.7s both;
-  margin-top: 1.5rem;
 }
 
+/* Estilos compartidos para ambos containers */
+.hero-primary-description p,
 .hero-secondary-description p {
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
@@ -126,10 +122,12 @@ body {
   box-shadow: 
     0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 0 20px rgba(32, 189, 170, 0.1);
-  font-weight: 400; /* Más fino */
+  font-weight: 400;
   line-height: 1.6;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.hero-primary-description p:hover,
 .hero-secondary-description p:hover {
   transform: translateY(-2px);
   box-shadow: 
@@ -138,17 +136,30 @@ body {
   border-color: rgba(32, 189, 170, 0.3);
 }
 
-/* Responsive improvements con tamaños más refinados */
+/* Estilo específico para el subrayado en el primer container */
+.hero-primary-description span.text-primary {
+  position: relative;
+  display: inline-block;
+  animation: textGlow 3s ease-in-out infinite;
+  font-weight: 600;
+}
+
+/* Estilo específico para el texto italic en el segundo container */
+.hero-secondary-description p {
+  font-style: italic;
+}
+
+.hero-secondary-description .not-italic {
+  font-style: normal;
+}
+
+/* Responsive improvements */
 @media (max-width: 768px) {
-  .hero-main-description {
-    font-size: 1.125rem; /* Reducido de 1.25rem */
-    line-height: 1.6;
-  }
-  
+  .hero-primary-description p,
   .hero-secondary-description p {
-    font-size: 0.95rem; /* Reducido de 1rem */
+    font-size: 1.125rem;
     padding: 1rem;
-    line-height: 1.7;
+    line-height: 1.6;
   }
   
   .hero-description-container {
@@ -157,12 +168,12 @@ body {
 }
 
 @media (max-width: 640px) {
-  .hero-main-description {
-    font-size: 1rem; /* Reducido de 1.125rem */
+  .hero-primary-description p {
+    font-size: 1rem;
   }
   
   .hero-secondary-description p {
-    font-size: 0.875rem; /* Reducido de 0.95rem */
+    font-size: 0.875rem;
     padding: 0.875rem;
   }
 }
