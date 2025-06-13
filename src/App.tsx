@@ -27,7 +27,6 @@ function App() {
     <div className="app min-h-screen bg-gradient-to-br from-secondary to-secondary-light">
       <Header />
       <main className="relative">
-        {/* Hero Section */}
         <div className="container mx-auto px-4 pt-20 md:pt-32 pb-16 md:pb-32">
           <div className="flex flex-col md:flex-col-reverse">
             <div className="mb-8 md:mb-16 animate-slide-up order-2 md:order-1">
@@ -40,66 +39,35 @@ function App() {
                 <div className="absolute -top-12 -right-12 w-24 h-24 bg-primary opacity-10 rounded-full blur-3xl animate-pulse-slow hidden md:block"></div>
               </h1>
 
-              {/* Bloque de texto actualizado */}
-              <div className="hero-intro-text">
-                <p className="text-lg md:text-xl lg:text-2xl text-gray-200 max-w-3xl mx-auto leading-relaxed">
-                  The intelligent assistant that helps you chart faster—without compromising clinical quality.
-                </p>
-                <p className="italic-line text-lg md:text-xl lg:text-2xl text-gray-200 max-w-3xl mx-auto leading-relaxed">
-                  <span style={{ color: '#20BDAA', fontWeight: 'bold' }}>
-                    Built for mental health professionals
-                  </span>{' '}
-                  who want documentation that's compliant, coherent, and easy to complete.
-                </p>
+              {/* Containers unificados con estilos similares */}
+              <div className="hero-description-container max-w-4xl mx-auto space-y-4">
+                {/* Primer container - mantiene el estilo original con subrayado */}
+                <div className="hero-primary-description relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent rounded-2xl blur-xl"></div>
+                  <p className="relative text-lg md:text-xl lg:text-xl text-gray-100 leading-relaxed font-medium px-6 py-3 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
+                    The intelligent assistant that helps you{' '}
+                    <span className="text-primary font-semibold relative">
+                      chart faster
+                      <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary opacity-60 rounded-full"></span>
+                    </span>
+                    —without compromising{' '}
+                    <span className="text-white font-semibold">clinical quality</span>.
+                  </p>
+                </div>
+                
+                {/* Segundo container - mantiene el estilo italic */}
+                <div className="hero-secondary-description relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent rounded-2xl blur-xl"></div>
+                  <p className="relative text-base md:text-lg lg:text-lg text-gray-200 leading-relaxed font-medium italic px-6 py-3 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
+                    <span className="text-primary font-bold not-italic">Built for mental health professionals</span>{' '}
+                    who want documentation that's{' '}
+                    <span className="text-white font-semibold">compliant</span>,{' '}
+                    <span className="text-white font-semibold">coherent</span>, and{' '}
+                    <span className="text-white font-semibold">easy to complete</span>.
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-
-          <div className="flex flex-col md:flex-row justify-center gap-6 md:gap-24 text-center animate-fade-in mt-8 md:mt-0">
-            <div className="flex flex-col items-center">
-              <span className="text-4xl md:text-5xl font-bold text-primary mb-2 gradient-text">10+</span>
-              <span className="text-lg md:text-xl text-gray-300">hours saved weekly</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-4xl md:text-5xl font-bold text-primary mb-2 gradient-text">98%</span>
-              <span className="text-lg md:text-xl text-gray-300">compliance rate</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-4xl md:text-5xl font-bold text-primary mb-2 gradient-text">50%</span>
-              <span className="text-lg md:text-xl text-gray-300">more approvals</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Transición suave con parallax */}
-        <div className="transition-section relative overflow-hidden">
-          {/* Gradiente de transición */}
-          <div className="transition-gradient"></div>
-          
-          {/* Elementos flotantes con parallax */}
-          <div className="parallax-elements">
-            <div className="floating-text text-1" data-speed="0.5">
-              Smart Documentation
-            </div>
-            <div className="floating-text text-2" data-speed="0.3">
-              Peace of Mind
-            </div>
-            <div className="floating-text text-3" data-speed="0.7">
-              Compliant
-            </div>
-            <div className="floating-text text-4" data-speed="0.4">
-              Efficient
-            </div>
-          </div>
-          
-          {/* Ondas decorativas */}
-          <div className="wave-container">
-            <svg className="wave wave-1" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M0 0L48 8.33333C96 16.6667 192 33.3333 288 41.6667C384 50 480 50 576 41.6667C672 33.3333 768 16.6667 864 16.6667C960 16.6667 1056 33.3333 1152 41.6667C1248 50 1344 50 1392 50L1440 50V120H1392C1344 120 1248 120 1152 120C1056 120 960 120 864 120C768 120 672 120 576 120C480 120 384 120 288 120C192 120 96 120 48 120H0V0Z" fill="rgba(255, 255, 255, 0.1)"/>
-            </svg>
-            <svg className="wave wave-2" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M0 20L48 25C96 30 192 40 288 45C384 50 480 50 576 45C672 40 768 30 864 25C960 20 1056 20 1152 25C1248 30 1344 40 1392 45L1440 50V120H1392C1344 120 1248 120 1152 120C1056 120 960 120 864 120C768 120 672 120 576 120C480 120 384 120 288 120C192 120 96 120 48 120H0V20Z" fill="rgba(255, 255, 255, 0.05)"/>
-            </svg>
           </div>
         </div>
 
