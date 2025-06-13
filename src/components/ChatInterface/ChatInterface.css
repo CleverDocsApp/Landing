@@ -53,7 +53,7 @@
 }
 
 .chat-header-title-enhanced {
-  font-size: 20px;
+  font-size: 28px;
   font-weight: 700;
   color: white;
   background: linear-gradient(135deg, #ffffff 0%, #20BDAA 50%, #ffffff 100%);
@@ -410,7 +410,7 @@
   }
   
   .chat-header-title-enhanced {
-    font-size: 18px;
+    font-size: 22px;
   }
   
   .chat-input {
@@ -458,7 +458,7 @@
   }
   
   .chat-header-title-enhanced {
-    font-size: 16px;
+    font-size: 18px;
     line-height: 1.3;
   }
   
