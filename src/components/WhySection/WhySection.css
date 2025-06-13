@@ -1,13 +1,13 @@
 .why-section {
-  background: linear-gradient(180deg, #fff 0%, #f8fafc 100%);
+  background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%);
   position: relative;
   overflow: hidden;
   transition: background 1.5s ease-in-out;
-  padding-top: 48px; /* Reduced from default */
+  padding-top: 48px;
 }
 
-.why-section-dark-initial {
-  background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%) !important;
+.why-section.light-mode {
+  background: linear-gradient(180deg, #fff 0%, #f8fafc 100%);
 }
 
 .why-section::before {

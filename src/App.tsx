@@ -29,7 +29,7 @@ function App() {
     const handleScroll = () => {
       if (whySectionRef.current) {
         const rect = whySectionRef.current.getBoundingClientRect();
-        const threshold = window.innerHeight * 0.95; // Start transition earlier
+        const threshold = window.innerHeight * 0.75; // Start transition earlier
         
         if (rect.top <= threshold) {
           setIsScrolledPastHero(true);
@@ -110,7 +110,7 @@ function App() {
 
         {/* Sections with transition effect */}
         <div className={`transition-container ${isScrolledPastHero ? 'scrolled' : ''}`}>
-          <WhySection ref={whySectionRef} isScrolledPastHero={isScrolledPastHero} />
+          <WhySection ref={whySectionRef} isLightMode={isScrolledPastHero} />
           <TestimonialsSection />
           <MetricsSection />
           <FeaturesSection />

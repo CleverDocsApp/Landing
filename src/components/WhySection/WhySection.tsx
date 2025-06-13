@@ -3,26 +3,26 @@ import { CheckCircle, Clock, TrendingUp } from 'lucide-react';
 import './WhySection.css'; 
 
 interface WhySectionProps {
-  isScrolledPastHero: boolean;
+  isLightMode: boolean;
 }
 
-const WhySection = forwardRef<HTMLElement, WhySectionProps>(({ isScrolledPastHero }, ref) => {
+const WhySection = forwardRef<HTMLElement, WhySectionProps>(({ isLightMode }, ref) => {
   return (
     <section 
       ref={ref}
-      className={`why-section ${!isScrolledPastHero ? 'why-section-dark-initial' : ''}`}
+      className={`why-section ${isLightMode ? 'light-mode' : ''}`}
     >
       <div className="container mx-auto px-4 py-16">
         
         <div className="text-center mb-6">
           <h2 className={`section-title mt-4 transition-colors duration-1000 ${
-            !isScrolledPastHero ? 'text-white' : 'text-gray-900'
+            isLightMode ? 'text-gray-900' : 'text-white'
           }`}>
             <span className="block md:hidden">Smart Documentation & Peace of Mind</span>
             <span className="hidden md:block">
               Smart Documentation,<br />
               <span className={`gradient-text transition-all duration-1000 ${
-                !isScrolledPastHero ? 'text-white-override' : ''
+                !isLightMode ? 'text-white-override' : ''
               }`}>Peace of Mind</span>
             </span>
           </h2>
@@ -30,7 +30,7 @@ const WhySection = forwardRef<HTMLElement, WhySectionProps>(({ isScrolledPastHer
 
         <div className="text-center mb-2">
           <span className={`font-semibold tracking-wider uppercase text-sm transition-colors duration-1000 ${
-            !isScrolledPastHero ? 'text-gray-300' : 'text-gray-900'
+            isLightMode ? 'text-gray-900' : 'text-gray-300'
           }`}>
             Why Choose On Klinic?
           </span>
@@ -38,7 +38,7 @@ const WhySection = forwardRef<HTMLElement, WhySectionProps>(({ isScrolledPastHer
 
         <div className="text-center max-w-3xl mx-auto mb-12">
           <p className={`text-lg leading-relaxed transition-colors duration-1000 ${
-            !isScrolledPastHero ? 'text-gray-200' : 'text-gray-700'
+            isLightMode ? 'text-gray-700' : 'text-gray-200'
           }`}>
             Unlike generic tools, OnKlinic is purpose-built for mental health documentation. <br />
             Whether you're in private practice or managing a clinic, OnKlinic adapts to your needs <br />
@@ -82,19 +82,19 @@ const WhySection = forwardRef<HTMLElement, WhySectionProps>(({ isScrolledPastHer
           <div className="flex flex-col items-center">
             <span className="text-4xl md:text-5xl font-bold text-primary mb-2 gradient-text">10+</span>
             <span className={`text-lg md:text-xl transition-colors duration-1000 ${
-              !isScrolledPastHero ? 'text-gray-300' : 'text-gray-600'
+              isLightMode ? 'text-gray-600' : 'text-gray-300'
             }`}>hours saved weekly</span>
           </div>
           <div className="flex flex-col items-center">
             <span className="text-4xl md:text-5xl font-bold text-primary mb-2 gradient-text">98%</span>
             <span className={`text-lg md:text-xl transition-colors duration-1000 ${
-              !isScrolledPastHero ? 'text-gray-300' : 'text-gray-600'
+              isLightMode ? 'text-gray-600' : 'text-gray-300'
             }`}>compliance rate</span>
           </div>
           <div className="flex flex-col items-center">
             <span className="text-4xl md:text-5xl font-bold text-primary mb-2 gradient-text">50%</span>
             <span className={`text-lg md:text-xl transition-colors duration-1000 ${
-              !isScrolledPastHero ? 'text-gray-300' : 'text-gray-600'
+              isLightMode ? 'text-gray-600' : 'text-gray-300'
             }`}>more approvals</span>
           </div>
         </div>
