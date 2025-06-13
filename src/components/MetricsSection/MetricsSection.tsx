@@ -2,6 +2,10 @@ import React from 'react';
 import { Clock, TrendingUp, FileCheck, Smile } from 'lucide-react';
 import './MetricsSection.css';
 
+interface MetricsSectionProps {
+  activeSection: string;
+}
+
 const metrics = [
   { 
     icon: <Clock size={24} />,
@@ -29,12 +33,14 @@ const metrics = [
   }
 ];
 
-const MetricsSection: React.FC = () => {
+const MetricsSection: React.FC<MetricsSectionProps> = ({ activeSection }) => {
   return (
-    <section className="metrics-section">
+    <section className="metrics-section" data-section="metrics">
       <div className="container mx-auto px-4 py-24">
         <div className="text-center mb-20">
-          <span className="section-label text-primary font-semibold tracking-wider uppercase text-sm">The Impact</span>
+          <span className={`section-label ${activeSection === 'metrics' ? 'active' : ''}`}>
+            The Impact
+          </span>
           <h2 className="section-title mt-4">
             Numbers That<br />
             <span className="gradient-text">Speak for Themselves</span>

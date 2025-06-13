@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './components/Header/Header';
 import ChatInterface from './components/ChatInterface/ChatInterface';
 import WhySection from './components/WhySection/WhySection';
@@ -10,6 +10,7 @@ import Footer from './components/Footer/Footer';
 
 function App() {
   const [backgroundProgress, setBackgroundProgress] = useState(0);
+  const [activeSection, setActiveSection] = useState<string>('');
 
   React.useEffect(() => {
     document.title = 'On Klinic - AI Assistant for Mental Health Clinicians';
@@ -23,6 +24,34 @@ function App() {
     }, { threshold: 0.1 });
 
     document.querySelectorAll('.section-title').forEach((el) => observer.observe(el));
+  }, []);
+
+  // Section scroll observer
+  useEffect(() => {
+    const sectionObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const sectionId = entry.target.getAttribute('data-section');
+            if (sectionId) {
+              setActiveSection(sectionId);
+            }
+          }
+        });
+      },
+      {
+        threshold: 0.3, // Section needs to be 30% visible to be considered active
+        rootMargin: '-20% 0px -20% 0px' // Adjust the trigger area
+      }
+    );
+
+    // Observe all sections
+    const sections = document.querySelectorAll('[data-section]');
+    sections.forEach((section) => sectionObserver.observe(section));
+
+    return () => {
+      sections.forEach((section) => sectionObserver.unobserve(section));
+    };
   }, []);
 
   // Helper function to interpolate between two RGB colors
@@ -60,7 +89,7 @@ function App() {
       className="app min-h-screen transition-container"
       style={{ 
         background: currentBackground,
-        transition: 'background 0.4s ease-out' // Faster transition
+        transition: 'background 0.4s ease-out'
       }}
     >
       <Header />
@@ -76,7 +105,7 @@ function App() {
                 className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-4 md:mb-6 relative"
                 style={{ 
                   color: `rgb(${heroTitleColor[0]}, ${heroTitleColor[1]}, ${heroTitleColor[2]})`,
-                  transition: 'color 0.4s ease-out' // Faster transition
+                  transition: 'color 0.4s ease-out'
                 }}
               >
                 You Care, <span className="gradient-text">We Chart</span>
@@ -90,7 +119,7 @@ function App() {
                     className="relative text-base md:text-lg lg:text-lg leading-relaxed font-medium px-4 py-2 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10"
                     style={{ 
                       color: `rgb(${heroDescColor[0]}, ${heroDescColor[1]}, ${heroDescColor[2]})`,
-                      transition: 'color 0.4s ease-out' // Faster transition
+                      transition: 'color 0.4s ease-out'
                     }}
                   >
                     The intelligent assistant that helps you{' '}
@@ -109,7 +138,7 @@ function App() {
                     className="relative text-sm md:text-base lg:text-base leading-relaxed font-medium italic px-4 py-2 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10"
                     style={{ 
                       color: `rgb(${heroDescColor[0]}, ${heroDescColor[1]}, ${heroDescColor[2]})`,
-                      transition: 'color 0.4s ease-out' // Faster transition
+                      transition: 'color 0.4s ease-out'
                     }}
                   >
                     <span className="text-primary font-bold not-italic">Built for mental health professionals</span>{' '}
@@ -124,11 +153,11 @@ function App() {
           </div>
         </div>
 
-        <WhySection onScrollProgressChange={handleWhySectionScroll} />
-        <TestimonialsSection />
-        <MetricsSection />
-        <FeaturesSection />
-        <PricingTeaser />
+        <WhySection onScrollProgressChange={handleWhySectionScroll} activeSection={activeSection} />
+        <TestimonialsSection activeSection={activeSection} />
+        <MetricsSection activeSection={activeSection} />
+        <FeaturesSection activeSection={activeSection} />
+        <PricingTeaser activeSection={activeSection} />
       </main>
       <Footer />
     </div>

@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 import { Check, Building2, Sparkles, Brain, Zap, HelpCircle, CreditCard, Calendar, RefreshCw, Shield, MessageCircle } from 'lucide-react';
 import './PricingTeaser.css';
 
-const PricingTeaser: React.FC = () => {
+interface PricingTeaserProps {
+  activeSection: string;
+}
+
+const PricingTeaser: React.FC<PricingTeaserProps> = ({ activeSection }) => {
   const [isAnnual, setIsAnnual] = useState(true);
   
   const togglePricing = () => {
@@ -33,10 +37,12 @@ const PricingTeaser: React.FC = () => {
   ];
   
   return (
-    <section className="pricing-section" id="pricing">
+    <section className="pricing-section" id="pricing" data-section="pricing">
       <div className="container mx-auto px-4 py-24">
         <div className="text-center mb-20">
-          <span className="section-label text-primary font-semibold tracking-wider uppercase text-sm">Pricing</span>
+          <span className={`section-label ${activeSection === 'pricing' ? 'active' : ''}`}>
+            Pricing
+          </span>
           <h2 className="section-title mt-4">
             <span className="block md:hidden">Choose Your Perfect Documentation Partner</span>
             <span className="hidden md:block">

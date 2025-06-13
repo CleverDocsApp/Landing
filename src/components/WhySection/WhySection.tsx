@@ -4,9 +4,10 @@ import './WhySection.css';
 
 interface WhySectionProps {
   onScrollProgressChange: (progress: number) => void;
+  activeSection: string;
 }
 
-const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange }) => {
+const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange, activeSection }) => {
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -16,8 +17,8 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange }) => {
         const windowHeight = window.innerHeight;
         
         // Make transition faster by reducing the range
-        const startPoint = windowHeight * 0.7; // Start when section top is at 70% of viewport (was 80%)
-        const endPoint = windowHeight * 0.3;   // End when section top is at 30% of viewport (was 10%)
+        const startPoint = windowHeight * 0.7; // Start when section top is at 70% of viewport
+        const endPoint = windowHeight * 0.3;   // End when section top is at 30% of viewport
         
         if (rect.top <= startPoint && rect.top >= endPoint) {
           // Calculate progress (0 to 1) within the transition range
@@ -44,11 +45,12 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange }) => {
     <section 
       ref={sectionRef}
       className="why-section"
+      data-section="why"
     >
       <div className="container mx-auto px-4 py-24">
         
         <div className="text-center mb-20">
-          <span className="section-label text-primary font-semibold tracking-wider uppercase text-sm">
+          <span className={`section-label ${activeSection === 'why' ? 'active' : ''}`}>
             Why Choose On Klinic?
           </span>
           <h2 className="section-title mt-4">
