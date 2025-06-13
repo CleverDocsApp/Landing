@@ -29,7 +29,7 @@ function App() {
     const handleScroll = () => {
       if (whySectionRef.current) {
         const rect = whySectionRef.current.getBoundingClientRect();
-        const threshold = window.innerHeight * 0.7; // Trigger when section is 70% visible
+        const threshold = window.innerHeight * 0.95; // Start transition earlier
         
         if (rect.top <= threshold) {
           setIsScrolledPastHero(true);
