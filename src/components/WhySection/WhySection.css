@@ -2,7 +2,7 @@
   background: linear-gradient(180deg, #fff 0%, #f8fafc 100%);
   position: relative;
   overflow: hidden;
-  transition: background-color 1.5s ease-in-out;
+  transition: background 1.5s ease-in-out;
   padding-top: 48px; /* Reduced from default */
 }
 
