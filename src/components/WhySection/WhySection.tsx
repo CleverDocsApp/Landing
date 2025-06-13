@@ -55,7 +55,7 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange, activeS
           </span>
           <h2 className="section-title mt-4">
             Smart Documentation,<br />
-            <span className="text-primary">Peace of Mind</span>
+            <span className="text-primary">Clinical Confidence</span>
           </h2>
         </div>
 
