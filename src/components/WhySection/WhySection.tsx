@@ -15,9 +15,9 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange }) => {
         const rect = sectionRef.current.getBoundingClientRect();
         const windowHeight = window.innerHeight;
         
-        // Define the scroll range for the transition
-        const startPoint = windowHeight * 0.8; // Start when section top is at 80% of viewport
-        const endPoint = windowHeight * 0.1;   // End when section top is at 10% of viewport
+        // Make transition faster by reducing the range
+        const startPoint = windowHeight * 0.7; // Start when section top is at 70% of viewport (was 80%)
+        const endPoint = windowHeight * 0.3;   // End when section top is at 30% of viewport (was 10%)
         
         if (rect.top <= startPoint && rect.top >= endPoint) {
           // Calculate progress (0 to 1) within the transition range
