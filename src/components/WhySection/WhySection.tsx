@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle, Clock, TrendingUp } from 'lucide-react';
+import { CheckCircle, Clock, Brain } from 'lucide-react';
 import './WhySection.css'; 
 
 const WhySection: React.FC = () => {
@@ -58,28 +58,12 @@ const WhySection: React.FC = () => {
 
           <div className="feature-card group" data-aos="fade-up" data-aos-delay="200">
             <div className="icon-wrapper group-hover:scale-110">
-              <TrendingUp size={32} className="text-primary" />
+              <Brain size={32} className="text-primary" />
             </div>
-            <h3 className="text-xl font-semibold mb-4 text-secondary">More Approvals</h3>
+            <h3 className="text-xl font-semibold mb-4 text-secondary">Adapts to Your Style</h3>
             <p className="text-gray-600 leading-relaxed">
-              Increase insurance approval rates by 30-50% with compliant documentation.
+              Your voice, amplified. OK learns your documentation style.
             </p>
-          </div>
-        </div>
-
-        {/* Estadísticas decorativas */}
-        <div className="flex flex-col md:flex-row justify-center gap-6 md:gap-24 text-center mt-16">
-          <div className="flex flex-col items-center">
-            <span className="text-4xl md:text-5xl font-bold text-primary mb-2 gradient-text">10+</span>
-            <span className="text-lg md:text-xl text-gray-600">hours saved weekly</span>
-          </div>
-          <div className="flex flex-col items-center">
-            <span className="text-4xl md:text-5xl font-bold text-primary mb-2 gradient-text">98%</span>
-            <span className="text-lg md:text-xl text-gray-600">compliance rate</span>
-          </div>
-          <div className="flex flex-col items-center">
-            <span className="text-4xl md:text-5xl font-bold text-primary mb-2 gradient-text">50%</span>
-            <span className="text-lg md:text-xl text-gray-600">more approvals</span>
           </div>
         </div>
       </div>

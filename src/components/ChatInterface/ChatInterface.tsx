@@ -1,52 +1,22 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send } from 'lucide-react';
 import ChatMessage from './ChatMessage';
-import ChatOptions from './ChatOptions';
-import { Message, Option } from '../../types/chat';
+import { Message } from '../../types/chat';
 import './ChatInterface.css';
 
 const initialMessages: Message[] = [
   {
     id: '1',
-    text: "Have questions about OnKlinic?\n\nAsk how it can support your documentation, how it compares to other tools, or anything else you need to know.\n\n**There's nothing like OnKlinic on the market today** and we're here to show you why.\n\nNo jargon. No sales pitch. Just clear, honest answers.",
+    text: "Some still doubt that an AI can really assist with clinical documentation...\n\nLet's find out. You lead — I assist.\n\nDescribe a case — even in your own words. It doesn't need to be perfect — I've seen worse 😉",
     sender: 'bot',
     timestamp: new Date().toISOString(),
   },
-];
-
-const exampleQuestions: Option[] = [
-  {
-    id: 'q1',
-    text: 'How does OnKlinic help with compliance?',
-    value: 'How does OnKlinic help with compliance?'
-  },
-  {
-    id: 'q2',
-    text: 'Does OnKlinic support Joint Commission documentation standards?',
-    value: 'Does OnKlinic support Joint Commission documentation standards?'
-  },
-  {
-    id: 'q3',
-    text: 'What makes OnKlinic different from other AI tools?',
-    value: 'What makes OnKlinic different from other AI tools?'
-  },
-  {
-    id: 'q4',
-    text: 'Is OnKlinic suitable for solo providers or only for clinics?',
-    value: 'Is OnKlinic suitable for solo providers or only for clinics?'
-  },
-  {
-    id: 'q5',
-    text: 'How does it support prior authorizations?',
-    value: 'How does it support prior authorizations?'
-  }
 ];
 
 const ChatInterface: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [showSuggestions, setShowSuggestions] = useState(true);
 
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -57,13 +27,12 @@ const ChatInterface: React.FC = () => {
     }
   }, [messages]);
 
-  const handleSend = async (messageToSend?: string) => {
-    const messageText = messageToSend || input.trim();
-    if (!messageText) return;
+  const handleSend = async () => {
+    if (!input.trim()) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
-      text: messageText,
+      text: input,
       sender: 'user',
       timestamp: new Date().toISOString(),
     };
@@ -71,12 +40,11 @@ const ChatInterface: React.FC = () => {
     setMessages((prev) => [...prev, userMessage]);
     setInput('');
     setIsTyping(true);
-    setShowSuggestions(false); // Hide suggestions after sending a message
 
     try {
       const res = await fetch('/.netlify/functions/chatbot', {
         method: 'POST',
-        body: JSON.stringify({ message: messageText }),
+        body: JSON.stringify({ message: input }),
       });
 
       const data = await res.json();
@@ -96,30 +64,19 @@ const ChatInterface: React.FC = () => {
     }
   };
 
-  const handleOptionSelect = (option: Option) => {
-    handleSend(option.text);
-  };
-
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       handleSend();
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(e.target.value);
-    // Hide suggestions when user starts typing
-    if (e.target.value.trim() && showSuggestions) {
-      setShowSuggestions(false);
-    }
-  };
-
   return (
     <div className="chat-interface">
       <div className="chat-header">
-        <div className="chat-header-content">
-          <div className="chat-header-title-enhanced">
-            Ask Anything. Get Real Answers.
+        <div className="chat-header-left">
+          <div>
+            <div className="chat-header-title">On Klinic AI Assistant</div>
+            <div className="chat-header-subtitle">Your documentation partner</div>
           </div>
         </div>
       </div>
@@ -138,21 +95,15 @@ const ChatInterface: React.FC = () => {
       <div className="chat-input">
         <input
           type="text"
+          placeholder="Describe a case, ask a question..."
           value={input}
-          onChange={handleInputChange}
+          onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyPress}
         />
-        <button onClick={() => handleSend()}>
+        <button onClick={handleSend}>
           <Send size={18} />
         </button>
       </div>
-
-      {showSuggestions && (
-        <ChatOptions 
-          options={exampleQuestions} 
-          onSelect={handleOptionSelect} 
-        />
-      )}
     </div>
   );
 };
