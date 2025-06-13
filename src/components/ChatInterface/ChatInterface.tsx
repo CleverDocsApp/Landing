@@ -138,7 +138,6 @@ const ChatInterface: React.FC = () => {
       <div className="chat-input">
         <input
           type="text"
-          placeholder="Describe a case, ask a question..."
           value={input}
           onChange={handleInputChange}
           onKeyDown={handleKeyPress}
