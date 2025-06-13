@@ -74,7 +74,7 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange, activeS
             <div className="icon-wrapper group-hover:scale-110">
               <Clock size={32} className="text-primary" />
             </div>
-            <h3 className="text-xl font-semibold mb-4 text-secondary">10+ Hours Saved Weekly</h3>
+            <h3 className="text-xl font-semibold mb-4 text-secondary">Save Hours Every Week</h3>
             <p className="text-gray-600 leading-relaxed">
               Cut documentation time by 50–70%. Get your evenings back.
             </p>
