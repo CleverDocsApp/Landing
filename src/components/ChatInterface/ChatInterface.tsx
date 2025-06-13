@@ -75,7 +75,7 @@ const ChatInterface: React.FC = () => {
       <div className="chat-header">
         <div className="chat-header-left">
           <div>
-            <div className="chat-header-title">On Klinic AI Assistant</div>
+            <div className="chat-header-title">Ask Anything. Get Real Answers.</div>
             <div className="chat-header-subtitle">Your documentation partner</div>
           </div>
         </div>
