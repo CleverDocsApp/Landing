@@ -63,7 +63,7 @@ const WhySection: React.FC = () => {
       
       {/* Content layer */}
       <div className="why-section-content">
-        <div className="container mx-auto px-4 py-16">
+        <div className="container mx-auto px-4 py-12">
           
           <div className="text-center mb-6">
             <h2 
