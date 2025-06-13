@@ -76,7 +76,7 @@ const WhySection: React.FC = () => {
                 <span 
                   className={`gradient-text ${whiteOverlayOpacity < 0.5 ? 'text-white-override' : ''}`}
                   style={{ 
-                    transition: 'all 2s ease-in-out',
+                    transition: 'all 1.5s ease-in-out',
                     ...(whiteOverlayOpacity >= 0.5 && {
                       background: 'linear-gradient(135deg, #20BDAA 0%, #1AA192 100%)',
                       WebkitBackgroundClip: 'text',
@@ -95,7 +95,7 @@ const WhySection: React.FC = () => {
               className="font-semibold tracking-wider uppercase text-sm"
               style={{ 
                 color: subtitleColor,
-                transition: 'color 2s ease-in-out'
+                transition: 'color 1.5s ease-in-out'
               }}
             >
               Why Choose On Klinic?
@@ -107,7 +107,7 @@ const WhySection: React.FC = () => {
               className="text-lg leading-relaxed"
               style={{ 
                 color: paragraphColor,
-                transition: 'color 2s ease-in-out'
+                transition: 'color 1.5s ease-in-out'
               }}
             >
               Unlike generic tools, OnKlinic is purpose-built for mental health documentation. <br />
