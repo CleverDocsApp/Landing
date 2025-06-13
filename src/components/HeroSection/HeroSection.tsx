@@ -10,7 +10,7 @@ const HeroSection: React.FC = () => {
         <div className="hero-content">
           <h1 className="hero-title">You Care, We Chart</h1>
           <p className="hero-subtitle">
-            The AI assistant that helps mental health professionals focus on patients, not paperwork.
+            An intelligent documentation assistant built for mental health professionals.
           </p>
           <div className="hero-stats">
             <div className="stat-item">
