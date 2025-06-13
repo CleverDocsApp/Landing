@@ -122,57 +122,6 @@ function App() {
               </div>
             </div>
           </div>
-
-          <div className="flex flex-col md:flex-row justify-center gap-6 md:gap-24 text-center animate-fade-in mt-8 md:mt-0">
-            <div className="flex flex-col items-center">
-              <span 
-                className="text-4xl md:text-5xl font-bold mb-2 gradient-text"
-                style={{ 
-                  color: backgroundProgress > 0.5 ? '#20BDAA' : `rgb(${heroTitleColor[0]}, ${heroTitleColor[1]}, ${heroTitleColor[2]})`,
-                  transition: 'color 0.4s ease-out'
-                }}
-              >10+</span>
-              <span 
-                className="text-lg md:text-xl"
-                style={{ 
-                  color: `rgb(${heroDescColor[0]}, ${heroDescColor[1]}, ${heroDescColor[2]})`,
-                  transition: 'color 0.4s ease-out'
-                }}
-              >hours saved weekly</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span 
-                className="text-4xl md:text-5xl font-bold mb-2 gradient-text"
-                style={{ 
-                  color: backgroundProgress > 0.5 ? '#20BDAA' : `rgb(${heroTitleColor[0]}, ${heroTitleColor[1]}, ${heroTitleColor[2]})`,
-                  transition: 'color 0.4s ease-out'
-                }}
-              >98%</span>
-              <span 
-                className="text-lg md:text-xl"
-                style={{ 
-                  color: `rgb(${heroDescColor[0]}, ${heroDescColor[1]}, ${heroDescColor[2]})`,
-                  transition: 'color 0.4s ease-out'
-                }}
-              >compliance rate</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span 
-                className="text-4xl md:text-5xl font-bold mb-2 gradient-text"
-                style={{ 
-                  color: backgroundProgress > 0.5 ? '#20BDAA' : `rgb(${heroTitleColor[0]}, ${heroTitleColor[1]}, ${heroTitleColor[2]})`,
-                  transition: 'color 0.4s ease-out'
-                }}
-              >50%</span>
-              <span 
-                className="text-lg md:text-xl"
-                style={{ 
-                  color: `rgb(${heroDescColor[0]}, ${heroDescColor[1]}, ${heroDescColor[2]})`,
-                  transition: 'color 0.4s ease-out'
-                }}
-              >more approvals</span>
-            </div>
-          </div>
         </div>
 
         <WhySection onScrollProgressChange={handleWhySectionScroll} />
