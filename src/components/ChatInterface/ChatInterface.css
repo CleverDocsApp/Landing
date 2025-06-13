@@ -1,7 +1,8 @@
 .chat-interface {
   width: 100%;
-  max-height: 600px;
-  height: 600px;
+  min-height: 500px;
+  max-height: 700px;
+  height: auto;
   display: flex;
   flex-direction: column;
   background: rgba(255, 255, 255, 0.02);
@@ -102,11 +103,11 @@
 
 .chat-messages {
   flex: 1;
-  padding: 32px;
+  padding: 40px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 32px;
   scroll-behavior: smooth;
   background: linear-gradient(180deg,
     rgba(255, 255, 255, 0.02) 0%,
@@ -118,7 +119,7 @@
 .message {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: 16px;
 }
 
 .user-message {
@@ -129,9 +130,12 @@
 .user-message .message-content {
   background: linear-gradient(135deg, #20BDAA 0%, #1AA192 100%);
   color: white;
-  padding: 12px 16px;
-  border-radius: 18px 18px 0 18px;
-  max-width: 75%;
+  padding: 16px 20px;
+  border-radius: 20px 20px 4px 20px;
+  max-width: 65%;
+  font-size: 15px;
+  line-height: 1.5;
+  box-shadow: 0 4px 12px rgba(32, 189, 170, 0.2);
 }
 
 .bot-message {
@@ -142,11 +146,13 @@
 .bot-message .message-content {
   background: rgba(32, 189, 170, 0.12);
   color: white;
-  padding: 14px 18px;
-  border-radius: 18px 18px 18px 0;
-  max-width: 75%;
+  padding: 18px 22px;
+  border-radius: 20px 20px 20px 4px;
+  max-width: 65%;
   border: 1px solid rgba(32, 189, 170, 0.2);
   box-shadow: 0 4px 16px rgba(32, 189, 170, 0.1);
+  font-size: 15px;
+  line-height: 1.6;
 }
 
 /* Estilo especial para texto resaltado */
@@ -201,6 +207,7 @@
   border: 1px solid rgba(32, 189, 170, 0.3);
   position: relative;
   transition: all 0.3s ease;
+  flex-shrink: 0;
 }
 
 .avatar::before {
@@ -384,7 +391,8 @@
   }
   
   .chat-messages {
-    padding: 24px;
+    padding: 28px;
+    gap: 28px;
   }
   
   .chat-input {
@@ -411,12 +419,23 @@
     font-size: 1em;
     padding: 1px 6px;
   }
+  
+  .user-message .message-content,
+  .bot-message .message-content {
+    font-size: 14px;
+    max-width: 70%;
+  }
 }
 
 @media (max-width: 640px) {
   .chat-header-title-enhanced {
     font-size: 18px;
     line-height: 1.3;
+  }
+  
+  .chat-messages {
+    padding: 24px;
+    gap: 24px;
   }
   
   .chat-options {
@@ -437,5 +456,11 @@
   .highlighted-text {
     font-size: 0.95em;
     padding: 1px 4px;
+  }
+  
+  .user-message .message-content,
+  .bot-message .message-content {
+    font-size: 13px;
+    max-width: 75%;
   }
 }
