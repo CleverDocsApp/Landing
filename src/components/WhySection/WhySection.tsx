@@ -66,7 +66,7 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange, activeS
             </div>
             <h3 className="text-xl font-semibold mb-4 text-secondary">Compliant by Design</h3>
             <p className="text-gray-600 leading-relaxed">
-              Built with HIPAA, DSM-V, and payer rules in mind. You focus on care — OK handles the rules.
+              Designed to meet federal, state, HIPAA, Joint Commission, and payer standards. Strengthened with tools like DSM-5 support, Golden Thread detection, and built-in compliance validations.
             </p>
           </div>
 
