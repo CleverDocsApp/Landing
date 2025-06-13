@@ -34,17 +34,17 @@ function App() {
             </div>
 
             <div className="text-center mb-8 md:mb-16 animate-slide-up order-1 md:order-2">
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white mb-6 md:mb-8 relative">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white mb-4 md:mb-6 relative">
                 You Care, <span className="gradient-text">We Chart</span>
                 <div className="absolute -top-12 -right-12 w-24 h-24 bg-primary opacity-10 rounded-full blur-3xl animate-pulse-slow hidden md:block"></div>
               </h1>
 
               {/* Containers unificados con estilos similares */}
-              <div className="hero-description-container max-w-4xl mx-auto space-y-6">
+              <div className="hero-description-container max-w-4xl mx-auto space-y-4">
                 {/* Primer container - mantiene el estilo original con subrayado */}
                 <div className="hero-primary-description relative">
                   <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent rounded-2xl blur-xl"></div>
-                  <p className="relative text-lg md:text-xl lg:text-2xl text-gray-100 leading-relaxed font-medium px-6 py-4 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
+                  <p className="relative text-lg md:text-xl lg:text-xl text-gray-100 leading-relaxed font-medium px-6 py-3 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
                     The intelligent assistant that helps you{' '}
                     <span className="text-primary font-semibold relative">
                       chart faster
@@ -58,7 +58,7 @@ function App() {
                 {/* Segundo container - mantiene el estilo italic */}
                 <div className="hero-secondary-description relative">
                   <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent rounded-2xl blur-xl"></div>
-                  <p className="relative text-base md:text-lg lg:text-xl text-gray-200 leading-relaxed font-medium italic px-6 py-4 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
+                  <p className="relative text-base md:text-lg lg:text-lg text-gray-200 leading-relaxed font-medium italic px-6 py-3 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
                     <span className="text-primary font-bold not-italic">Built for mental health professionals</span>{' '}
                     who want documentation that's{' '}
                     <span className="text-white font-semibold">compliant</span>,{' '}
