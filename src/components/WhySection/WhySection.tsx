@@ -1,15 +1,36 @@
-import React, { forwardRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { CheckCircle, Clock, TrendingUp } from 'lucide-react';
 import './WhySection.css'; 
 
-interface WhySectionProps {
-  isLightMode: boolean;
-}
+const WhySection: React.FC = () => {
+  const [isLightMode, setIsLightMode] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
 
-const WhySection = forwardRef<HTMLElement, WhySectionProps>(({ isLightMode }, ref) => {
+  useEffect(() => {
+    const handleScroll = () => {
+      if (sectionRef.current) {
+        const rect = sectionRef.current.getBoundingClientRect();
+        const threshold = window.innerHeight * 0.6; // Trigger when section is 60% visible
+        
+        if (rect.top <= threshold && rect.bottom >= 0) {
+          setIsLightMode(true);
+        } else {
+          setIsLightMode(false);
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Check initial state
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
     <section 
-      ref={ref}
+      ref={sectionRef}
       className={`why-section ${isLightMode ? 'light-mode' : ''}`}
     >
       <div className="container mx-auto px-4 py-16">
@@ -101,8 +122,6 @@ const WhySection = forwardRef<HTMLElement, WhySectionProps>(({ isLightMode }, re
       </div>
     </section>
   );
-});
-
-WhySection.displayName = 'WhySection';
+};
 
 export default WhySection;

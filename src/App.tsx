@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React from 'react';
 import Header from './components/Header/Header';
 import ChatInterface from './components/ChatInterface/ChatInterface';
 import WhySection from './components/WhySection/WhySection';
@@ -9,10 +9,7 @@ import PricingTeaser from './components/PricingTeaser/PricingTeaser';
 import Footer from './components/Footer/Footer';
 
 function App() {
-  const whySectionRef = useRef<HTMLElement>(null);
-  const [isScrolledPastHero, setIsScrolledPastHero] = useState(false);
-
-  useEffect(() => {
+  React.useEffect(() => {
     document.title = 'On Klinic - AI Assistant for Mental Health Clinicians';
     
     const observer = new IntersectionObserver((entries) => {
@@ -24,34 +21,12 @@ function App() {
     }, { threshold: 0.1 });
 
     document.querySelectorAll('.section-title').forEach((el) => observer.observe(el));
-
-    // Scroll handler for transition effect
-    const handleScroll = () => {
-      if (whySectionRef.current) {
-        const rect = whySectionRef.current.getBoundingClientRect();
-        const threshold = window.innerHeight * 0.75; // Start transition earlier
-        
-        if (rect.top <= threshold) {
-          setIsScrolledPastHero(true);
-        } else {
-          setIsScrolledPastHero(false);
-        }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Check initial state
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
   }, []);
 
   return (
     <div className="app min-h-screen bg-gradient-to-br from-secondary to-secondary-light">
       <Header />
       <main className="relative">
-        {/* Hero Section with reduced bottom padding */}
         <div className="container mx-auto px-4 pt-20 md:pt-32 pb-8 md:pb-12">
           <div className="flex flex-col md:flex-col-reverse">
             <div className="mb-8 md:mb-16 animate-slide-up order-2 md:order-1">
@@ -91,11 +66,25 @@ function App() {
               </div>
             </div>
           </div>
+
+          <div className="flex flex-col md:flex-row justify-center gap-6 md:gap-24 text-center animate-fade-in mt-8 md:mt-0">
+            <div className="flex flex-col items-center">
+              <span className="text-4xl md:text-5xl font-bold text-primary mb-2 gradient-text">10+</span>
+              <span className="text-lg md:text-xl text-gray-300">hours saved weekly</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="text-4xl md:text-5xl font-bold text-primary mb-2 gradient-text">98%</span>
+              <span className="text-lg md:text-xl text-gray-300">compliance rate</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="text-4xl md:text-5xl font-bold text-primary mb-2 gradient-text">50%</span>
+              <span className="text-lg md:text-xl text-gray-300">more approvals</span>
+            </div>
+          </div>
         </div>
 
-        {/* Sections with transition effect */}
-        <div className={`transition-container ${isScrolledPastHero ? 'scrolled' : ''}`}>
-          <WhySection ref={whySectionRef} isLightMode={isScrolledPastHero} />
+        <div className="bg-white">
+          <WhySection />
           <TestimonialsSection />
           <MetricsSection />
           <FeaturesSection />
