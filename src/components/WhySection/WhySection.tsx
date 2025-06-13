@@ -48,7 +48,7 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange }) => {
       <div className="container mx-auto px-4 py-24">
         
         <div className="text-center mb-20">
-          <span className="text-primary font-semibold tracking-wider uppercase text-sm">
+          <span className="section-label text-primary font-semibold tracking-wider uppercase text-sm">
             Why Choose On Klinic?
           </span>
           <h2 className="section-title mt-4">

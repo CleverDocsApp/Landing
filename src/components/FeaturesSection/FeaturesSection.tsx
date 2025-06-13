@@ -35,7 +35,8 @@ const FeaturesSection: React.FC = () => {
     <section className="features-section" id="features">
       <div className="container mx-auto px-4 py-24">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-center text-gray-900 mb-4">
+          <span className="section-label text-primary font-semibold tracking-wider uppercase text-sm">Features</span>
+          <h2 className="section-title mt-4">
             <span className="ok-logo">On Klinic</span> Transforms<br />
             <span className="gradient-text">Clinical Documentation</span>
           </h2>

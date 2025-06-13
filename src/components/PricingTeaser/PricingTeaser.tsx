@@ -36,7 +36,7 @@ const PricingTeaser: React.FC = () => {
     <section className="pricing-section" id="pricing">
       <div className="container mx-auto px-4 py-24">
         <div className="text-center mb-20">
-          <span className="text-primary font-semibold tracking-wider uppercase text-sm">Pricing</span>
+          <span className="section-label text-primary font-semibold tracking-wider uppercase text-sm">Pricing</span>
           <h2 className="section-title mt-4">
             <span className="block md:hidden">Choose Your Perfect Documentation Partner</span>
             <span className="hidden md:block">
