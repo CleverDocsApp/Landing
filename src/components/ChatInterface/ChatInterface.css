@@ -149,6 +149,22 @@
   box-shadow: 0 4px 16px rgba(32, 189, 170, 0.1);
 }
 
+/* Estilos especiales para texto realzado en mensajes del bot */
+.bot-message .message-content .text-primary-light {
+  position: relative;
+  display: inline-block;
+  animation: text-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes text-glow {
+  0% {
+    filter: brightness(1) drop-shadow(0 0 5px rgba(32, 189, 170, 0.3));
+  }
+  100% {
+    filter: brightness(1.2) drop-shadow(0 0 15px rgba(32, 189, 170, 0.6));
+  }
+}
+
 /* Avatar bot mejorado */
 
 .avatar {
