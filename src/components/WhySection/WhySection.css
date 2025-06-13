@@ -1,24 +1,7 @@
 .why-section {
-  background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%);
+  /* Remove background - let App's background show through */
   position: relative;
   overflow: hidden;
-  padding-top: 8px;
-}
-
-.why-section-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(180deg, #fff 0%, #f8fafc 100%);
-  z-index: 1;
-  transition: opacity 1s ease-out;
-}
-
-.why-section-content {
-  position: relative;
-  z-index: 2;
 }
 
 .why-section::before {
