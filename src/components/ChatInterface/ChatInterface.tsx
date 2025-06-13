@@ -100,31 +100,28 @@ const ChatInterface: React.FC = () => {
           <ChatMessage key={msg.id} message={msg} />
         ))}
         
-        {showSuggestions && messages.length === 1 && (
-          <div className="suggested-questions">
-            <div className="suggestions-header">
-              <span className="suggestions-title">Example questions you could ask:</span>
-            </div>
-            <div className="suggestions-grid">
-              {suggestedQuestions.map((question, index) => (
-                <button
-                  key={index}
-                  className="suggestion-button"
-                  onClick={() => handleSuggestionClick(question)}
-                >
-                  {question}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-        
         {isTyping && (
           <div className="chat-message bot">
             🟢 On Klinic is typing...
           </div>
         )}
       </div>
+
+      {showSuggestions && messages.length === 1 && (
+        <div className="suggested-questions">
+          <div className="suggestions-grid">
+            {suggestedQuestions.map((question, index) => (
+              <button
+                key={index}
+                className="suggestion-button"
+                onClick={() => handleSuggestionClick(question)}
+              >
+                {question}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="chat-input">
         <input
