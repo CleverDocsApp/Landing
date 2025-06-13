@@ -279,15 +279,23 @@
   flex: 1;
   padding: 16px 24px;
   border-radius: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.05);
-  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #f8fafc;
+  color: #1a202c;
   outline: none;
   font-size: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.chat-input input:focus {
+  border-color: rgba(32, 189, 170, 0.4);
+  box-shadow: 0 0 0 3px rgba(32, 189, 170, 0.1), 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
 }
 
 .chat-input input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
+  color: #64748b;
 }
 
 .chat-input button {
