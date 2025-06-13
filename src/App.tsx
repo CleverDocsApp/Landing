@@ -83,11 +83,11 @@ function App() {
                 <div className="absolute -top-12 -right-12 w-24 h-24 bg-primary opacity-10 rounded-full blur-3xl animate-pulse-slow hidden md:block"></div>
               </h1>
 
-              <div className="hero-description-container max-w-4xl mx-auto space-y-4">
+              <div className="hero-description-container max-w-5xl mx-auto space-y-3">
                 <div className="hero-primary-description relative">
                   <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent rounded-2xl blur-xl"></div>
                   <p 
-                    className="relative text-lg md:text-xl lg:text-xl leading-relaxed font-medium px-6 py-3 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10"
+                    className="relative text-base md:text-lg lg:text-lg leading-relaxed font-medium px-4 py-2 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10"
                     style={{ 
                       color: `rgb(${heroDescColor[0]}, ${heroDescColor[1]}, ${heroDescColor[2]})`,
                       transition: 'color 0.4s ease-out' // Faster transition
@@ -106,7 +106,7 @@ function App() {
                 <div className="hero-secondary-description relative">
                   <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent rounded-2xl blur-xl"></div>
                   <p 
-                    className="relative text-base md:text-lg lg:text-lg leading-relaxed font-medium italic px-6 py-3 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10"
+                    className="relative text-sm md:text-base lg:text-base leading-relaxed font-medium italic px-4 py-2 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10"
                     style={{ 
                       color: `rgb(${heroDescColor[0]}, ${heroDescColor[1]}, ${heroDescColor[2]})`,
                       transition: 'color 0.4s ease-out' // Faster transition
