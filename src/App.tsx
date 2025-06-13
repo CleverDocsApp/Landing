@@ -39,7 +39,7 @@ function App() {
                 <div className="absolute -top-12 -right-12 w-24 h-24 bg-primary opacity-10 rounded-full blur-3xl animate-pulse-slow hidden md:block"></div>
               </h1>
               <p className="text-lg md:text-xl lg:text-2xl text-gray-200 max-w-3xl mx-auto leading-relaxed">
-                The AI assistant that helps mental health professionals focus on patients, not paperwork.
+                An intelligent documentation assistant built for mental health professionals.
               </p>
             </div>
           </div>
