@@ -32,8 +32,7 @@
   align-items: center;
   gap: 8px;
   transition: transform 0.3s ease;
-  min-height: 64px; /* Aumentado de 48px a 64px */
-  padding: 8px 0; /* Añadido padding para dar más espacio */
+  min-height: 48px;
 }
 
 .logo:hover {
@@ -42,9 +41,9 @@
 
 /* LOGO dinámico SVG */
 .logo-img {
-  height: 64px; /* Aumentado de 48px a 64px */
+  height: 48px;
   width: auto;
-  max-width: 200px; /* Aumentado de 160px a 200px */
+  max-width: 160px;
   max-height: 100%;
   display: inline-block;
   object-fit: contain;
@@ -61,8 +60,6 @@
 
 .site-header.scrolled .logo-img.scrolled {
   display: inline-block;
-  height: 56px; /* Tamaño ligeramente menor cuando está scrolled */
-  max-width: 180px;
 }
 
 /* Texto legado (si queda) */
@@ -162,35 +159,5 @@
 
   .login-link {
     display: none;
-  }
-  
-  .logo {
-    min-height: 56px; /* Tamaño reducido en móvil */
-  }
-  
-  .logo-img {
-    height: 56px; /* Tamaño reducido en móvil */
-    max-width: 160px;
-  }
-  
-  .site-header.scrolled .logo-img.scrolled {
-    height: 48px;
-    max-width: 140px;
-  }
-}
-
-@media (max-width: 480px) {
-  .logo {
-    min-height: 48px;
-  }
-  
-  .logo-img {
-    height: 48px;
-    max-width: 140px;
-  }
-  
-  .site-header.scrolled .logo-img.scrolled {
-    height: 40px;
-    max-width: 120px;
   }
 }
