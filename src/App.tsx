@@ -68,13 +68,12 @@ function App() {
           </div>
         </div>
 
-        <div className="bg-white">
-          <WhySection />
-          <TestimonialsSection />
-          <MetricsSection />
-          <FeaturesSection />
-          <PricingTeaser />
-        </div>
+        {/* Removed bg-white wrapper to allow smooth transition */}
+        <WhySection />
+        <TestimonialsSection />
+        <MetricsSection />
+        <FeaturesSection />
+        <PricingTeaser />
       </main>
       <Footer />
     </div>
