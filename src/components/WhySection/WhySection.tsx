@@ -57,18 +57,10 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange }) => {
           </h2>
         </div>
 
-        <div className="text-center mb-2">
+        <div className="text-center mb-12">
           <span className="text-gray-900 font-semibold tracking-wider uppercase text-sm">
             Why Choose On Klinic?
           </span>
-        </div>
-
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <p className="text-gray-700 text-lg leading-relaxed">
-            Unlike generic tools, OnKlinic is purpose-built for mental health documentation. <br />
-            Whether you're in private practice or managing a clinic, OnKlinic adapts to your needs <br />
-            while ensuring clinical, legal, and ethical standards are met.
-          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
@@ -101,6 +93,13 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange }) => {
               Increase insurance approval rates by 30-50% with compliant documentation.
             </p>
           </div>
+        </div>
+
+        <div className="text-center max-w-3xl mx-auto mt-12">
+          <p className="text-gray-700 text-lg leading-relaxed">
+            Unlike generic tools, OnKlinic is purpose-built for mental health documentation. <br />
+            Whether you're in private practice or managing a clinic, OnKlinic adapts to your needs while ensuring clinical, legal, and ethical standards are met.
+          </p>
         </div>
       </div>
     </section>
