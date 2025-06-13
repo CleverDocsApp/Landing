@@ -41,7 +41,7 @@ function App() {
 <p className="text-center text-lg md:text-xl lg:text-2xl text-gray-200 max-w-3xl mx-auto leading-relaxed">
   The intelligent assistant that helps you chart faster—without compromising clinical quality.
 </p>
-<p className="text-center italic text-lg md:text-xl lg:text-2xl text-gray-200 max-w-3xl mx-auto leading-relaxed">
+<p className="text-center text-lg md:text-xl lg:text-2xl text-gray-200 max-w-3xl mx-auto leading-relaxed">
   <span style={{ color: '#20BDAA', fontWeight: 'bold' }}>
     Built for mental health professionals
   </span>{' '}
