@@ -13,10 +13,19 @@ const initialMessages: Message[] = [
   },
 ];
 
+const suggestedQuestions = [
+  "How does OnKlinic help with compliance?",
+  "Does OnKlinic support Joint Commission documentation standards?",
+  "What makes OnKlinic different from other AI tools?",
+  "Is OnKlinic suitable for solo providers or only for clinics?",
+  "How does it support prior authorizations?"
+];
+
 const ChatInterface: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(true);
 
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -27,12 +36,13 @@ const ChatInterface: React.FC = () => {
     }
   }, [messages]);
 
-  const handleSend = async () => {
-    if (!input.trim()) return;
+  const handleSend = async (messageText?: string) => {
+    const textToSend = messageText || input.trim();
+    if (!textToSend) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
-      text: input,
+      text: textToSend,
       sender: 'user',
       timestamp: new Date().toISOString(),
     };
@@ -40,11 +50,12 @@ const ChatInterface: React.FC = () => {
     setMessages((prev) => [...prev, userMessage]);
     setInput('');
     setIsTyping(true);
+    setShowSuggestions(false); // Hide suggestions after first interaction
 
     try {
       const res = await fetch('/.netlify/functions/chatbot', {
         method: 'POST',
-        body: JSON.stringify({ message: input }),
+        body: JSON.stringify({ message: textToSend }),
       });
 
       const data = await res.json();
@@ -62,6 +73,10 @@ const ChatInterface: React.FC = () => {
     } finally {
       setIsTyping(false);
     }
+  };
+
+  const handleSuggestionClick = (question: string) => {
+    handleSend(question);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -84,6 +99,26 @@ const ChatInterface: React.FC = () => {
         {messages.map((msg) => (
           <ChatMessage key={msg.id} message={msg} />
         ))}
+        
+        {showSuggestions && messages.length === 1 && (
+          <div className="suggested-questions">
+            <div className="suggestions-header">
+              <span className="suggestions-title">Example questions you could ask:</span>
+            </div>
+            <div className="suggestions-grid">
+              {suggestedQuestions.map((question, index) => (
+                <button
+                  key={index}
+                  className="suggestion-button"
+                  onClick={() => handleSuggestionClick(question)}
+                >
+                  {question}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+        
         {isTyping && (
           <div className="chat-message bot">
             🟢 On Klinic is typing...
@@ -99,7 +134,7 @@ const ChatInterface: React.FC = () => {
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyPress}
         />
-        <button onClick={handleSend}>
+        <button onClick={() => handleSend()}>
           <Send size={18} />
         </button>
       </div>
