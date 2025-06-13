@@ -149,6 +149,38 @@
   box-shadow: 0 4px 16px rgba(32, 189, 170, 0.1);
 }
 
+/* Estilo especial para texto resaltado */
+.highlighted-text {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.9) 0%, rgba(255, 193, 7, 0.8) 100%);
+  color: #1a1a1a !important;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 1.05em;
+  letter-spacing: 0.02em;
+  box-shadow: 
+    0 2px 8px rgba(255, 215, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 215, 0, 0.4);
+  display: inline-block;
+  transform: translateY(-1px);
+  animation: subtle-glow 2s ease-in-out infinite alternate;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes subtle-glow {
+  0% {
+    box-shadow: 
+      0 2px 8px rgba(255, 215, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+  100% {
+    box-shadow: 
+      0 4px 12px rgba(255, 215, 0, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  }
+}
+
 /* Avatar bot mejorado */
 
 .avatar {
@@ -287,6 +319,11 @@
     height: 48px;
     padding: 6px;
   }
+  
+  .highlighted-text {
+    font-size: 1em;
+    padding: 1px 6px;
+  }
 }
 
 @media (max-width: 640px) {
@@ -299,5 +336,10 @@
     width: 44px;
     height: 44px;
     padding: 6px;
+  }
+  
+  .highlighted-text {
+    font-size: 0.95em;
+    padding: 1px 4px;
   }
 }
