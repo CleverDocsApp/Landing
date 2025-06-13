@@ -1,5 +1,6 @@
 import React from 'react';
 import { CheckCircle, Clock, Brain } from 'lucide-react';
+import './WhySection.css'; 
 
 const WhySection: React.FC = () => {
   return (
