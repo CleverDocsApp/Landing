@@ -69,21 +69,6 @@ function App() {
               </div>
             </div>
           </div>
-
-          <div className="flex flex-col md:flex-row justify-center gap-6 md:gap-24 text-center animate-fade-in mt-8 md:mt-0">
-            <div className="flex flex-col items-center">
-              <span className="text-4xl md:text-5xl font-bold text-primary mb-2 gradient-text">10+</span>
-              <span className="text-lg md:text-xl text-gray-300">hours saved weekly</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-4xl md:text-5xl font-bold text-primary mb-2 gradient-text">98%</span>
-              <span className="text-lg md:text-xl text-gray-300">compliance rate</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-4xl md:text-5xl font-bold text-primary mb-2 gradient-text">50%</span>
-              <span className="text-lg md:text-xl text-gray-300">more approvals</span>
-            </div>
-          </div>
         </div>
 
         <div className="bg-white">
