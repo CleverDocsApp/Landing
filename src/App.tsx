@@ -38,16 +38,15 @@ function App() {
                 You Care, <span className="gradient-text">We Chart</span>
                 <div className="absolute -top-12 -right-12 w-24 h-24 bg-primary opacity-10 rounded-full blur-3xl animate-pulse-slow hidden md:block"></div>
               </h1>
-<p className="text-center text-lg md:text-xl lg:text-2xl text-gray-200 max-w-3xl mx-auto leading-relaxed">
+<p className="text-center text-lg md:text-xl lg:text-2xl text-gray-200 max-w-3xl mx-auto leading-relaxed mb-2">
   The intelligent assistant that helps you chart faster—without compromising clinical quality.
 </p>
-<p className="text-center text-lg md:text-xl lg:text-2xl text-gray-200 max-w-3xl mx-auto leading-relaxed">
+<p className="text-center italic text-lg md:text-xl lg:text-2xl text-gray-200 max-w-3xl mx-auto leading-relaxed">
   <span style={{ color: '#20BDAA', fontWeight: 'bold' }}>
     Built for mental health professionals
   </span>{' '}
   who want documentation that’s compliant, coherent, and easy to complete.
 </p>
-
             </div>
           </div>
           
