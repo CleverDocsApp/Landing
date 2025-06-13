@@ -47,20 +47,14 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange }) => {
     >
       <div className="container mx-auto px-4 py-24">
         
-        <div className="text-center mb-6">
-          <h2 className="section-title mt-4">
-            <span className="block md:hidden">Smart Documentation & Peace of Mind</span>
-            <span className="hidden md:block">
-              Smart Documentation,<br />
-              <span className="gradient-text">Peace of Mind</span>
-            </span>
-          </h2>
-        </div>
-
-        <div className="text-center mb-12">
-          <span className="text-gray-900 font-semibold tracking-wider uppercase text-sm">
+        <div className="text-center mb-20">
+          <span className="text-primary font-semibold tracking-wider uppercase text-sm">
             Why Choose On Klinic?
           </span>
+          <h2 className="section-title mt-4">
+            Smart Documentation,<br />
+            <span className="text-primary">Peace of Mind</span>
+          </h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
