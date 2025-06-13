@@ -27,13 +27,13 @@ function App() {
     <div className="app min-h-screen bg-gradient-to-br from-secondary to-secondary-light">
       <Header />
       <main className="relative">
-        <div className="container mx-auto px-4 pt-20 md:pt-32 pb-8 md:pb-12">
+        <div className="container mx-auto px-4 pt-20 md:pt-32 pb-4 md:pb-6">
           <div className="flex flex-col md:flex-col-reverse">
-            <div className="mb-8 md:mb-16 animate-slide-up order-2 md:order-1">
+            <div className="mb-4 md:mb-8 animate-slide-up order-2 md:order-1">
               <ChatInterface />
             </div>
 
-            <div className="text-center mb-8 md:mb-16 animate-slide-up order-1 md:order-2">
+            <div className="text-center mb-6 md:mb-12 animate-slide-up order-1 md:order-2">
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white mb-4 md:mb-6 relative">
                 You Care, <span className="gradient-text">We Chart</span>
                 <div className="absolute -top-12 -right-12 w-24 h-24 bg-primary opacity-10 rounded-full blur-3xl animate-pulse-slow hidden md:block"></div>
@@ -64,21 +64,6 @@ function App() {
                   </p>
                 </div>
               </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col md:flex-row justify-center gap-6 md:gap-24 text-center animate-fade-in mt-8 md:mt-0">
-            <div className="flex flex-col items-center">
-              <span className="text-4xl md:text-5xl font-bold text-primary mb-2 gradient-text">10+</span>
-              <span className="text-lg md:text-xl text-gray-300">hours saved weekly</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-4xl md:text-5xl font-bold text-primary mb-2 gradient-text">98%</span>
-              <span className="text-lg md:text-xl text-gray-300">compliance rate</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-4xl md:text-5xl font-bold text-primary mb-2 gradient-text">50%</span>
-              <span className="text-lg md:text-xl text-gray-300">more approvals</span>
             </div>
           </div>
         </div>

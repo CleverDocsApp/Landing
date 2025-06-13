@@ -36,13 +36,13 @@ const WhySection: React.FC = () => {
       <div className="container mx-auto px-4 py-16">
         
         <div className="text-center mb-6">
-          <h2 className={`section-title mt-4 transition-colors duration-1000 ${
+          <h2 className={`section-title mt-4 transition-colors duration-[3000ms] ${
             isLightMode ? 'text-gray-900' : 'text-white'
           }`}>
             <span className="block md:hidden">Smart Documentation & Peace of Mind</span>
             <span className="hidden md:block">
               Smart Documentation,<br />
-              <span className={`gradient-text transition-all duration-1000 ${
+              <span className={`gradient-text transition-all duration-[3000ms] ${
                 !isLightMode ? 'text-white-override' : ''
               }`}>Peace of Mind</span>
             </span>
@@ -50,7 +50,7 @@ const WhySection: React.FC = () => {
         </div>
 
         <div className="text-center mb-2">
-          <span className={`font-semibold tracking-wider uppercase text-sm transition-colors duration-1000 ${
+          <span className={`font-semibold tracking-wider uppercase text-sm transition-colors duration-[3000ms] ${
             isLightMode ? 'text-gray-900' : 'text-gray-300'
           }`}>
             Why Choose On Klinic?
@@ -58,7 +58,7 @@ const WhySection: React.FC = () => {
         </div>
 
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <p className={`text-lg leading-relaxed transition-colors duration-1000 ${
+          <p className={`text-lg leading-relaxed transition-colors duration-[3000ms] ${
             isLightMode ? 'text-gray-700' : 'text-gray-200'
           }`}>
             Unlike generic tools, OnKlinic is purpose-built for mental health documentation. <br />
@@ -96,27 +96,6 @@ const WhySection: React.FC = () => {
             <p className="text-gray-600 leading-relaxed">
               Increase insurance approval rates by 30-50% with compliant documentation.
             </p>
-          </div>
-        </div>
-
-        <div className="flex flex-col md:flex-row justify-center gap-6 md:gap-24 text-center mt-16">
-          <div className="flex flex-col items-center">
-            <span className="text-4xl md:text-5xl font-bold text-primary mb-2 gradient-text">10+</span>
-            <span className={`text-lg md:text-xl transition-colors duration-1000 ${
-              isLightMode ? 'text-gray-600' : 'text-gray-300'
-            }`}>hours saved weekly</span>
-          </div>
-          <div className="flex flex-col items-center">
-            <span className="text-4xl md:text-5xl font-bold text-primary mb-2 gradient-text">98%</span>
-            <span className={`text-lg md:text-xl transition-colors duration-1000 ${
-              isLightMode ? 'text-gray-600' : 'text-gray-300'
-            }`}>compliance rate</span>
-          </div>
-          <div className="flex flex-col items-center">
-            <span className="text-4xl md:text-5xl font-bold text-primary mb-2 gradient-text">50%</span>
-            <span className={`text-lg md:text-xl transition-colors duration-1000 ${
-              isLightMode ? 'text-gray-600' : 'text-gray-300'
-            }`}>more approvals</span>
           </div>
         </div>
       </div>
