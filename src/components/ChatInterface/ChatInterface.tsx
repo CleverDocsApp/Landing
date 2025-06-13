@@ -7,7 +7,7 @@ import './ChatInterface.css';
 const initialMessages: Message[] = [
   {
     id: '1',
-    text: "Some still doubt that an AI can really assist with clinical documentation...\n\nLet's find out. You lead — I assist.\n\nDescribe a case — even in your own words. It doesn't need to be perfect — I've seen worse 😉",
+    text: "Have questions about OnKlinic?\nAsk how it can support your documentation, how it compares to other tools, or anything else you need to know.\n\nThere's nothing like OnKlinic on the market today—and we're here to show you why.\n\nNo jargon. No sales pitch. Just clear, honest answers.",
     sender: 'bot',
     timestamp: new Date().toISOString(),
   },
