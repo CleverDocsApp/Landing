@@ -32,19 +32,19 @@ function App() {
             <div className="mb-8 md:mb-16 animate-slide-up order-2 md:order-1">
               <ChatInterface />
             </div>
-            
+
             <div className="text-center mb-8 md:mb-16 animate-slide-up order-1 md:order-2">
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white mb-4 md:mb-6 relative">
                 You Care, <span className="gradient-text">We Chart</span>
                 <div className="absolute -top-12 -right-12 w-24 h-24 bg-primary opacity-10 rounded-full blur-3xl animate-pulse-slow hidden md:block"></div>
               </h1>
 
-              {/* Bloque de texto con dos líneas separadas */}
-              <div className="w-full text-center">
-                <p className="text-lg md:text-xl lg:text-2xl text-gray-200 max-w-3xl mx-auto leading-relaxed mb-2">
+              {/* Bloque de texto actualizado */}
+              <div className="hero-intro-text">
+                <p className="text-lg md:text-xl lg:text-2xl text-gray-200 max-w-3xl mx-auto leading-relaxed">
                   The intelligent assistant that helps you chart faster—without compromising clinical quality.
                 </p>
-                <p className="italic text-lg md:text-xl lg:text-2xl text-gray-200 max-w-3xl mx-auto leading-relaxed">
+                <p className="italic-line text-lg md:text-xl lg:text-2xl text-gray-200 max-w-3xl mx-auto leading-relaxed">
                   <span style={{ color: '#20BDAA', fontWeight: 'bold' }}>
                     Built for mental health professionals
                   </span>{' '}
@@ -53,7 +53,7 @@ function App() {
               </div>
             </div>
           </div>
-          
+
           <div className="flex flex-col md:flex-row justify-center gap-6 md:gap-24 text-center animate-fade-in mt-8 md:mt-0">
             <div className="flex flex-col items-center">
               <span className="text-4xl md:text-5xl font-bold text-primary mb-2 gradient-text">10+</span>
@@ -69,7 +69,7 @@ function App() {
             </div>
           </div>
         </div>
-        
+
         <div className="bg-white">
           <WhySection />
           <TestimonialsSection />
