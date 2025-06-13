@@ -149,25 +149,65 @@
   box-shadow: 0 4px 16px rgba(32, 189, 170, 0.1);
 }
 
-/* Avatar bot */
+/* Avatar bot mejorado */
 
 .avatar {
-  width: 40px;
-  height: 40px;
-  background-color: #DEE6E6;
-  border-radius: 12px;
-  padding: 4px;
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, 
+    rgba(32, 189, 170, 0.15) 0%, 
+    rgba(32, 189, 170, 0.25) 100%);
+  border-radius: 14px;
+  padding: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(32, 189, 170, 0.2);
+  box-shadow: 
+    0 4px 12px rgba(32, 189, 170, 0.3),
+    0 0 20px rgba(32, 189, 170, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(32, 189, 170, 0.3);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.avatar::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 14px;
+  padding: 1px;
+  background: linear-gradient(135deg, 
+    rgba(32, 189, 170, 0.4) 0%, 
+    rgba(32, 189, 170, 0.1) 50%,
+    rgba(255, 255, 255, 0.1) 100%);
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 
+    0 6px 16px rgba(32, 189, 170, 0.4),
+    0 0 30px rgba(32, 189, 170, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .avatar img.chat-avatar {
   width: 100%;
   height: auto;
   object-fit: contain;
-  border-radius: 8px; /* suave, no redondo */
+  border-radius: 10px;
+  filter: brightness(1.1) contrast(1.05);
+  transition: all 0.3s ease;
+}
+
+.avatar:hover img.chat-avatar {
+  filter: brightness(1.2) contrast(1.1);
+  transform: scale(1.02);
 }
 
 /* Indicador de escritura */
