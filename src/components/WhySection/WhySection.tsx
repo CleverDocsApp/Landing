@@ -76,7 +76,7 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange, activeS
             </div>
             <h3 className="text-xl font-semibold mb-4 text-secondary">Save Hours Every Week</h3>
             <p className="text-gray-600 leading-relaxed">
-              Cut documentation time by 50–70%. Get your evenings back. OnKlinic reduces friction across every note, plan, and form, freeing up time for what matters most.
+              Only we understand that documentation time isn't paid time. Cut documentation time by 50–70%. Get your evenings back. OnKlinic reduces friction across every note, plan, and form, freeing up time for what matters most.
             </p>
           </div>
 
