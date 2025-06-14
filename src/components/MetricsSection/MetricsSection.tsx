@@ -9,8 +9,8 @@ interface MetricsSectionProps {
 const metrics = [
   { 
     icon: <Clock size={24} />,
-    value: '12h',
-    label: 'saved/week',
+    value: '12 hours',
+    label: 'saved weekly',
     color: 'bg-gradient-to-br from-primary to-primary-dark'
   },
   {
