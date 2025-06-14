@@ -53,7 +53,7 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({ activeSection }) => {
             Features
           </span>
           <h2 className="section-title mt-4">
-            <span className="ok-highlight">OK</span> Transforms<br />
+            <span className="text-gray-900">OK Transforms</span><br />
             <span className="gradient-text">Clinical Documentation</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
