@@ -76,7 +76,7 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange, activeS
         >
           <div className="explanatory-text-card">
             <p className="explanatory-text">
-              Unlike generic tools, <span className="highlight-brand">OK</span> is purpose-built for mental health documentation.
+              Unlike generic tools, <span className="highlight-brand">OnKlinic</span> is purpose-built for mental health documentation.
             </p>
             <p className="explanatory-text">
               Whether you're in private practice or managing a clinic, <span className="highlight-brand">OK</span> adapts to your needs while ensuring clinical, legal, and ethical standards are met.
