@@ -1,5 +1,5 @@
 import React from 'react';
-import { ClipboardCheck, Link, FileText, Users, BarChart } from 'lucide-react';
+import { ClipboardCheck, Link, FileText, Users, BarChart, FileSearch } from 'lucide-react';
 import './FeaturesSection.css';
 
 interface FeaturesSectionProps {
@@ -10,34 +10,39 @@ const features = [
   {
     icon: <ClipboardCheck size={24} />,
     title: 'Treatment Plan Validator',
-    description: 'Ensures your plans match payer expectations'
+    description: 'Automatically checks that your treatment plans align with payer and Joint Commission standards. Get actionable feedback before submission to avoid denials and rework.'
   },
   {
     icon: <Link size={24} />,
     title: 'Golden Thread Detection',
-    description: 'Keeps narrative coherence from eval to discharge'
+    description: 'Ensures narrative coherence across evaluations, progress notes, and treatment plans. OnKlinic flags missing links so your documentation stays consistent from intake to discharge.'
   },
   {
     icon: <FileText size={24} />,
     title: 'Smart Form Library',
-    description: 'Upload, reuse and auto-fill your own templates'
+    description: 'Upload, reuse, and auto-fill your own templates or EHR forms. OnKlinic adapts to your process so you don\'t have to change how you work.'
   },
   {
     icon: <Users size={24} />,
-    title: 'Multi-user Mode',
-    description: 'Works with teams, directors, and clinical reviewers'
+    title: 'Multi-user Supervision Mode',
+    description: 'Built for clinical supervisors and directors. Gain visibility into notes, plans, and compliance status—while supporting your team in real time.'
   },
   {
     icon: <BarChart size={24} />,
     title: 'Dashboard & Compliance Alerts',
-    description: 'Stay audit-ready, always'
+    description: 'Stay audit-ready with live compliance checks and dashboards that highlight risks before they become problems.'
+  },
+  {
+    icon: <FileSearch size={24} />,
+    title: 'Prior Authorization Optimizer',
+    description: 'Analyze your documentation for insurance readiness and get suggestions to strengthen authorizations before you submit.'
   }
 ];
 
 const FeaturesSection: React.FC<FeaturesSectionProps> = ({ activeSection }) => {
-  // Function to replace "OK" with highlighted version
-  const highlightOK = (text: string) => {
-    return text.replace(/\bOK\b/g, '<span class="ok-highlight">OK</span>');
+  // Function to replace "OnKlinic" with highlighted version
+  const highlightOnKlinic = (text: string) => {
+    return text.replace(/\bOnKlinic\b/g, '<span class="ok-highlight">OnKlinic</span>');
   };
 
   return (
@@ -65,7 +70,7 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({ activeSection }) => {
               <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
               <p 
                 className="text-gray-600"
-                dangerouslySetInnerHTML={{ __html: highlightOK(feature.description) }}
+                dangerouslySetInnerHTML={{ __html: highlightOnKlinic(feature.description) }}
               />
             </div>
           ))}
