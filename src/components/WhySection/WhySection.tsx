@@ -49,7 +49,7 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange, activeS
     >
       <div className="container mx-auto px-4 py-24">
         
-        <div className="text-center mb-20">
+        <div className="text-center mb-12">
           <span className={`section-label ${activeSection === 'why' ? 'active' : ''}`}>
             Why Choose On Klinic?
           </span>
@@ -57,6 +57,18 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange, activeS
             Smart Documentation,<br />
             <span className="text-primary">Clinical Confidence</span>
           </h2>
+        </div>
+
+        {/* Moved explanatory text here with improved styling */}
+        <div className="explanatory-text-container text-center max-w-4xl mx-auto mb-16">
+          <div className="explanatory-text-card">
+            <p className="explanatory-text">
+              Unlike generic tools, <span className="highlight-brand">OnKlinic</span> is purpose-built for mental health documentation.
+            </p>
+            <p className="explanatory-text">
+              Whether you're in private practice or managing a clinic, <span className="highlight-brand">OnKlinic</span> adapts to your needs while ensuring clinical, legal, and ethical standards are met.
+            </p>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
@@ -89,13 +101,6 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange, activeS
               Bring your own electronic forms or those used by your EHR. OnKlinic adapts to your process so you can document your way, not the system's way.
             </p>
           </div>
-        </div>
-
-        <div className="text-center max-w-3xl mx-auto mt-12">
-          <p className="text-gray-700 text-lg leading-relaxed">
-            Unlike generic tools, OnKlinic is purpose-built for mental health documentation. <br />
-            Whether you're in private practice or managing a clinic, OnKlinic adapts to your needs while ensuring clinical, legal, and ethical standards are met.
-          </p>
         </div>
       </div>
     </section>
