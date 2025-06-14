@@ -26,7 +26,7 @@ const metrics = [
   {
     icon: <FileCheck size={24} />,
     value: '70%',
-    subValue: 'documentation auto-completion',
+    subValue: 'Auto-Completion',
     label: 'Let OK handle the repetitive work while you focus on clinical decisions.',
     color: 'bg-gradient-to-br from-purple-400 to-purple-600',
     type: 'mixed'
