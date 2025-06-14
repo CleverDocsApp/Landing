@@ -10,7 +10,7 @@ const metrics = [
   { 
     icon: <Clock size={24} />,
     value: '12h',
-    label: 'saved/week',
+    label: 'recovered weekly for patient care',
     color: 'bg-gradient-to-br from-primary to-primary-dark'
   },
   {
