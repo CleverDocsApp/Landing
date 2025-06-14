@@ -29,6 +29,14 @@
   margin-bottom: 24px;
 }
 
+.footer-logo-img {
+  height: 32px;
+  width: auto;
+  max-width: 160px;
+  object-fit: contain;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
 .logo-icon {
   color: #20BDAA;
 }

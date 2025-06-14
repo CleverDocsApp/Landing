@@ -9,8 +9,12 @@ const Footer: React.FC = () => {
         <div className="footer-top">
           <div className="footer-company">
             <div className="footer-logo">
-              <Activity size={24} className="logo-icon" />
-              <span className="logo-text">On Klinic</span>
+              <img
+                src="/images/logo-default.svg"
+                alt="On Klinic"
+                className="footer-logo-img"
+                style={{ height: '32px', width: 'auto' }}
+              />
             </div>
             <p className="company-desc">
               AI-powered documentation assistant for mental health professionals.
