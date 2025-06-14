@@ -17,6 +17,7 @@ exports.handler = async function(event) {
       },
       body: JSON.stringify({
         query: userMessage,
+        user: "web-user",  // Puedes reemplazar esto por un identificador dinámico si lo prefieres
         response_mode: "blocking"
       })
     });
