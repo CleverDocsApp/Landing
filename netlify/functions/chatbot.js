@@ -1,9 +1,13 @@
 const fetch = require("node-fetch");
 
-exports.handler = async function(event, context) {
+exports.handler = async function(event) {
+  console.log("✅ Function called");
+  console.log("✅ ENV DIFY_API_KEY:", process.env.DIFY_API_KEY ? "OK" : "MISSING");
+
   try {
     const body = JSON.parse(event.body);
     const userMessage = body.message;
+    console.log("📝 User message:", userMessage);
 
     const response = await fetch("https://api.dify.ai/v1/chat-messages", {
       method: "POST",
@@ -14,35 +18,32 @@ exports.handler = async function(event, context) {
       body: JSON.stringify({
         query: userMessage,
         response_mode: "blocking"
-        // Puedes agregar user: "user-id" si deseas rastrear usuarios
       })
     });
 
     const data = await response.json();
-    console.log("🧠 Dify raw response:", JSON.stringify(data));
+    console.log("🌐 Dify response:", JSON.stringify(data));
 
     if (!response.ok) {
-      console.error("❌ Dify API error:", data);
+      console.error("❌ API error:", data);
       return {
         statusCode: response.status,
         body: JSON.stringify({
-          error: "Error from Dify API",
+          error: "API error",
           details: data
         })
       };
     }
 
-    const reply = data?.answer;
-
     return {
       statusCode: 200,
-      body: JSON.stringify({ reply: reply || "⚠️ Dify did not return a valid response." })
+      body: JSON.stringify({ reply: data.answer || "⚠️ Empty response from Dify" })
     };
-  } catch (error) {
-    console.error("❌ Error in chatbot.js:", error);
+  } catch (err) {
+    console.error("❌ Function error:", err);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Server error", details: error.message })
+      body: JSON.stringify({ error: "Server error", details: err.message })
     };
   }
 };
