@@ -88,6 +88,43 @@
   -webkit-text-fill-color: transparent;
 }
 
+/* Apply the same styling as the highlighted OK element */
+.ok-highlight {
+  background: linear-gradient(135deg, #20BDAA 0%, #1AA192 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+  font-size: 1.05em;
+  position: relative;
+  display: inline-block;
+  text-shadow: none;
+}
+
+.ok-highlight::after {
+  content: '';
+  position: absolute;
+  bottom: 1px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #20BDAA 0%, #1AA192 100%);
+  border-radius: 1px;
+  opacity: 0.6;
+  animation: underlineGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes underlineGlow {
+  0% {
+    opacity: 0.4;
+    transform: scaleX(0.8);
+  }
+  100% {
+    opacity: 0.8;
+    transform: scaleX(1);
+  }
+}
+
 @media (max-width: 768px) {
   .metric-main-text {
     font-size: 2rem;

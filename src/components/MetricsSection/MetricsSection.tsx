@@ -39,6 +39,11 @@ const metrics = [
 ];
 
 const MetricsSection: React.FC<MetricsSectionProps> = ({ activeSection }) => {
+  // Function to replace "OK" with highlighted version
+  const highlightOK = (text: string) => {
+    return text.replace(/\bOK\b/g, '<span class="ok-highlight">OK</span>');
+  };
+
   return (
     <section className="metrics-section" data-section="metrics">
       <div className="container mx-auto px-4 py-24">
@@ -75,9 +80,10 @@ const MetricsSection: React.FC<MetricsSectionProps> = ({ activeSection }) => {
                 </div>
               )}
               
-              <div className="text-gray-600 leading-relaxed">
-                {metric.label}
-              </div>
+              <div 
+                className="text-gray-600 leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: highlightOK(metric.label) }}
+              />
             </div>
           ))}
         </div>
