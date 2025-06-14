@@ -37,7 +37,7 @@ const metrics = [
     subValue: 'Smoother supervision',
     label: 'Greater visibility, confidence, and peace of mind in every supervised note.',
     color: 'bg-gradient-to-br from-green-400 to-green-600',
-    type: 'mixed'
+    type: 'single-line'
   }
 ];
 
@@ -76,6 +76,11 @@ const MetricsSection: React.FC<MetricsSectionProps> = ({ activeSection }) => {
                 <div className="metric-value-mixed">
                   <div className="metric-main-text">{metric.value}</div>
                   <div className="metric-sub-text">{metric.subValue}</div>
+                </div>
+              ) : metric.type === 'single-line' ? (
+                <div className="metric-value-single-line">
+                  <div className="metric-main-text">{metric.value}</div>
+                  <div className="metric-sub-text-single">{metric.subValue}</div>
                 </div>
               ) : (
                 <div className="metric-value-standard">
