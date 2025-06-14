@@ -73,7 +73,7 @@
 .metric-sub-text {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #20BDAA;
+  color: #374151; /* Changed to dark gray */
   line-height: 1;
 }
 
