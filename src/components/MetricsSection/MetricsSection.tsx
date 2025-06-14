@@ -9,27 +9,32 @@ interface MetricsSectionProps {
 const metrics = [
   { 
     icon: <Clock size={24} />,
-    value: '12 hours saved weekly',
+    value: '12 hours',
+    subValue: 'saved weekly',
     label: 'On average, professionals using OK recover 12 hours they can dedicate to patient care.',
-    color: 'bg-gradient-to-br from-primary to-primary-dark'
+    color: 'bg-gradient-to-br from-primary to-primary-dark',
+    type: 'mixed' // Special type for the first metric
   },
   {
     icon: <TrendingUp size={24} />,
     value: '+40%',
     label: 'more approvals',
-    color: 'bg-gradient-to-br from-blue-400 to-blue-600'
+    color: 'bg-gradient-to-br from-blue-400 to-blue-600',
+    type: 'standard'
   },
   {
     icon: <FileCheck size={24} />,
     value: '70%',
     label: 'auto-completed',
-    color: 'bg-gradient-to-br from-purple-400 to-purple-600'
+    color: 'bg-gradient-to-br from-purple-400 to-purple-600',
+    type: 'standard'
   },
   {
     icon: <Smile size={24} />,
     value: '84%',
     label: 'less stress',
-    color: 'bg-gradient-to-br from-green-400 to-green-600'
+    color: 'bg-gradient-to-br from-green-400 to-green-600',
+    type: 'standard'
   }
 ];
 
@@ -58,9 +63,18 @@ const MetricsSection: React.FC<MetricsSectionProps> = ({ activeSection }) => {
               <div className={`metric-icon ${metric.color}`}>
                 {metric.icon}
               </div>
-              <div className="text-4xl font-bold text-secondary mb-2 gradient-text">
-                {metric.value}
-              </div>
+              
+              {metric.type === 'mixed' ? (
+                <div className="metric-value-mixed">
+                  <div className="metric-main-text">{metric.value}</div>
+                  <div className="metric-sub-text">{metric.subValue}</div>
+                </div>
+              ) : (
+                <div className="metric-value-standard">
+                  {metric.value}
+                </div>
+              )}
+              
               <div className="text-gray-600 leading-relaxed">
                 {metric.label}
               </div>

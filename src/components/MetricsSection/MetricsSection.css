@@ -50,3 +50,68 @@
 .metric-card:hover .metric-icon {
   transform: scale(1.1) rotate(10deg);
 }
+
+/* Custom styling for the first metric with mixed text sizes */
+.metric-value-mixed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.metric-main-text {
+  font-size: 2.5rem;
+  font-weight: bold;
+  line-height: 1;
+  background: linear-gradient(135deg, #20BDAA 0%, #1AA192 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.metric-sub-text {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #20BDAA;
+  line-height: 1;
+}
+
+/* For other metrics that use the standard single value */
+.metric-value-standard {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #20BDAA 0%, #1AA192 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@media (max-width: 768px) {
+  .metric-main-text {
+    font-size: 2rem;
+  }
+  
+  .metric-sub-text {
+    font-size: 1rem;
+  }
+  
+  .metric-value-standard {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .metric-main-text {
+    font-size: 1.75rem;
+  }
+  
+  .metric-sub-text {
+    font-size: 0.875rem;
+  }
+  
+  .metric-value-standard {
+    font-size: 1.75rem;
+  }
+}
