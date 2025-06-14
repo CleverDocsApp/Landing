@@ -19,7 +19,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
      {message.sender === 'bot' && (
   <div className="avatar">
     <img
-      src="/images/chat-avatar.svg"
+      src="/images/chat-avatar-inverted.svg"
       alt="On Klinic bot"
       className="chat-avatar"
     />
