@@ -84,7 +84,7 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange, activeS
             <div className="icon-wrapper group-hover:scale-110">
               <TrendingUp size={32} className="text-primary" />
             </div>
-            <h3 className="text-xl font-semibold mb-4 text-secondary">More Approvals</h3>
+            <h3 className="text-xl font-semibold mb-4 text-secondary">Your Form, Your Way</h3>
             <p className="text-gray-600 leading-relaxed">
               Increase insurance approval rates by 30-50% with compliant documentation.
             </p>
