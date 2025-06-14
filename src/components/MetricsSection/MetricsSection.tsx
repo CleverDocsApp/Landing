@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clock, TrendingUp, FileCheck, Smile } from 'lucide-react';
+import { Clock, TrendingUp, FileCheck, Users } from 'lucide-react';
 import './MetricsSection.css';
 
 interface MetricsSectionProps {
@@ -32,11 +32,12 @@ const metrics = [
     type: 'mixed'
   },
   {
-    icon: <Smile size={24} />,
+    icon: <Users size={24} />,
     value: '84%',
-    label: 'less stress',
+    subValue: 'Smoother supervision',
+    label: 'Greater visibility, confidence, and peace of mind in every supervised note.',
     color: 'bg-gradient-to-br from-green-400 to-green-600',
-    type: 'standard'
+    type: 'mixed'
   }
 ];
 
