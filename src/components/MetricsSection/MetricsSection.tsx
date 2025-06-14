@@ -17,7 +17,7 @@ const metrics = [
   },
   {
     icon: <TrendingUp size={24} />,
-    value: '+40%',
+    value: '+65%',
     subValue: 'approval increase',
     label: 'Stronger documentation that helps secure insurance approvals.',
     color: 'bg-gradient-to-br from-blue-400 to-blue-600',
