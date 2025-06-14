@@ -18,9 +18,10 @@ const metrics = [
   {
     icon: <TrendingUp size={24} />,
     value: '+40%',
-    label: 'more approvals',
+    subValue: 'approval rate increase',
+    label: 'Stronger documentation that helps secure insurance approvals.',
     color: 'bg-gradient-to-br from-blue-400 to-blue-600',
-    type: 'standard'
+    type: 'mixed' // Changed to mixed type to match the first metric
   },
   {
     icon: <FileCheck size={24} />,
