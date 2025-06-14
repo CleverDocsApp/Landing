@@ -10,6 +10,7 @@ interface WhySectionProps {
 const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange, activeSection }) => {
   const sectionRef = useRef<HTMLElement>(null);
   const explanatoryTextRef = useRef<HTMLDivElement>(null);
+  const featureCardsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -51,6 +52,37 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange, activeS
     };
   }, [onScrollProgressChange]);
 
+  // Intersection Observer for feature cards animation
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // Add animation class to all feature cards when the container is visible
+            const cards = entry.target.querySelectorAll('.feature-card');
+            cards.forEach((card) => {
+              card.classList.add('animate-in');
+            });
+          }
+        });
+      },
+      {
+        threshold: 0.2, // Trigger when 20% of the container is visible
+        rootMargin: '0px 0px -100px 0px' // Start animation 100px before the element comes into view
+      }
+    );
+
+    if (featureCardsRef.current) {
+      observer.observe(featureCardsRef.current);
+    }
+
+    return () => {
+      if (featureCardsRef.current) {
+        observer.unobserve(featureCardsRef.current);
+      }
+    };
+  }, []);
+
   return (
     <section 
       ref={sectionRef}
@@ -84,8 +116,11 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange, activeS
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-          <div className="feature-card group" data-aos="fade-up" data-aos-delay="0">
+        <div 
+          ref={featureCardsRef}
+          className="grid grid-cols-1 md:grid-cols-3 gap-12"
+        >
+          <div className="feature-card group">
             <div className="icon-wrapper group-hover:scale-110">
               <CheckCircle size={32} className="text-primary" />
             </div>
@@ -95,7 +130,7 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange, activeS
             </p>
           </div>
 
-          <div className="feature-card group" data-aos="fade-up" data-aos-delay="100">
+          <div className="feature-card group">
             <div className="icon-wrapper group-hover:scale-110">
               <Clock size={32} className="text-primary" />
             </div>
@@ -105,7 +140,7 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange, activeS
             </p>
           </div>
 
-          <div className="feature-card group" data-aos="fade-up" data-aos-delay="200">
+          <div className="feature-card group">
             <div className="icon-wrapper group-hover:scale-110">
               <TrendingUp size={32} className="text-primary" />
             </div>
