@@ -15,12 +15,12 @@ const features = [
   {
     icon: <Link size={24} />,
     title: 'Golden Thread Detection',
-    description: 'Ensures narrative coherence across evaluations, progress notes, and treatment plans. OnKlinic flags missing links so your documentation stays consistent from intake to discharge.'
+    description: 'Ensures narrative coherence across evaluations, progress notes, and treatment plans. OK flags missing links so your documentation stays consistent from intake to discharge.'
   },
   {
     icon: <FileText size={24} />,
     title: 'Smart Form Library',
-    description: 'Upload, reuse, and auto-fill your own templates or EHR forms. OnKlinic adapts to your process so you don\'t have to change how you work.'
+    description: 'Upload, reuse, and auto-fill your own templates or EHR forms. OK adapts to your process so you don\'t have to change how you work.'
   },
   {
     icon: <Users size={24} />,
@@ -40,9 +40,9 @@ const features = [
 ];
 
 const FeaturesSection: React.FC<FeaturesSectionProps> = ({ activeSection }) => {
-  // Function to replace "OnKlinic" with highlighted version
-  const highlightOnKlinic = (text: string) => {
-    return text.replace(/\bOnKlinic\b/g, '<span class="ok-highlight">OnKlinic</span>');
+  // Function to replace "OK" with highlighted version
+  const highlightOK = (text: string) => {
+    return text.replace(/\bOK\b/g, '<span class="ok-highlight">OK</span>');
   };
 
   return (
@@ -53,7 +53,7 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({ activeSection }) => {
             Features
           </span>
           <h2 className="section-title mt-4">
-            <span className="ok-highlight">On Klinic</span> Transforms<br />
+            <span className="ok-highlight">OK</span> Transforms<br />
             <span className="gradient-text">Clinical Documentation</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
@@ -70,7 +70,7 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({ activeSection }) => {
               <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
               <p 
                 className="text-gray-600"
-                dangerouslySetInnerHTML={{ __html: highlightOnKlinic(feature.description) }}
+                dangerouslySetInnerHTML={{ __html: highlightOK(feature.description) }}
               />
             </div>
           ))}
