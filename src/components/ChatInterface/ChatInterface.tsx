@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Send } from 'lucide-react';
 import ChatMessage from './ChatMessage';
 import ChatOptions from './ChatOptions';
+import TypingIndicator from './TypingIndicator';
 import { Message, Option } from '../../types/chat';
 import './ChatInterface.css';
 
@@ -128,11 +129,7 @@ const ChatInterface: React.FC = () => {
         {messages.map((msg) => (
           <ChatMessage key={msg.id} message={msg} />
         ))}
-        {isTyping && (
-          <div className="chat-message bot">
-            🟢 On Klinic is typing...
-          </div>
-        )}
+        {isTyping && <TypingIndicator />}
       </div>
 
       <div className="chat-input">
