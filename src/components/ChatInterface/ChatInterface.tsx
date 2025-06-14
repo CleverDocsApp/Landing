@@ -8,7 +8,7 @@ import './ChatInterface.css';
 const initialMessages: Message[] = [
   {
     id: '1',
-    text: "Have questions about OnKlinic?\n\nAsk how it can support your documentation, how it compares to other tools, or anything else you need to know.\n\n**There's nothing like OnKlinic on the market today** and we're here to show you why.\n\nNo jargon. No sales pitch. Just clear, honest answers.",
+    text: "Have questions about OK?\n\nAsk how it can support your documentation, how it compares to other tools, or anything else you need to know.\n\n**There's nothing like OK on the market today** and we're here to show you why.\n\nNo jargon. No sales pitch. Just clear, honest answers.",
     sender: 'bot',
     timestamp: new Date().toISOString(),
   },
@@ -17,23 +17,23 @@ const initialMessages: Message[] = [
 const exampleQuestions: Option[] = [
   {
     id: 'q1',
-    text: 'How does OnKlinic help with compliance?',
-    value: 'How does OnKlinic help with compliance?'
+    text: 'How does OK help with compliance?',
+    value: 'How does OK help with compliance?'
   },
   {
     id: 'q2',
-    text: 'Does OnKlinic support Joint Commission documentation standards?',
-    value: 'Does OnKlinic support Joint Commission documentation standards?'
+    text: 'Does OK support Joint Commission documentation standards?',
+    value: 'Does OK support Joint Commission documentation standards?'
   },
   {
     id: 'q3',
-    text: 'What makes OnKlinic different from other AI tools?',
-    value: 'What makes OnKlinic different from other AI tools?'
+    text: 'What makes OK different from other AI tools?',
+    value: 'What makes OK different from other AI tools?'
   },
   {
     id: 'q4',
-    text: 'Is OnKlinic suitable for solo providers or only for clinics?',
-    value: 'Is OnKlinic suitable for solo providers or only for clinics?'
+    text: 'Is OK suitable for solo providers or only for clinics?',
+    value: 'Is OK suitable for solo providers or only for clinics?'
   },
   {
     id: 'q5',
@@ -130,7 +130,7 @@ const ChatInterface: React.FC = () => {
         ))}
         {isTyping && (
           <div className="chat-message bot">
-            🟢 On Klinic is typing...
+            🟢 OK is typing...
           </div>
         )}
       </div>
