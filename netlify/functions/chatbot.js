@@ -16,8 +16,10 @@ exports.handler = async function(event) {
         Authorization: `Bearer ${process.env.DIFY_API_KEY}`
       },
       body: JSON.stringify({
-        query: userMessage,
-        user: "web-user",  // Puedes reemplazar esto por un identificador dinámico si lo prefieres
+        inputs: {
+          query: userMessage,
+          user: "web-user" // O genera un ID dinámico si lo prefieres
+        },
         response_mode: "blocking"
       })
     });
