@@ -11,7 +11,6 @@ const TypingIndicator: React.FC = () => {
             alt="On Klinic"
             className="typing-avatar-img"
           />
-          <div className="avatar-pulse"></div>
         </div>
         
         <div className="typing-content">
@@ -27,22 +26,7 @@ const TypingIndicator: React.FC = () => {
               <div className="wave-dot"></div>
               <div className="wave-dot"></div>
             </div>
-            
-            <div className="neural-network">
-              <div className="neural-node"></div>
-              <div className="neural-node"></div>
-              <div className="neural-node"></div>
-              <div className="neural-connection"></div>
-              <div className="neural-connection"></div>
-            </div>
           </div>
-        </div>
-        
-        <div className="thinking-particles">
-          <div className="particle"></div>
-          <div className="particle"></div>
-          <div className="particle"></div>
-          <div className="particle"></div>
         </div>
       </div>
     </div>
