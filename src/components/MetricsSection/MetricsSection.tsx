@@ -33,7 +33,7 @@ const metrics = [
   },
   {
     icon: <Users size={24} />,
-    value: '84%',
+    value: '+84%',
     subValue: 'Smoother supervision',
     label: 'Greater visibility, confidence, and peace of mind in every supervised note.',
     color: 'bg-gradient-to-br from-green-400 to-green-600',
