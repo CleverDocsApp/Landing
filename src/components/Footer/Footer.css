@@ -30,9 +30,9 @@
 }
 
 .footer-logo-img {
-  height: 32px;
+  height: 48px;
   width: auto;
-  max-width: 160px;
+  max-width: 200px;
   object-fit: contain;
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
@@ -189,5 +189,10 @@
     flex-direction: column;
     gap: 24px;
     text-align: center;
+  }
+  
+  .footer-logo-img {
+    height: 40px;
+    max-width: 180px;
   }
 }

@@ -13,7 +13,7 @@ const Footer: React.FC = () => {
                 src="/images/logo-default.svg"
                 alt="On Klinic"
                 className="footer-logo-img"
-                style={{ height: '32px', width: 'auto' }}
+                style={{ height: '48px', width: 'auto' }}
               />
             </div>
             <p className="company-desc">
