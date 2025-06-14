@@ -4,7 +4,7 @@ import ChatInterface from './components/ChatInterface/ChatInterface';
 import WhySection from './components/WhySection/WhySection';
 import TestimonialsSection from './components/TestimonialsSection/TestimonialsSection';
 import MetricsSection from './components/MetricsSection/MetricsSection';
-import FeaturesSection from './components/FeaturesSection/FeaturesSection';
+import FeaturesCarousel from './components/FeaturesCarousel/FeaturesCarousel';
 import PricingTeaser from './components/PricingTeaser/PricingTeaser';
 import Footer from './components/Footer/Footer';
 
@@ -156,7 +156,7 @@ function App() {
         <WhySection onScrollProgressChange={handleWhySectionScroll} activeSection={activeSection} />
         <TestimonialsSection activeSection={activeSection} />
         <MetricsSection activeSection={activeSection} />
-        <FeaturesSection activeSection={activeSection} />
+        <FeaturesCarousel />
         <PricingTeaser activeSection={activeSection} />
       </main>
       <Footer />
