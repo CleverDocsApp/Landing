@@ -15,14 +15,14 @@ exports.handler = async function(event) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${process.env.DIFY_API_KEY}`
       },
-body: JSON.stringify({
-  inputs: {
-    query: userMessage
-  },
-  user: "web-user",
-  response_mode: "blocking"
-})
-
+      body: JSON.stringify({
+        inputs: {
+          query: userMessage
+        },
+        user: "web-user",
+        response_mode: "blocking"
+      })
+    });
 
     const data = await response.json();
     console.log("🌐 Dify response:", JSON.stringify(data));
