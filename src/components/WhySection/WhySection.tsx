@@ -86,7 +86,7 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange, activeS
             </div>
             <h3 className="text-xl font-semibold mb-4 text-secondary">Your Form, Your Way</h3>
             <p className="text-gray-600 leading-relaxed">
-              Increase insurance approval rates by 30-50% with compliant documentation.
+              Bring your own electronic forms or those used by your EHR. OnKlinic adapts to your process—so you can document your way, not the system's way.
             </p>
           </div>
         </div>
