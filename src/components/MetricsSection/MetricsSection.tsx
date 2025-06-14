@@ -9,8 +9,8 @@ interface MetricsSectionProps {
 const metrics = [
   { 
     icon: <Clock size={24} />,
-    value: '12 hours',
-    label: 'saved weekly',
+    value: '12 hours saved weekly',
+    label: 'On average, professionals using OK recover 12 hours they can dedicate to patient care.',
     color: 'bg-gradient-to-br from-primary to-primary-dark'
   },
   {
