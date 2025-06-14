@@ -78,10 +78,6 @@
   mask-composite: exclude;
 }
 
-.feature-card:hover .icon-wrapper {
-  transform: scale(1.1) rotate(10deg);
-}
-
 /* New styles for the explanatory text - SCROLL TRIGGERED */
 .explanatory-text-container {
   /* Start hidden and positioned below */
