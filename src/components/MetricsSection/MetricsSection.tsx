@@ -13,7 +13,7 @@ const metrics = [
     subValue: 'saved weekly',
     label: 'On average, professionals using OK recover 12 hours they can dedicate to patient care.',
     color: 'bg-gradient-to-br from-primary to-primary-dark',
-    type: 'mixed' // Special type for the first metric
+    type: 'mixed'
   },
   {
     icon: <TrendingUp size={24} />,
@@ -21,14 +21,15 @@ const metrics = [
     subValue: 'approval rate increase',
     label: 'Stronger documentation that helps secure insurance approvals.',
     color: 'bg-gradient-to-br from-blue-400 to-blue-600',
-    type: 'mixed' // Changed to mixed type to match the first metric
+    type: 'mixed'
   },
   {
     icon: <FileCheck size={24} />,
     value: '70%',
-    label: 'auto-completed',
+    subValue: 'documentation auto-completion',
+    label: 'Let OK handle the repetitive work while you focus on clinical decisions.',
     color: 'bg-gradient-to-br from-purple-400 to-purple-600',
-    type: 'standard'
+    type: 'mixed'
   },
   {
     icon: <Smile size={24} />,
