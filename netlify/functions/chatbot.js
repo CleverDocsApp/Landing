@@ -16,9 +16,7 @@ exports.handler = async function(event) {
         Authorization: `Bearer ${process.env.DIFY_API_KEY}`
       },
       body: JSON.stringify({
-        inputs: {
-          query: userMessage
-        },
+        query: userMessage,
         user: "web-user",
         response_mode: "blocking"
       })
