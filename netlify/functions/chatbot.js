@@ -12,9 +12,9 @@ exports.handler = async function(event, context) {
         Authorization: `Bearer ${process.env.DIFY_API_KEY}`
       },
       body: JSON.stringify({
-        inputs: {
-          query: userMessage
-        }
+        query: userMessage,
+        response_mode: "blocking"
+        // Puedes agregar user: "user-id" si deseas rastrear usuarios
       })
     });
 
