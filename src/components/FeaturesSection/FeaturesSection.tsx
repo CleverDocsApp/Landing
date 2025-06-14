@@ -35,6 +35,11 @@ const features = [
 ];
 
 const FeaturesSection: React.FC<FeaturesSectionProps> = ({ activeSection }) => {
+  // Function to replace "OK" with highlighted version
+  const highlightOK = (text: string) => {
+    return text.replace(/\bOK\b/g, '<span class="ok-highlight">OK</span>');
+  };
+
   return (
     <section className="features-section" id="features" data-section="features">
       <div className="container mx-auto px-4 py-24">
@@ -43,7 +48,7 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({ activeSection }) => {
             Features
           </span>
           <h2 className="section-title mt-4">
-            <span>On Klinic</span> Transforms<br />
+            <span className="ok-highlight">On Klinic</span> Transforms<br />
             <span className="gradient-text">Clinical Documentation</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
@@ -58,7 +63,10 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({ activeSection }) => {
                 {feature.icon}
               </div>
               <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
-              <p className="text-gray-600">{feature.description}</p>
+              <p 
+                className="text-gray-600"
+                dangerouslySetInnerHTML={{ __html: highlightOK(feature.description) }}
+              />
             </div>
           ))}
         </div>
