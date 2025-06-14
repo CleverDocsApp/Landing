@@ -76,10 +76,10 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange, activeS
         >
           <div className="explanatory-text-card">
             <p className="explanatory-text">
-              Unlike generic tools, <span className="highlight-brand">OK</span> is purpose-built for mental health documentation.
+              Unlike generic tools, <span className="highlight-brand">OnKlinic</span> is purpose-built for mental health documentation.
             </p>
             <p className="explanatory-text">
-              Whether you're in private practice or managing a clinic, <span className="highlight-brand">OK</span> adapts to your needs while ensuring clinical, legal, and ethical standards are met.
+              Whether you're in private practice or managing a clinic, <span className="highlight-brand">OnKlinic</span> adapts to your needs while ensuring clinical, legal, and ethical standards are met.
             </p>
           </div>
         </div>
@@ -101,7 +101,7 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange, activeS
             </div>
             <h3 className="text-xl font-semibold mb-4 text-secondary">Save Hours Every Week</h3>
             <p className="text-gray-600 leading-relaxed">
-              Only we understand that documentation time isn't paid time. Cut documentation time by 50–70%. Get your evenings back. OK reduces friction across every note, plan, and form, freeing up time for what matters most.
+              Only we understand that documentation time isn't paid time. Cut documentation time by 50–70%. Get your evenings back. OnKlinic reduces friction across every note, plan, and form, freeing up time for what matters most.
             </p>
           </div>
 
@@ -111,7 +111,7 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange, activeS
             </div>
             <h3 className="text-xl font-semibold mb-4 text-secondary">Your Form, Your Way</h3>
             <p className="text-gray-600 leading-relaxed">
-              Bring your own electronic forms or those used by your EHR. OK adapts to your process so you can document your way, not the system's way.
+              Bring your own electronic forms or those used by your EHR. OnKlinic adapts to your process so you can document your way, not the system's way.
             </p>
           </div>
         </div>
