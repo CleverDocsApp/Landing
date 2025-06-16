@@ -68,11 +68,11 @@ exports.handler = async function(event) {
     const runId = runData.id;
     console.log("🏃 Run started ID:", runId);
 
-    // Paso 4: Polling limitado
+    // Paso 4: Polling extendido para Netlify Pro
     let output = null;
     let completed = false;
     let tries = 0;
-    const maxTries = 7; // Espera máx ~7 segundos (ajusta si tu función permite más)
+    const maxTries = 20; // ~20s polling
     while (!completed && tries < maxTries) {
       const checkRes = await fetch(`https://api.openai.com/v1/threads/${threadId}/runs/${runId}`, {
         headers: commonHeaders
@@ -98,7 +98,7 @@ exports.handler = async function(event) {
 
       if (!completed) {
         tries++;
-        await new Promise(r => setTimeout(r, 1000)); // Esperar 1 segundo
+        await new Promise(r => setTimeout(r, 1000)); // 1s entre intentos
       }
     }
 
