@@ -31,7 +31,7 @@ exports.handler = async function(event) {
     const threadId = threadData.id;
     console.log("🧵 Created thread ID:", threadId);
 
-    // Paso 2: Agregar mensaje del usuario
+    // Paso 2: Agregar mensaje
     const msgRes = await fetch(`https://api.openai.com/v1/threads/${threadId}/messages`, {
       method: "POST",
       headers: commonHeaders,
@@ -68,10 +68,12 @@ exports.handler = async function(event) {
     const runId = runData.id;
     console.log("🏃 Run started ID:", runId);
 
-    // Paso 4: Polling para el run
+    // Paso 4: Polling limitado
     let output = null;
     let completed = false;
-    while (!completed) {
+    let tries = 0;
+    const maxTries = 7; // Espera máx ~7 segundos (ajusta si tu función permite más)
+    while (!completed && tries < maxTries) {
       const checkRes = await fetch(`https://api.openai.com/v1/threads/${threadId}/runs/${runId}`, {
         headers: commonHeaders
       });
@@ -95,8 +97,19 @@ exports.handler = async function(event) {
       }
 
       if (!completed) {
-        await new Promise(r => setTimeout(r, 1000)); // Esperar 1 segundo antes de reintentar
+        tries++;
+        await new Promise(r => setTimeout(r, 1000)); // Esperar 1 segundo
       }
+    }
+
+    if (!completed) {
+      console.warn("⚠ Run still in progress, returning wait message");
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          reply: "OnKlinic is preparing your response. Please try again in a few seconds."
+        })
+      };
     }
 
     console.log("🌐 OpenAI response:", output);
