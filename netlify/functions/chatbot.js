@@ -1,13 +1,14 @@
 const fetch = require("node-fetch");
 
 exports.handler = async function(event) {
-  console.log("✅ Function called");
+  console.log("✅ Function called: chatbot");
   console.log("✅ ENV OPENAI_API_KEY:", process.env.OPENAI_API_KEY ? "OK" : "MISSING");
   console.log("✅ ENV OPENAI_ASSISTANT_ID:", process.env.OPENAI_ASSISTANT_ID ? "OK" : "MISSING");
 
   try {
-    const { message: userMessage } = JSON.parse(event.body);
+    const { message: userMessage, thread_id } = JSON.parse(event.body);
     console.log("📝 User message:", userMessage);
+    console.log("🧵 Using thread ID:", thread_id);
 
     const commonHeaders = {
       "Content-Type": "application/json",
@@ -15,24 +16,8 @@ exports.handler = async function(event) {
       "OpenAI-Beta": "assistants=v2"
     };
 
-    // Paso 1: Crear thread
-    const threadRes = await fetch("https://api.openai.com/v1/threads", {
-      method: "POST",
-      headers: commonHeaders
-    });
-    const threadData = await threadRes.json();
-    if (!threadRes.ok) {
-      console.error("❌ Thread creation error:", threadData);
-      return {
-        statusCode: threadRes.status,
-        body: JSON.stringify({ error: "Error creating thread", details: threadData })
-      };
-    }
-    const threadId = threadData.id;
-    console.log("🧵 Created thread ID:", threadId);
-
-    // Paso 2: Agregar mensaje
-    const msgRes = await fetch(`https://api.openai.com/v1/threads/${threadId}/messages`, {
+    // Add message to thread
+    const msgRes = await fetch(`https://api.openai.com/v1/threads/${thread_id}/messages`, {
       method: "POST",
       headers: commonHeaders,
       body: JSON.stringify({
@@ -42,15 +27,15 @@ exports.handler = async function(event) {
     });
     const msgData = await msgRes.json();
     if (!msgRes.ok) {
-      console.error("❌ Message error:", msgData);
+      console.error("❌ Error adding message:", msgData);
       return {
         statusCode: msgRes.status,
         body: JSON.stringify({ error: "Error adding message", details: msgData })
       };
     }
 
-    // Paso 3: Iniciar run
-    const runRes = await fetch(`https://api.openai.com/v1/threads/${threadId}/runs`, {
+    // Start run
+    const runRes = await fetch(`https://api.openai.com/v1/threads/${thread_id}/runs`, {
       method: "POST",
       headers: commonHeaders,
       body: JSON.stringify({
@@ -59,37 +44,36 @@ exports.handler = async function(event) {
     });
     const runData = await runRes.json();
     if (!runRes.ok) {
-      console.error("❌ Run start error:", runData);
+      console.error("❌ Error starting run:", runData);
       return {
         statusCode: runRes.status,
         body: JSON.stringify({ error: "Error starting run", details: runData })
       };
     }
-    const runId = runData.id;
-    console.log("🏃 Run started ID:", runId);
 
-    // Paso 4: Polling extendido para Netlify Pro
-    let output = null;
+    const runId = runData.id;
+
+    // Polling
     let completed = false;
     let tries = 0;
-    const maxTries = 20; // ~20s polling
+    const maxTries = 20; // ~20 seconds
+    let output = null;
+
     while (!completed && tries < maxTries) {
-      const checkRes = await fetch(`https://api.openai.com/v1/threads/${threadId}/runs/${runId}`, {
+      const checkRes = await fetch(`https://api.openai.com/v1/threads/${thread_id}/runs/${runId}`, {
         headers: commonHeaders
       });
       const checkData = await checkRes.json();
 
       if (checkData.status === "completed") {
         completed = true;
-        console.log("✅ Run completed");
-
-        const messagesRes = await fetch(`https://api.openai.com/v1/threads/${threadId}/messages`, {
+        const messagesRes = await fetch(`https://api.openai.com/v1/threads/${thread_id}/messages`, {
           headers: commonHeaders
         });
         const messagesData = await messagesRes.json();
         output = messagesData.data[0]?.content[0]?.text?.value || "No response generated.";
       } else if (checkData.status === "failed") {
-        console.error("❌ Run failed");
+        console.error("❌ Run failed:", checkData);
         return {
           statusCode: 500,
           body: JSON.stringify({ error: "Run failed", details: checkData })
@@ -98,12 +82,11 @@ exports.handler = async function(event) {
 
       if (!completed) {
         tries++;
-        await new Promise(r => setTimeout(r, 1000)); // 1s entre intentos
+        await new Promise(r => setTimeout(r, 1000));
       }
     }
 
     if (!completed) {
-      console.warn("⚠ Run still in progress, returning wait message");
       return {
         statusCode: 200,
         body: JSON.stringify({
@@ -112,15 +95,13 @@ exports.handler = async function(event) {
       };
     }
 
-    console.log("🌐 OpenAI response:", output);
-
     return {
       statusCode: 200,
       body: JSON.stringify({ reply: output })
     };
 
   } catch (err) {
-    console.error("❌ Function error:", err);
+    console.error("❌ Server error:", err);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: "Server error", details: err.message })
