@@ -9,13 +9,16 @@ exports.handler = async function(event) {
     const { message: userMessage } = JSON.parse(event.body);
     console.log("📝 User message:", userMessage);
 
+    const commonHeaders = {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
+      "OpenAI-Beta": "assistants=v2"
+    };
+
     // Paso 1: Crear thread
     const threadRes = await fetch("https://api.openai.com/v1/threads", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
-      }
+      headers: commonHeaders
     });
     const threadData = await threadRes.json();
     if (!threadRes.ok) {
@@ -31,10 +34,7 @@ exports.handler = async function(event) {
     // Paso 2: Agregar mensaje del usuario
     const msgRes = await fetch(`https://api.openai.com/v1/threads/${threadId}/messages`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
-      },
+      headers: commonHeaders,
       body: JSON.stringify({
         role: "user",
         content: userMessage
@@ -52,10 +52,7 @@ exports.handler = async function(event) {
     // Paso 3: Iniciar run
     const runRes = await fetch(`https://api.openai.com/v1/threads/${threadId}/runs`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
-      },
+      headers: commonHeaders,
       body: JSON.stringify({
         assistant_id: process.env.OPENAI_ASSISTANT_ID
       })
@@ -76,9 +73,7 @@ exports.handler = async function(event) {
     let completed = false;
     while (!completed) {
       const checkRes = await fetch(`https://api.openai.com/v1/threads/${threadId}/runs/${runId}`, {
-        headers: {
-          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
-        }
+        headers: commonHeaders
       });
       const checkData = await checkRes.json();
 
@@ -87,9 +82,7 @@ exports.handler = async function(event) {
         console.log("✅ Run completed");
 
         const messagesRes = await fetch(`https://api.openai.com/v1/threads/${threadId}/messages`, {
-          headers: {
-            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
-          }
+          headers: commonHeaders
         });
         const messagesData = await messagesRes.json();
         output = messagesData.data[0]?.content[0]?.text?.value || "No response generated.";
@@ -102,7 +95,7 @@ exports.handler = async function(event) {
       }
 
       if (!completed) {
-        await new Promise(r => setTimeout(r, 1000)); // Esperar 1s antes de chequear otra vez
+        await new Promise(r => setTimeout(r, 1000)); // Esperar 1 segundo antes de reintentar
       }
     }
 
