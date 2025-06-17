@@ -121,12 +121,11 @@ const PricingTeaser: React.FC<PricingTeaserProps> = ({ activeSection }) => {
             <div className="pricing-features">
               <p className="feature-title">Everything in Prelude, plus:</p>
               <ul>
-                <li><Check size={16} /> Unlimited clinical notes & plans</li>
-                <li><Check size={16} /> Real-time Legal compliance checks</li>
+                <li><Check size={16} /> Unlimited documentation</li>
+                <li><Check size={16} /> Real-time legal compliance checks</li>
                 <li><Check size={16} /> Prior Authorization optimization</li>
-                <li><Check size={16} /> Smart DSM-5 diagnostic suggestions</li>
-                <li><Check size={16} /> Personal Golden Thread maintenance</li>
-                <li><Check size={16} /> Intelligent Forms adaptation</li>
+                <li><Check size={16} /> Smart ICD-10 diagnostic suggestions</li>
+                <li><Check size={16} /> Personalized Golden Thread maintenance</li>
                 <li><Check size={16} /> Export-ready for any EHR</li>
               </ul>
             </div>
