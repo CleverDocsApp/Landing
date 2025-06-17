@@ -4,20 +4,26 @@ import { Option } from '../../types/chat';
 interface ChatOptionsProps {
   options: Option[];
   onSelect: (option: Option) => void;
+  askedQuestionsIds: Set<string>;
 }
 
-const ChatOptions: React.FC<ChatOptionsProps> = ({ options, onSelect }) => {
+const ChatOptions: React.FC<ChatOptionsProps> = ({ options, onSelect, askedQuestionsIds }) => {
   return (
     <div className="chat-options">
-      {options.map((option) => (
-        <button 
-          key={option.id} 
-          className="option-button"
-          onClick={() => onSelect(option)}
-        >
-          {option.text}
-        </button>
-      ))}
+      {options.map((option) => {
+        const isAsked = askedQuestionsIds.has(option.id);
+        return (
+          <button 
+            key={option.id} 
+            className={`option-button ${isAsked ? 'asked-question' : ''}`}
+            onClick={() => !isAsked && onSelect(option)}
+            disabled={isAsked}
+            title={isAsked ? 'Already asked' : option.text}
+          >
+            {option.text}
+          </button>
+        );
+      })}
     </div>
   );
 };

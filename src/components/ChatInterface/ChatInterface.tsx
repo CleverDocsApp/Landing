@@ -49,6 +49,7 @@ const ChatInterface: React.FC = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(true);
   const [showSuggestionsButton, setShowSuggestionsButton] = useState(false);
+  const [askedQuestionsIds, setAskedQuestionsIds] = useState<Set<string>>(new Set());
   const [threadId, setThreadId] = useState<string | null>(localStorage.getItem('onklinicThreadId'));
 
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
@@ -74,7 +75,7 @@ const ChatInterface: React.FC = () => {
     }
   }, [threadId]);
 
-  const handleSend = async (messageToSend?: string) => {
+  const handleSend = async (messageToSend?: string, optionId?: string) => {
     const messageText = messageToSend || input.trim();
     if (!messageText) return;
 
@@ -90,6 +91,11 @@ const ChatInterface: React.FC = () => {
     setIsTyping(true);
     setShowSuggestions(false);
     setShowSuggestionsButton(true);
+
+    // Mark question as asked if it came from a suggestion
+    if (optionId) {
+      setAskedQuestionsIds(prev => new Set([...prev, optionId]));
+    }
 
     if (!threadId) {
       console.error("Thread ID is missing, cannot send message.");
@@ -159,7 +165,7 @@ const ChatInterface: React.FC = () => {
   };
 
   const handleOptionSelect = (option: Option) => {
-    handleSend(option.text);
+    handleSend(option.text, option.id);
   };
 
   const handleShowSuggestions = () => {
@@ -223,7 +229,8 @@ const ChatInterface: React.FC = () => {
       {showSuggestions && (
         <ChatOptions 
           options={exampleQuestions} 
-          onSelect={handleOptionSelect} 
+          onSelect={handleOptionSelect}
+          askedQuestionsIds={askedQuestionsIds}
         />
       )}
     </div>
