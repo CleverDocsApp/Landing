@@ -206,6 +206,43 @@
   color: #1AA192;
 }
 
+/* Estilo para hipervínculos en el chat */
+.chat-hyperlink {
+  color: #20BDAA;
+  text-decoration: none;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(32, 189, 170, 0.3);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.chat-hyperlink:hover {
+  color: #1AA192;
+  border-bottom-color: #1AA192;
+  background: rgba(32, 189, 170, 0.1);
+  padding: 2px 4px;
+  border-radius: 4px;
+  transform: translateY(-1px);
+}
+
+.chat-hyperlink:active {
+  transform: translateY(0);
+}
+
+/* Estilo para menciones de marca (OnKlinic, OK) */
+.brand-mention {
+  color: #20BDAA;
+  font-weight: 700;
+  position: relative;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.brand-mention:hover {
+  color: #1AA192;
+  transform: scale(1.05);
+}
+
 /* Avatar bot mejorado */
 
 .avatar {
