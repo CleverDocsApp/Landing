@@ -100,15 +100,14 @@ const ChatInterface: React.FC = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: messageText
+          message: messageText,
+          thread_id: threadId
         }),
       });
 
       const data = await res.json();
 
       if (data.thread_id && data.run_id) {
-        setThreadId(data.thread_id);
-        localStorage.setItem('onklinicThreadId', data.thread_id);
         await pollForResponse(data.thread_id, data.run_id);
       } else {
         throw new Error("Could not start chat run.");
@@ -130,7 +129,7 @@ const ChatInterface: React.FC = () => {
     let completed = false;
 
     while (!completed) {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Polling cada 1 segundo
 
       const res = await fetch('/.netlify/functions/check-run', {
         method: 'POST',
