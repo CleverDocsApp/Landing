@@ -88,12 +88,12 @@ const PricingTeaser: React.FC<PricingTeaserProps> = ({ activeSection }) => {
               <p className="feature-title">Included features:</p>
               <ul>
                 <li><Check size={16} /> Up to 10 fully compliant clinical notes</li>
-                <li><Check size={16} /> HIPAA compliance validation</li>
-                <li><Check size={16} /> Smart DSM-5 diagnostic suggestions</li>
-                <li><Check size={16} /> Recommended clinical assessments</li>
-                <li><Check size={16} /> Personal Golden Thread</li>
-                <li><Check size={16} /> Prior Authorization Optimizer</li>
-                <li><Check size={16} /> Intelligent Forms adaptation</li>
+                <li><Check size={16} /> HIPAA compliance validation built in</li>
+                <li><Check size={16} /> Smart ICD-10 diagnostic suggestions</li>
+                <li><Check size={16} /> Recommended clinical assessments based on documentation</li>
+                <li><Check size={16} /> Your personalized Golden Thread for consistent notes</li>
+                <li><Check size={16} /> Prior Authorization Optimizer to strengthen submissions</li>
+                <li><Check size={16} /> Intelligent forms that adapt to your documentation style</li>
               </ul>
             </div>
             
