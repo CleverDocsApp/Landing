@@ -243,6 +243,27 @@
   transform: scale(1.05);
 }
 
+/* Override green styling for user messages */
+.user-message .chat-message-bold,
+.user-message .brand-mention {
+  color: white !important;
+}
+
+.user-message .chat-hyperlink {
+  color: white !important;
+  border-bottom-color: white !important;
+}
+
+.user-message .chat-hyperlink:hover {
+  color: rgba(255, 255, 255, 0.9) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Override green styling for the initial highlighted message */
+.initial-message-special-highlight .brand-mention {
+  color: inherit !important;
+}
+
 /* Avatar bot mejorado */
 
 .avatar {
