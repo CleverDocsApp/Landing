@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send } from 'lucide-react';
+import { Send, MessageSquare } from 'lucide-react';
 import ChatMessage from './ChatMessage';
 import ChatOptions from './ChatOptions';
 import TypingIndicator from './TypingIndicator';
@@ -48,6 +48,7 @@ const ChatInterface: React.FC = () => {
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(true);
+  const [showSuggestionsButton, setShowSuggestionsButton] = useState(false);
   const [threadId, setThreadId] = useState<string | null>(localStorage.getItem('onklinicThreadId'));
 
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
@@ -88,6 +89,7 @@ const ChatInterface: React.FC = () => {
     setInput('');
     setIsTyping(true);
     setShowSuggestions(false);
+    setShowSuggestionsButton(true);
 
     if (!threadId) {
       console.error("Thread ID is missing, cannot send message.");
@@ -160,6 +162,11 @@ const ChatInterface: React.FC = () => {
     handleSend(option.text);
   };
 
+  const handleShowSuggestions = () => {
+    setShowSuggestions(true);
+    setShowSuggestionsButton(false);
+  };
+
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       handleSend();
@@ -170,6 +177,7 @@ const ChatInterface: React.FC = () => {
     setInput(e.target.value);
     if (e.target.value.trim() && showSuggestions) {
       setShowSuggestions(false);
+      setShowSuggestionsButton(true);
     }
   };
 
@@ -198,6 +206,15 @@ const ChatInterface: React.FC = () => {
           onKeyDown={handleKeyPress}
           placeholder="Type your message..."
         />
+        {showSuggestionsButton && (
+          <button 
+            className="show-suggestions-button"
+            onClick={handleShowSuggestions}
+            title="Show suggested questions"
+          >
+            <MessageSquare size={16} />
+          </button>
+        )}
         <button onClick={() => handleSend()}>
           <Send size={18} />
         </button>
