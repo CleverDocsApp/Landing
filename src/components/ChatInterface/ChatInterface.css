@@ -380,34 +380,33 @@
   color: #64748b;
 }
 
-/* Botón discreto para mostrar sugerencias - INVERTED STYLES */
+/* Botón discreto para mostrar sugerencias - MINIMALIST STYLE */
 .show-suggestions-button {
-  background: rgba(100, 116, 139, 0.1);
-  border: 1px solid rgba(100, 116, 139, 0.3);
+  background: transparent;
+  border: 1px solid rgba(156, 163, 175, 0.3);
   border-radius: 50%;
   width: 40px;
   height: 40px;
-  color: #475569;
+  color: #9ca3af;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 8px rgba(100, 116, 139, 0.15);
-  transform: translateY(-1px);
+  box-shadow: none;
 }
 
 .show-suggestions-button:hover {
-  background: rgba(248, 250, 252, 0.9);
-  border-color: rgba(100, 116, 139, 0.2);
-  color: #64748b;
-  transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  background: rgba(156, 163, 175, 0.1);
+  border-color: rgba(156, 163, 175, 0.4);
+  color: #6b7280;
+  transform: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .show-suggestions-button:active {
   transform: translateY(1px);
-  box-shadow: 0 2px 4px rgba(100, 116, 139, 0.2);
+  box-shadow: none;
 }
 
 .chat-input button {
