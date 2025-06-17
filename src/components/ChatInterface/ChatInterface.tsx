@@ -61,7 +61,6 @@ const ChatInterface: React.FC = () => {
 
   useEffect(() => {
     if (!threadId) {
-      // Create a new thread if it doesn't exist
       fetch('/.netlify/functions/create-thread')
         .then(res => res.json())
         .then(data => {
@@ -101,21 +100,20 @@ const ChatInterface: React.FC = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: messageText,
-          thread_id: threadId
+          message: messageText
         }),
       });
 
       const data = await res.json();
 
-      const botMessage: Message = {
-        id: Date.now().toString() + '_bot',
-        text: data.reply || 'Sorry, I had trouble understanding that.',
-        sender: 'bot',
-        timestamp: new Date().toISOString(),
-      };
+      if (data.thread_id && data.run_id) {
+        setThreadId(data.thread_id);
+        localStorage.setItem('onklinicThreadId', data.thread_id);
+        await pollForResponse(data.thread_id, data.run_id);
+      } else {
+        throw new Error("Could not start chat run.");
+      }
 
-      setMessages((prev) => [...prev, botMessage]);
     } catch (error) {
       console.error('Chatbot error:', error);
       setMessages((prev) => [...prev, {
@@ -124,8 +122,38 @@ const ChatInterface: React.FC = () => {
         sender: 'bot',
         timestamp: new Date().toISOString(),
       }]);
-    } finally {
       setIsTyping(false);
+    }
+  };
+
+  const pollForResponse = async (threadId: string, runId: string) => {
+    let completed = false;
+
+    while (!completed) {
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      const res = await fetch('/.netlify/functions/check-run', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          thread_id: threadId,
+          run_id: runId
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.status === 'completed') {
+        const botMessage: Message = {
+          id: Date.now().toString() + '_bot',
+          text: data.reply,
+          sender: 'bot',
+          timestamp: new Date().toISOString(),
+        };
+        setMessages((prev) => [...prev, botMessage]);
+        setIsTyping(false);
+        completed = true;
+      }
     }
   };
 
