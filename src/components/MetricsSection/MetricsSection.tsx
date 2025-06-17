@@ -27,7 +27,7 @@ const metrics = [
     icon: <FileCheck size={24} />,
     value: '+70%',
     subValue: 'Auto-Completion',
-    label: 'Let OK handle the repetitive work so you can focus on clinical decisions.',
+    label: 'Let OK handle the repetitive work so you can focus on clinical decisions. Your attention where it truly counts: on your patients.',
     color: 'bg-gradient-to-br from-purple-400 to-purple-600',
     type: 'mixed'
   },
