@@ -10,7 +10,7 @@ const features = [
   {
     icon: <ClipboardCheck size={24} />,
     title: 'Treatment Plan Validator',
-    description: 'Automatically checks that your treatment plans align with payer and Joint Commission standards. Get actionable feedback before submission to avoid denials and rework.'
+    description: 'Automatically checks that your treatment plans meet payer standards. Get clear, actionable feedback before submission so you can avoid denials and unnecessary rework.'
   },
   {
     icon: <Link size={24} />,
