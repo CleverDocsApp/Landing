@@ -2,8 +2,7 @@ const fetch = require("node-fetch");
 
 exports.handler = async function(event) {
   try {
-    const { message: userMessage, thread_id: threadIdFromClient } = JSON.parse(event.body);
-
+    const { message: userMessage } = JSON.parse(event.body);
     const apiKey = process.env.OPENAI_API_KEY;
     const assistantId = process.env.OPENAI_ASSISTANT_ID;
 
@@ -13,18 +12,15 @@ exports.handler = async function(event) {
       "OpenAI-Beta": "assistants=v2"
     };
 
-    // Crear un thread si no hay uno
-    let threadId = threadIdFromClient;
-    if (!threadId) {
-      const threadRes = await fetch("https://api.openai.com/v1/threads", {
-        method: "POST",
-        headers
-      });
-      const threadData = await threadRes.json();
-      threadId = threadData.id;
-    }
+    // Crear thread
+    const threadRes = await fetch("https://api.openai.com/v1/threads", {
+      method: "POST",
+      headers
+    });
+    const threadData = await threadRes.json();
+    const threadId = threadData.id;
 
-    // Crear el mensaje
+    // Crear mensaje
     await fetch(`https://api.openai.com/v1/threads/${threadId}/messages`, {
       method: "POST",
       headers,
@@ -34,7 +30,7 @@ exports.handler = async function(event) {
       })
     });
 
-    // Lanzar el run
+    // Iniciar run
     const runRes = await fetch(`https://api.openai.com/v1/threads/${threadId}/runs`, {
       method: "POST",
       headers,
@@ -44,34 +40,12 @@ exports.handler = async function(event) {
     });
     const runData = await runRes.json();
 
-    // Polling hasta que termine
-    let completed = false;
-    let responseData = {};
-    while (!completed) {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      const checkRes = await fetch(`https://api.openai.com/v1/threads/${threadId}/runs/${runData.id}`, {
-        method: "GET",
-        headers
-      });
-      const checkData = await checkRes.json();
-      if (checkData.status === "completed") {
-        completed = true;
-        const messagesRes = await fetch(`https://api.openai.com/v1/threads/${threadId}/messages`, {
-          method: "GET",
-          headers
-        });
-        const messagesData = await messagesRes.json();
-        const lastMessage = messagesData.data.find(m => m.role === "assistant");
-        responseData = {
-          reply: lastMessage.content[0].text.value,
-          thread_id: threadId
-        };
-      }
-    }
-
     return {
       statusCode: 200,
-      body: JSON.stringify(responseData)
+      body: JSON.stringify({
+        thread_id: threadId,
+        run_id: runData.id
+      })
     };
 
   } catch (err) {
