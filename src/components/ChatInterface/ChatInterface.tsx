@@ -9,7 +9,7 @@ import './ChatInterface.css';
 const initialMessages: Message[] = [
   {
     id: '1',
-    text: "Have questions about OnKlinic?\n\nAsk how it can support your documentation, how it compares to other tools, or anything else you need to know.\n\n**There's nothing like OnKlinic on the market today** and we're here to show you why.\n\nNo jargon. No sales pitch. Just clear, honest answers.",
+    text: "Have questions about OnKlinic?\n\nAsk how it can support your documentation, how it compares to other tools, or anything else you need to know.\n\n<span class=\"initial-message-special-highlight\">There's nothing like OnKlinic on the market today</span> and we're here to show you why.\n\nNo jargon. No sales pitch. Just clear, honest answers.",
     sender: 'bot',
     timestamp: new Date().toISOString(),
   },

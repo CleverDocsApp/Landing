@@ -8,8 +8,8 @@ interface ChatMessageProps {
 const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   // Función para procesar texto con markdown básico
   const processText = (text: string) => {
-    // Procesar texto en negrita **texto** con un estilo más distintivo
-    const processedText = text.replace(/\*\*(.*?)\*\*/g, '<span class="highlighted-text">$1</span>');
+    // Procesar texto en negrita **texto** con el color verde del logo
+    const processedText = text.replace(/\*\*(.*?)\*\*/g, '<span class="chat-message-bold">$1</span>');
     
     return { __html: processedText };
   };
