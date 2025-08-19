@@ -62,11 +62,16 @@ const ChatInterface: React.FC = () => {
   }, [messages]);
 
   useEffect(() => {
-    // Create a mock thread ID for development
     if (!threadId) {
-      const mockThreadId = 'dev-thread-' + Date.now();
-      setThreadId(mockThreadId);
-      localStorage.setItem('onklinicThreadId', mockThreadId);
+      fetch('/.netlify/functions/create-thread')
+        .then(res => res.json())
+        .then(data => {
+          if (data.thread_id) {
+            setThreadId(data.thread_id);
+            localStorage.setItem('onklinicThreadId', data.thread_id);
+          }
+        })
+        .catch(err => console.error('Error creating thread:', err));
     }
   }, [threadId]);
 
@@ -92,28 +97,71 @@ const ChatInterface: React.FC = () => {
       setAskedQuestionsIds(prev => new Set([...prev, optionId]));
     }
 
-    // Simulate bot response for development
-    setTimeout(() => {
-      const responses = [
-        "OnKlinic helps mental health professionals save time on documentation while maintaining clinical quality and compliance standards.",
-        "Our AI assistant is specifically trained on mental health terminology, DSM-V criteria, and documentation requirements.",
-        "With OnKlinic, you can reduce documentation time by 50-70% while improving insurance approval rates.",
-        "We ensure your documentation meets HIPAA, Joint Commission, and payer requirements automatically.",
-        "OnKlinic adapts to your writing style and clinical approach, making documentation feel natural and authentic."
-      ];
-      
-      const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-      
-      const botMessage: Message = {
-        id: Date.now().toString() + '_bot',
-        text: randomResponse,
+    if (!threadId) {
+      console.error("Thread ID is missing, cannot send message.");
+      setIsTyping(false);
+      return;
+    }
+
+    try {
+      const res = await fetch('/.netlify/functions/chatbot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: messageText,
+          thread_id: threadId
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.thread_id && data.run_id) {
+        await pollForResponse(data.thread_id, data.run_id);
+      } else {
+        throw new Error("Could not start chat run.");
+      }
+
+    } catch (error) {
+      console.error('Chatbot error:', error);
+      setMessages((prev) => [...prev, {
+        id: Date.now().toString() + '_bot_error',
+        text: 'Sorry, I could not process your request.',
         sender: 'bot',
         timestamp: new Date().toISOString(),
-      };
-      
-      setMessages((prev) => [...prev, botMessage]);
+      }]);
       setIsTyping(false);
-    }, 1500 + Math.random() * 1000); // Random delay between 1.5-2.5 seconds
+    }
+  };
+
+  const pollForResponse = async (threadId: string, runId: string) => {
+    let completed = false;
+
+    while (!completed) {
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Polling cada 1 segundo
+
+      const res = await fetch('/.netlify/functions/check-run', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          thread_id: threadId,
+          run_id: runId
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.status === 'completed') {
+        const botMessage: Message = {
+          id: Date.now().toString() + '_bot',
+          text: data.reply,
+          sender: 'bot',
+          timestamp: new Date().toISOString(),
+        };
+        setMessages((prev) => [...prev, botMessage]);
+        setIsTyping(false);
+        completed = true;
+      }
+    }
   };
 
   const handleOptionSelect = (option: Option) => {
