@@ -15,25 +15,25 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange, activeS
   useEffect(() => {
     const handleScroll = () => {
       if (sectionRef.current && explanatoryTextRef.current) {
-        // Get absolute position of the section in the document
-        const sectionTop = sectionRef.current.offsetTop;
-        const scrollY = window.pageYOffset;
+        // Get section position relative to viewport
+        const sectionRect = sectionRef.current.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
         
-        // Define transition points based on absolute scroll positions
-        const transitionStartScrollY = sectionTop - window.innerHeight;
-        const transitionEndScrollY = sectionTop;
+        // Define transition points based on viewport position
+        const transitionStart = viewportHeight; // Section top at bottom of viewport
+        const transitionEnd = 0; // Section top at top of viewport
         
         let progress = 0;
         
-        if (scrollY <= transitionStartScrollY) {
-          // Haven't reached the transition start point - stay dark
+        if (sectionRect.top >= transitionStart) {
+          // Section is below viewport - stay dark
           progress = 0;
-        } else if (scrollY >= transitionEndScrollY) {
-          // Past the transition end point - fully light
+        } else if (sectionRect.top <= transitionEnd) {
+          // Section has reached/passed top of viewport - fully light
           progress = 1;
         } else {
           // Within transition zone - interpolate between 0 and 1
-          progress = (scrollY - transitionStartScrollY) / (transitionEndScrollY - transitionStartScrollY);
+          progress = 1 - (sectionRect.top - transitionEnd) / (transitionStart - transitionEnd);
         }
         
         // Clamp progress between 0 and 1
