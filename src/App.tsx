@@ -11,7 +11,6 @@ import Footer from './components/Footer/Footer';
 function App() {
   const [backgroundProgress, setBackgroundProgress] = useState(0);
   const [activeSection, setActiveSection] = useState<string>('');
-  const whySectionRef = React.useRef<HTMLElement>(null);
 
   React.useEffect(() => {
     document.title = 'On Klinic - AI Assistant for Mental Health Clinicians';
@@ -27,42 +26,6 @@ function App() {
     document.querySelectorAll('.section-title').forEach((el) => observer.observe(el));
   }, []);
 
-  // Centralized scroll logic for background transition
-  useEffect(() => {
-    const handleScroll = () => {
-      if (whySectionRef.current) {
-        const whySectionTop = whySectionRef.current.offsetTop;
-        const scrollY = window.pageYOffset;
-        const viewportHeight = window.innerHeight;
-
-        // Transition begins when bottom of viewport reaches top of WhySection
-        const transitionStartScrollY = whySectionTop - viewportHeight;
-        // Transition ends when top of viewport reaches top of WhySection
-        const transitionEndScrollY = whySectionTop;
-
-        let progress = 0;
-        if (scrollY <= transitionStartScrollY) {
-          progress = 0; // Before transition zone - keep dark
-        } else if (scrollY >= transitionEndScrollY) {
-          progress = 1; // After transition zone - keep light
-        } else {
-          // Linear interpolation within transition zone
-          progress = (scrollY - transitionStartScrollY) / (transitionEndScrollY - transitionStartScrollY);
-        }
-
-        // Clamp progress between 0 and 1
-        const clampedProgress = Math.max(0, Math.min(1, progress));
-        setBackgroundProgress(clampedProgress);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Call once on mount to set initial state
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
   // Section scroll observer
   useEffect(() => {
     const sectionObserver = new IntersectionObserver(
@@ -99,6 +62,10 @@ function App() {
     return [r, g, b];
   };
 
+  // Handle scroll progress from WhySection
+  const handleWhySectionScroll = (progress: number) => {
+    setBackgroundProgress(progress);
+  };
 
   // Define color values for the gradient transition
   const darkStartColor: [number, number, number] = [10, 37, 64]; // #0A2540
@@ -186,7 +153,7 @@ function App() {
           </div>
         </div>
 
-        <WhySection ref={whySectionRef} activeSection={activeSection} />
+        <WhySection onScrollProgressChange={handleWhySectionScroll} activeSection={activeSection} />
         <TestimonialsSection activeSection={activeSection} />
         <MetricsSection activeSection={activeSection} />
         <FeaturesSection activeSection={activeSection} />
