@@ -15,16 +15,28 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange, activeS
   useEffect(() => {
     const handleScroll = () => {
       if (sectionRef.current && explanatoryTextRef.current) {
-        const rect = sectionRef.current.getBoundingClientRect();
         const windowHeight = window.innerHeight;
+        const sectionOffsetTop = sectionRef.current.offsetTop;
+        const currentScrollY = window.pageYOffset;
         
-        // Make transition faster by reducing the range
-        const startPoint = windowHeight * 0.7; // Start when section top is at 70% of viewport
-        const endPoint = windowHeight * 0.3;   // End when section top is at 30% of viewport
+        // Calculate absolute scroll positions for transition
+        const transitionStartScrollY = sectionOffsetTop - windowHeight * 0.7;
+        const transitionEndScrollY = sectionOffsetTop - windowHeight * 0.3;
         
-        if (rect.top <= startPoint && rect.top >= endPoint) {
-          // Calculate progress (0 to 1) within the transition range
-          const progress = (startPoint - rect.top) / (startPoint - endPoint);
+        // Calculate progress based on absolute scroll position
+        let progress = 0;
+        
+        if (currentScrollY < transitionStartScrollY) {
+          // Before transition starts - keep background dark
+          onScrollProgressChange(0);
+          explanatoryTextRef.current.classList.remove('visible');
+        } else if (currentScrollY >= transitionEndScrollY) {
+          // After transition ends - keep background light
+          onScrollProgressChange(1);
+          explanatoryTextRef.current.classList.add('visible');
+        } else {
+          // During transition - interpolate between 0 and 1
+          progress = (currentScrollY - transitionStartScrollY) / (transitionEndScrollY - transitionStartScrollY);
           const clampedProgress = Math.max(0, Math.min(1, progress));
           onScrollProgressChange(clampedProgress);
           
@@ -34,12 +46,6 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange, activeS
           } else {
             explanatoryTextRef.current.classList.remove('visible');
           }
-        } else if (rect.top > startPoint) {
-          onScrollProgressChange(0);
-          explanatoryTextRef.current.classList.remove('visible');
-        } else if (rect.top < endPoint) {
-          onScrollProgressChange(1);
-          explanatoryTextRef.current.classList.add('visible');
         }
       }
     };
