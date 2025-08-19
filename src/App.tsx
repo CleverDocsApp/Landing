@@ -12,7 +12,7 @@ function App() {
   const [backgroundProgress, setBackgroundProgress] = useState(0);
   const [activeSection, setActiveSection] = useState<string>('');
 
-  React.useEffect(() => {
+  useEffect(() => {
     document.title = 'On Klinic - AI Assistant for Mental Health Clinicians';
     
     const observer = new IntersectionObserver((entries) => {
@@ -40,12 +40,11 @@ function App() {
         });
       },
       {
-        threshold: 0.3, // Section needs to be 30% visible to be considered active
-        rootMargin: '-20% 0px -20% 0px' // Adjust the trigger area
+        threshold: 0.3,
+        rootMargin: '-20% 0px -20% 0px'
       }
     );
 
-    // Observe all sections
     const sections = document.querySelectorAll('[data-section]');
     sections.forEach((section) => sectionObserver.observe(section));
 
@@ -54,7 +53,6 @@ function App() {
     };
   }, []);
 
-  // Helper function to interpolate between two RGB colors
   const interpolateColor = (color1: [number, number, number], color2: [number, number, number], factor: number) => {
     const r = Math.round(color1[0] + (color2[0] - color1[0]) * factor);
     const g = Math.round(color1[1] + (color2[1] - color1[1]) * factor);
@@ -62,25 +60,20 @@ function App() {
     return [r, g, b];
   };
 
-  // Handle scroll progress from WhySection
   const handleWhySectionScroll = (progress: number) => {
     setBackgroundProgress(progress);
   };
 
-  // Define color values for the gradient transition
-  const darkStartColor: [number, number, number] = [10, 37, 64]; // #0A2540
-  const darkEndColor: [number, number, number] = [30, 58, 95]; // #1E3A5F
-  const lightStartColor: [number, number, number] = [255, 255, 255]; // #ffffff
-  const lightEndColor: [number, number, number] = [248, 250, 252]; // #f8fafc
+  const darkStartColor: [number, number, number] = [10, 37, 64];
+  const darkEndColor: [number, number, number] = [30, 58, 95];
+  const lightStartColor: [number, number, number] = [255, 255, 255];
+  const lightEndColor: [number, number, number] = [248, 250, 252];
 
-  // Interpolate colors based on scroll progress
   const currentStartColor = interpolateColor(darkStartColor, lightStartColor, backgroundProgress);
   const currentEndColor = interpolateColor(darkEndColor, lightEndColor, backgroundProgress);
 
-  // Create the background gradient
   const currentBackground = `linear-gradient(135deg, rgb(${currentStartColor[0]}, ${currentStartColor[1]}, ${currentStartColor[2]}) 0%, rgb(${currentEndColor[0]}, ${currentEndColor[1]}, ${currentEndColor[2]}) 100%)`;
 
-  // Interpolate text colors for hero section
   const heroTitleColor = interpolateColor([255, 255, 255], [17, 24, 39], backgroundProgress);
   const heroDescColor = interpolateColor([229, 231, 235], [75, 85, 99], backgroundProgress);
 
