@@ -3,59 +3,38 @@ import { CheckCircle, Clock, TrendingUp } from 'lucide-react';
 import './WhySection.css'; 
 
 interface WhySectionProps {
-  onScrollProgressChange: (progress: number) => void;
   activeSection: string;
 }
 
-const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange, activeSection }) => {
-  const sectionRef = useRef<HTMLElement>(null);
+const WhySection = React.forwardRef<HTMLElement, WhySectionProps>(({ activeSection }, ref) => {
   const explanatoryTextRef = useRef<HTMLDivElement>(null);
   const featureCardsRef = useRef<HTMLDivElement>(null);
 
+  // Intersection Observer for explanatory text visibility
   useEffect(() => {
-    const handleScroll = () => {
-      if (sectionRef.current && explanatoryTextRef.current) {
-        // Get section position relative to viewport
-        const sectionRect = sectionRef.current.getBoundingClientRect();
-        const viewportHeight = window.innerHeight;
-        
-        // Define transition points based on viewport position
-        const transitionStart = viewportHeight; // Section top at bottom of viewport
-        const transitionEnd = 0; // Section top at top of viewport
-        
-        let progress = 0;
-        
-        if (sectionRect.top >= transitionStart) {
-          // Section is below viewport - stay dark
-          progress = 0;
-        } else if (sectionRect.top <= transitionEnd) {
-          // Section has reached/passed top of viewport - fully light
-          progress = 1;
-        } else {
-          // Within transition zone - interpolate between 0 and 1
-          progress = 1 - (sectionRect.top - transitionEnd) / (transitionStart - transitionEnd);
-        }
-        
-        // Clamp progress between 0 and 1
-        const clampedProgress = Math.max(0, Math.min(1, progress));
-        onScrollProgressChange(clampedProgress);
-        
-        // Show explanatory text when transition is at least 40% complete
-        if (clampedProgress >= 0.4) {
-          explanatoryTextRef.current.classList.add('visible');
-        } else {
-          explanatoryTextRef.current.classList.remove('visible');
-        }
-      }
-    };
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            explanatoryTextRef.current?.classList.add('visible');
+          } else {
+            explanatoryTextRef.current?.classList.remove('visible');
+          }
+        });
+      },
+      { threshold: 0.5 } // Trigger when 50% of the element is visible
+    );
 
-    window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Check initial state
+    if (explanatoryTextRef.current) {
+      observer.observe(explanatoryTextRef.current);
+    }
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      if (explanatoryTextRef.current) {
+        observer.unobserve(explanatoryTextRef.current);
+      }
     };
-  }, [onScrollProgressChange]);
+  }, []);
 
   // Intersection Observer for feature cards animation
   useEffect(() => {
@@ -90,7 +69,7 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange, activeS
 
   return (
     <section 
-      ref={sectionRef}
+      ref={ref}
       className="why-section"
       data-section="why"
     >
@@ -158,6 +137,6 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange, activeS
       </div>
     </section>
   );
-};
+});
 
 export default WhySection;
