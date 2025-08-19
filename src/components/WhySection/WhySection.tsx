@@ -15,35 +15,36 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange, activeS
   useEffect(() => {
     const handleScroll = () => {
       if (sectionRef.current && explanatoryTextRef.current) {
-        const sectionRect = sectionRef.current.getBoundingClientRect();
-        const startTransitionAtViewportY = window.innerHeight * 0.7;
-        const endTransitionAtViewportY = window.innerHeight * 0.3;
+        // Get absolute position of the section in the document
+        const sectionTop = sectionRef.current.offsetTop;
+        const scrollY = window.pageYOffset;
         
-        const distanceToStart = sectionRect.top - startTransitionAtViewportY;
-        const transitionRange = startTransitionAtViewportY - endTransitionAtViewportY;
+        // Define transition points based on absolute scroll positions
+        const transitionStartScrollY = sectionTop - window.innerHeight;
+        const transitionEndScrollY = sectionTop;
         
         let progress = 0;
         
-        if (distanceToStart > 0) {
-          // Section is below the start point - no transition yet
-          onScrollProgressChange(0);
-          explanatoryTextRef.current.classList.remove('visible');
-        } else if (distanceToStart <= -transitionRange) {
-          // Section is above or at the end point - transition complete
-          onScrollProgressChange(1);
-          explanatoryTextRef.current.classList.add('visible');
+        if (scrollY <= transitionStartScrollY) {
+          // Haven't reached the transition start point - stay dark
+          progress = 0;
+        } else if (scrollY >= transitionEndScrollY) {
+          // Past the transition end point - fully light
+          progress = 1;
         } else {
           // Within transition zone - interpolate between 0 and 1
-          progress = Math.abs(distanceToStart) / transitionRange;
-          const clampedProgress = Math.max(0, Math.min(1, progress));
-          onScrollProgressChange(clampedProgress);
-          
-          // Show explanatory text when transition is at least 40% complete
-          if (clampedProgress >= 0.4) {
-            explanatoryTextRef.current.classList.add('visible');
-          } else {
-            explanatoryTextRef.current.classList.remove('visible');
-          }
+          progress = (scrollY - transitionStartScrollY) / (transitionEndScrollY - transitionStartScrollY);
+        }
+        
+        // Clamp progress between 0 and 1
+        const clampedProgress = Math.max(0, Math.min(1, progress));
+        onScrollProgressChange(clampedProgress);
+        
+        // Show explanatory text when transition is at least 40% complete
+        if (clampedProgress >= 0.4) {
+          explanatoryTextRef.current.classList.add('visible');
+        } else {
+          explanatoryTextRef.current.classList.remove('visible');
         }
       }
     };
