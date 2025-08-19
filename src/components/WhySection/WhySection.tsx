@@ -15,32 +15,30 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange, activeS
   useEffect(() => {
     const handleScroll = () => {
       if (sectionRef.current && explanatoryTextRef.current) {
-        const windowHeight = window.innerHeight;
-        const sectionOffsetTop = sectionRef.current.offsetTop;
-        const currentScrollY = window.pageYOffset;
+        const sectionRect = sectionRef.current.getBoundingClientRect();
+        const startTransitionAtViewportY = window.innerHeight * 0.7;
+        const endTransitionAtViewportY = window.innerHeight * 0.3;
         
-        // Calculate absolute scroll positions for transition
-        const transitionStartScrollY = sectionOffsetTop - windowHeight * 0.7;
-        const transitionEndScrollY = sectionOffsetTop - windowHeight * 0.3;
+        const distanceToStart = sectionRect.top - startTransitionAtViewportY;
+        const transitionRange = startTransitionAtViewportY - endTransitionAtViewportY;
         
-        // Calculate progress based on absolute scroll position
         let progress = 0;
         
-        if (currentScrollY < transitionStartScrollY) {
-          // Before transition starts - keep background dark
+        if (distanceToStart > 0) {
+          // Section is below the start point - no transition yet
           onScrollProgressChange(0);
           explanatoryTextRef.current.classList.remove('visible');
-        } else if (currentScrollY >= transitionEndScrollY) {
-          // After transition ends - keep background light
+        } else if (distanceToStart <= -transitionRange) {
+          // Section is above or at the end point - transition complete
           onScrollProgressChange(1);
           explanatoryTextRef.current.classList.add('visible');
         } else {
-          // During transition - interpolate between 0 and 1
-          progress = (currentScrollY - transitionStartScrollY) / (transitionEndScrollY - transitionStartScrollY);
+          // Within transition zone - interpolate between 0 and 1
+          progress = Math.abs(distanceToStart) / transitionRange;
           const clampedProgress = Math.max(0, Math.min(1, progress));
           onScrollProgressChange(clampedProgress);
           
-          // Show explanatory text when background transition is at least 40% complete
+          // Show explanatory text when transition is at least 40% complete
           if (clampedProgress >= 0.4) {
             explanatoryTextRef.current.classList.add('visible');
           } else {
