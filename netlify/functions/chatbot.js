@@ -1,5 +1,3 @@
-const fetch = require("node-fetch");
-
 exports.handler = async function(event) {
   try {
     const { message: userMessage } = JSON.parse(event.body);

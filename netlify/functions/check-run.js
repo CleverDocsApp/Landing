@@ -1,5 +1,3 @@
-const fetch = require("node-fetch");
-
 exports.handler = async function(event) {
   try {
     const { thread_id: threadId, run_id: runId } = JSON.parse(event.body);

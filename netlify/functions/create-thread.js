@@ -1,5 +1,3 @@
-const fetch = require("node-fetch");
-
 exports.handler = async function() {
   try {
     const apiKey = process.env.OPENAI_API_KEY;
