@@ -14,6 +14,15 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange, activeS
 
   useEffect(() => {
     const handleScroll = () => {
+      // Force initial dark state when at the top of the page
+      if (window.scrollY === 0) {
+        onScrollProgressChange(0);
+        if (explanatoryTextRef.current) {
+          explanatoryTextRef.current.classList.remove('visible');
+        }
+        return;
+      }
+
       if (sectionRef.current && explanatoryTextRef.current) {
         const rect = sectionRef.current.getBoundingClientRect();
         const windowHeight = window.innerHeight;
