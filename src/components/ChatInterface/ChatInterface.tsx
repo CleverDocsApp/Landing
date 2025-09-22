@@ -4,7 +4,6 @@ import ChatMessage from './ChatMessage';
 import ChatOptions from './ChatOptions';
 import TypingIndicator from './TypingIndicator';
 import { Message, Option } from '../../types/chat';
-import { postJSON, getJSON } from '../../lib/api';
 import './ChatInterface.css';
 
 const initialMessages: Message[] = [
@@ -64,7 +63,8 @@ const ChatInterface: React.FC = () => {
 
   useEffect(() => {
     if (!threadId) {
-      getJSON<{ thread_id: string }>('/.netlify/functions/create-thread')
+      fetch('/.netlify/functions/create-thread')
+        .then(res => res.json())
         .then(data => {
           if (data.thread_id) {
             setThreadId(data.thread_id);
@@ -104,10 +104,16 @@ const ChatInterface: React.FC = () => {
     }
 
     try {
-      const data = await postJSON<{ thread_id: string; run_id: string }>('/.netlify/functions/chatbot', {
-        message: messageText,
-        thread_id: threadId
+      const res = await fetch('/.netlify/functions/chatbot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: messageText,
+          thread_id: threadId
+        }),
       });
+
+      const data = await res.json();
 
       if (data.thread_id && data.run_id) {
         await pollForResponse(data.thread_id, data.run_id);
@@ -133,10 +139,16 @@ const ChatInterface: React.FC = () => {
     while (!completed) {
       await new Promise((resolve) => setTimeout(resolve, 1000)); // Polling cada 1 segundo
 
-      const data = await postJSON<{ status: string; reply?: string }>('/.netlify/functions/check-run', {
-        thread_id: threadId,
-        run_id: runId
+      const res = await fetch('/.netlify/functions/check-run', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          thread_id: threadId,
+          run_id: runId
+        }),
       });
+
+      const data = await res.json();
 
       if (data.status === 'completed') {
         const botMessage: Message = {
