@@ -77,15 +77,15 @@ const Footer: React.FC = () => {
             <div className="contact-info">
               <div className="contact-item">
                 <Mail size={16} />
-                <span>hello@onklinic.com</span>
+                <span>abel@onklinic.com</span>
               </div>
               <div className="contact-item">
                 <Phone size={16} />
-                <span>+1 (555) 123-4567</span>
+                <span>+1 (305) 905 3330</span>
               </div>
               <div className="contact-item">
                 <MapPin size={16} />
-                <span>123 Healthcare Ave, Suite 456<br />San Francisco, CA 94107</span>
+                <span>501 Mokena Dr<br />Miami Springs FL, 33166</span>
               </div>
             </div>
           </div>
