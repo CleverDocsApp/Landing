@@ -124,18 +124,9 @@
   transition-delay: 0.6s;
 }
 
-/* New styles for the explanatory text - SCROLL TRIGGERED */
+/* New styles for the explanatory text - Always visible */
 .explanatory-text-container {
-  /* Start hidden and positioned below */
-  opacity: 0;
-  transform: translateY(30px) scale(0.95);
-  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  /* Add a delay so it appears after the background starts transitioning */
-  transition-delay: 0.2s;
-}
-
-/* Active state when background has transitioned enough */
-.explanatory-text-container.visible {
+  /* Always visible - no scroll trigger */
   opacity: 1;
   transform: translateY(0) scale(1);
 }

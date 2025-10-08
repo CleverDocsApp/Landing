@@ -9,7 +9,6 @@ interface WhySectionProps {
 
 const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange, activeSection }) => {
   const sectionRef = useRef<HTMLElement>(null);
-  const explanatoryTextRef = useRef<HTMLDivElement>(null);
   const featureCardsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -17,38 +16,26 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange, activeS
       // Force initial dark state when at the top of the page
       if (window.scrollY === 0) {
         onScrollProgressChange(0);
-        if (explanatoryTextRef.current) {
-          explanatoryTextRef.current.classList.remove('visible');
-        }
         return;
       }
 
-      if (sectionRef.current && explanatoryTextRef.current) {
+      if (sectionRef.current) {
         const rect = sectionRef.current.getBoundingClientRect();
         const windowHeight = window.innerHeight;
-        
+
         // Make transition faster by reducing the range
         const startPoint = windowHeight * 0.7; // Start when section top is at 70% of viewport
         const endPoint = windowHeight * 0.3;   // End when section top is at 30% of viewport
-        
+
         if (rect.top <= startPoint && rect.top >= endPoint) {
           // Calculate progress (0 to 1) within the transition range
           const progress = (startPoint - rect.top) / (startPoint - endPoint);
           const clampedProgress = Math.max(0, Math.min(1, progress));
           onScrollProgressChange(clampedProgress);
-          
-          // Show explanatory text when background transition is at least 40% complete
-          if (clampedProgress >= 0.4) {
-            explanatoryTextRef.current.classList.add('visible');
-          } else {
-            explanatoryTextRef.current.classList.remove('visible');
-          }
         } else if (rect.top > startPoint) {
           onScrollProgressChange(0);
-          explanatoryTextRef.current.classList.remove('visible');
         } else if (rect.top < endPoint) {
           onScrollProgressChange(1);
-          explanatoryTextRef.current.classList.add('visible');
         }
       }
     };
@@ -110,9 +97,8 @@ const WhySection: React.FC<WhySectionProps> = ({ onScrollProgressChange, activeS
           </h2>
         </div>
 
-        {/* Explanatory text with scroll-triggered visibility */}
-        <div 
-          ref={explanatoryTextRef}
+        {/* Explanatory text - always visible */}
+        <div
           className="explanatory-text-container text-center max-w-4xl mx-auto mb-16"
         >
           <div className="explanatory-text-card">
