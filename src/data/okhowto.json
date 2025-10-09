@@ -1,0 +1,69 @@
+{
+  "categories": [
+    {
+      "slug": "features",
+      "name": "Features",
+      "description": "Learn about OK's powerful features and capabilities"
+    },
+    {
+      "slug": "best-practices",
+      "name": "Best Practices",
+      "description": "Clinical documentation best practices and tips"
+    },
+    {
+      "slug": "onboarding",
+      "name": "Getting Started",
+      "description": "Get up and running with OK quickly"
+    }
+  ],
+  "videos": [
+    {
+      "id": "PLACEHOLDER_001",
+      "title": "Treatment Plan Validator Overview",
+      "description": "Learn how to validate treatment plans and ensure compliance with payer standards before submission.",
+      "category": "features",
+      "thumb": "/okhowto/thumbs/placeholder.svg",
+      "duration": 180
+    },
+    {
+      "id": "PLACEHOLDER_002",
+      "title": "Golden Thread Detection in Practice",
+      "description": "Understand how OK identifies and maintains narrative coherence across all your clinical documentation.",
+      "category": "features",
+      "thumb": "/okhowto/thumbs/placeholder.svg",
+      "duration": 240
+    },
+    {
+      "id": "PLACEHOLDER_003",
+      "title": "Writing Effective Progress Notes",
+      "description": "Best practices for creating clear, compliant, and clinically sound progress notes that meet standards.",
+      "category": "best-practices",
+      "thumb": "/okhowto/thumbs/placeholder.svg",
+      "duration": 300
+    },
+    {
+      "id": "PLACEHOLDER_004",
+      "title": "Documentation for Prior Authorization",
+      "description": "Tips for strengthening your documentation to improve prior authorization approval rates.",
+      "category": "best-practices",
+      "thumb": "/okhowto/thumbs/placeholder.svg",
+      "duration": 210
+    },
+    {
+      "id": "PLACEHOLDER_005",
+      "title": "Getting Started with OK",
+      "description": "A quick walkthrough of your first session with OK, from login to completing your first note.",
+      "category": "onboarding",
+      "thumb": "/okhowto/thumbs/placeholder.svg",
+      "duration": 150
+    },
+    {
+      "id": "PLACEHOLDER_006",
+      "title": "Customizing Your Workflow",
+      "description": "Learn how to set up templates, preferences, and shortcuts to match your clinical workflow.",
+      "category": "onboarding",
+      "thumb": "/okhowto/thumbs/placeholder.svg",
+      "duration": 195
+    }
+  ]
+}

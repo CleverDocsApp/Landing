@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import Header from './components/Header/Header';
 import ChatInterface from './components/ChatInterface/ChatInterface';
 import WhySection from './components/WhySection/WhySection';
@@ -8,7 +8,42 @@ import FeaturesSection from './components/FeaturesSection/FeaturesSection';
 import PricingTeaser from './components/PricingTeaser/PricingTeaser';
 import Footer from './components/Footer/Footer';
 
+const OkHowToPage = lazy(() => import('./pages/OkHowToPage'));
+
 function App() {
+  // Soft-routing: check pathname and render OK How To page if needed
+  if (window.location.pathname === '/ok-how-to') {
+    return (
+      <Suspense fallback={
+        <div style={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'linear-gradient(135deg, #0A2540 0%, #1E3A5F 100%)'
+        }}>
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '1rem'
+          }}>
+            <div style={{
+              width: '48px',
+              height: '48px',
+              border: '4px solid rgba(255, 255, 255, 0.2)',
+              borderTopColor: '#20BDAA',
+              borderRadius: '50%',
+              animation: 'spin 0.8s linear infinite'
+            }}></div>
+            <p style={{ color: '#E5E7EB', fontSize: '1rem' }}>Loading...</p>
+          </div>
+        </div>
+      }>
+        <OkHowToPage />
+      </Suspense>
+    );
+  }
   const [backgroundProgress, setBackgroundProgress] = useState(0);
   const [activeSection, setActiveSection] = useState<string>('');
 

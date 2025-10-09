@@ -1,0 +1,69 @@
+.okhowto-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(to bottom, #f8fafc 0%, #ffffff 100%);
+}
+
+.okhowto-main {
+  flex: 1;
+}
+
+.okhowto-content {
+  background-color: white;
+}
+
+.loading-container,
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  padding: 3rem 2rem;
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid var(--gray-200);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-container p {
+  font-size: 1rem;
+  color: var(--gray-500);
+}
+
+.error-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--secondary);
+  margin: 0 0 0.75rem 0;
+}
+
+.error-message {
+  font-size: 1rem;
+  color: var(--gray-500);
+  margin: 0;
+}
+
+.results-info {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.results-count {
+  font-size: 0.9375rem;
+  color: var(--gray-500);
+  font-weight: 500;
+}

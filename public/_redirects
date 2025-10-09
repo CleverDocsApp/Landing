@@ -1,0 +1,3 @@
+# SPA Redirects for Netlify/Vercel
+# This rule ensures all routes serve index.html for soft-routing in App.tsx
+/*  /index.html  200
