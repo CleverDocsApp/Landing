@@ -51,7 +51,7 @@ const PricingTeaser: React.FC<PricingTeaserProps> = ({ activeSection }) => {
             </span>
           </h2>
           <p className="text-gray-600 mt-6 text-lg">
-            Start with Prelude - no credit card required
+            Try any plan free for 7 days
           </p>
         </div>
         
@@ -71,17 +71,19 @@ const PricingTeaser: React.FC<PricingTeaserProps> = ({ activeSection }) => {
         </div>
         
         <div className="pricing-cards">
-          <div className="pricing-card prelude" data-aos="fade-up">
+          <div className="pricing-card chart" data-aos="fade-up">
             <div className="pricing-card-header">
               <div className="icon-badge">
                 <Sparkles size={20} />
               </div>
-              <h3>Prelude</h3>
+              <h3>Chart</h3>
               <div className="price">
-                <span className="amount">Free</span>
-                <span className="period">7 days</span>
+                <span className="currency">$</span>
+                <span className="amount">{isAnnual ? '47' : '59'}</span>
+                <span className="period">/{isAnnual ? 'mo' : 'mo'}</span>
               </div>
-              <p className="card-subtitle">Your first step toward intelligent documentation</p>
+              {isAnnual && <p className="billed-annually">Billed annually (${47 * 12})</p>}
+              <p className="card-subtitle">Chart faster. Chart smarter. Stay compliant. Built for Mental health specialist</p>
             </div>
             
             <div className="pricing-features">
@@ -98,28 +100,27 @@ const PricingTeaser: React.FC<PricingTeaserProps> = ({ activeSection }) => {
             </div>
             
             <div className="pricing-footer">
-              <button className="cta-button">Start Free Trial</button>
-              <p className="no-credit-card">No credit card required</p>
+              <button className="cta-button">Start 7-Day Free Trial</button>
             </div>
           </div>
           
-          <div className="pricing-card copilot" data-aos="fade-up" data-aos-delay="100">
+          <div className="pricing-card assure" data-aos="fade-up" data-aos-delay="100">
             <div className="pricing-card-header">
               <div className="icon-badge">
-                <Brain size={20} />
+                <Shield size={20} />
               </div>
-              <h3>Copilot</h3>
+              <h3>Assure</h3>
               <div className="price">
                 <span className="currency">$</span>
-                <span className="amount">{isAnnual ? '47' : '59'}</span>
+                <span className="amount">{isAnnual ? '79' : '99'}</span>
                 <span className="period">/{isAnnual ? 'mo' : 'mo'}</span>
               </div>
-              {isAnnual && <p className="billed-annually">Billed annually (${47 * 12})</p>}
-              <p className="card-subtitle">Your trusted co-pilot for unlimited documentation</p>
+              {isAnnual && <p className="billed-annually">Billed annually (${79 * 12})</p>}
+              <p className="card-subtitle">Documentation plus supervision, in one place. Designed for clinical supervisors and directors.</p>
             </div>
             
             <div className="pricing-features">
-              <p className="feature-title">Everything in Prelude, plus:</p>
+              <p className="feature-title">Everything in Chart, plus:</p>
               <ul>
                 <li><Check size={16} /> Unlimited documentation</li>
                 <li><Check size={16} /> Real-time legal compliance checks</li>
@@ -131,8 +132,7 @@ const PricingTeaser: React.FC<PricingTeaserProps> = ({ activeSection }) => {
             </div>
             
             <div className="pricing-footer">
-              <button className="cta-button">Get Started</button>
-              <p className="no-credit-card">14-day money-back guarantee</p>
+              <button className="cta-button">Start 7-Day Free Trial</button>
             </div>
           </div>
           
@@ -148,12 +148,12 @@ const PricingTeaser: React.FC<PricingTeaserProps> = ({ activeSection }) => {
               <h3>Harmony</h3>
               <div className="custom-price">
                 <span>Custom Solution</span>
-                <p>Tailored to your organization</p>
+                <p>All your documentation in one place. Multi-service and tailored to your needs. Built for medical centers, clinics, and integrated mental health.</p>
               </div>
             </div>
             
             <div className="pricing-features">
-              <p className="feature-title">Everything in Copilot, plus:</p>
+              <p className="feature-title">Everything in Assure, plus:</p>
               <ul>
                 <li><Check size={16} /> Multiservice Golden Thread</li>
                 <li><Check size={16} /> Full audit documentation prep</li>

@@ -113,11 +113,11 @@ input:checked + .slider:before {
   color: white;
 }
 
-.pricing-card.prelude {
+.pricing-card.chart {
   background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
 }
 
-.pricing-card.copilot {
+.pricing-card.assure {
   background: linear-gradient(135deg, #20BDAA 0%, #1AA192 100%);
   color: white;
 }
@@ -140,7 +140,7 @@ input:checked + .slider:before {
 }
 
 .harmony .icon-badge,
-.copilot .icon-badge {
+.assure .icon-badge {
   background: rgba(255, 255, 255, 0.1);
   color: white;
 }
@@ -166,7 +166,7 @@ input:checked + .slider:before {
 }
 
 .harmony .pricing-card-header,
-.copilot .pricing-card-header {
+.assure .pricing-card-header {
   border-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -180,14 +180,14 @@ input:checked + .slider:before {
   transition: all 0.3s ease;
 }
 
-.pricing-card.prelude h3 {
+.pricing-card.chart h3 {
   background: linear-gradient(135deg, #20BDAA 0%, #1AA192 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: 0 2px 10px rgba(32, 189, 170, 0.2);
 }
 
-.pricing-card.copilot h3,
+.pricing-card.assure h3,
 .pricing-card.harmony h3 {
   color: white;
   background: none;
@@ -208,7 +208,7 @@ input:checked + .slider:before {
 }
 
 .harmony .card-subtitle,
-.copilot .card-subtitle {
+.assure .card-subtitle {
   color: rgba(255, 255, 255, 0.7);
 }
 
@@ -237,7 +237,7 @@ input:checked + .slider:before {
 }
 
 .harmony .period,
-.copilot .period {
+.assure .period {
   color: rgba(255, 255, 255, 0.7);
 }
 
@@ -248,7 +248,7 @@ input:checked + .slider:before {
 }
 
 .harmony .billed-annually,
-.copilot .billed-annually {
+.assure .billed-annually {
   color: rgba(255, 255, 255, 0.7);
 }
 
@@ -276,7 +276,7 @@ input:checked + .slider:before {
 }
 
 .harmony .pricing-features li,
-.copilot .pricing-features li {
+.assure .pricing-features li {
   color: rgba(255, 255, 255, 0.7);
 }
 
@@ -285,7 +285,7 @@ input:checked + .slider:before {
 }
 
 .harmony .pricing-features li svg,
-.copilot .pricing-features li svg {
+.assure .pricing-features li svg {
   color: white;
 }
 
@@ -296,7 +296,7 @@ input:checked + .slider:before {
 }
 
 .harmony .pricing-footer,
-.copilot .pricing-footer {
+.assure .pricing-footer {
   border-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -313,7 +313,7 @@ input:checked + .slider:before {
   border: none;
 }
 
-.copilot .cta-button {
+.assure .cta-button {
   background: white;
   color: #20BDAA;
 }
@@ -336,7 +336,7 @@ input:checked + .slider:before {
   box-shadow: 0 4px 12px rgba(32, 189, 170, 0.3);
 }
 
-.copilot .cta-button:hover {
+.assure .cta-button:hover {
   background: rgba(255, 255, 255, 0.9);
 }
 
@@ -352,7 +352,7 @@ input:checked + .slider:before {
 }
 
 .harmony .enterprise-contact,
-.copilot .no-credit-card {
+.assure .no-credit-card {
   color: rgba(255, 255, 255, 0.7);
 }
 
