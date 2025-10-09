@@ -84,7 +84,7 @@ const PricingTeaser: React.FC<PricingTeaserProps> = ({ activeSection }) => {
               </div>
               {isAnnual && <p className="billed-annually">Billed annually (${47 * 12})</p>}
               <p className="card-subtitle">
-                <span className="subtitle-main">Chart faster. Chart smarter. Stay compliant.</span>
+                <span className="subtitle-main">Chart faster. Chart smarter.<br />Stay compliant.</span>
                 <span className="subtitle-target">Built for mental health specialists</span>
               </p>
             </div>
