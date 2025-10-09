@@ -83,7 +83,10 @@ const PricingTeaser: React.FC<PricingTeaserProps> = ({ activeSection }) => {
                 <span className="period">/{isAnnual ? 'mo' : 'mo'}</span>
               </div>
               {isAnnual && <p className="billed-annually">Billed annually (${47 * 12})</p>}
-              <p className="card-subtitle">Chart faster. Chart smarter. Stay compliant. Built for Mental health specialist</p>
+              <p className="card-subtitle">
+                <span className="subtitle-main">Chart faster. Chart smarter. Stay compliant.</span>
+                <span className="subtitle-target">Built for mental health specialists</span>
+              </p>
             </div>
             
             <div className="pricing-features">
@@ -116,7 +119,10 @@ const PricingTeaser: React.FC<PricingTeaserProps> = ({ activeSection }) => {
                 <span className="period">/{isAnnual ? 'mo' : 'mo'}</span>
               </div>
               {isAnnual && <p className="billed-annually">Billed annually (${79 * 12})</p>}
-              <p className="card-subtitle">Documentation plus supervision, in one place. Designed for clinical supervisors and directors.</p>
+              <p className="card-subtitle">
+                <span className="subtitle-main">Documentation plus supervision, in one place.</span>
+                <span className="subtitle-target">Designed for clinical supervisors and directors</span>
+              </p>
             </div>
             
             <div className="pricing-features">
@@ -148,7 +154,10 @@ const PricingTeaser: React.FC<PricingTeaserProps> = ({ activeSection }) => {
               <h3>Harmony</h3>
               <div className="custom-price">
                 <span>Custom Solution</span>
-                <p>All your documentation in one place. Multi-service and tailored to your needs. Built for medical centers, clinics, and integrated mental health.</p>
+                <p className="card-subtitle">
+                  <span className="subtitle-main">All your documentation in one place. Multi-service and tailored to your needs.</span>
+                  <span className="subtitle-target">Built for medical centers, clinics, and integrated mental health</span>
+                </p>
               </div>
             </div>
             

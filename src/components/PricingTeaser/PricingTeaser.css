@@ -205,11 +205,46 @@ input:checked + .slider:before {
   color: #64748b;
   margin-top: 0.75rem;
   font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  line-height: 1.6;
 }
 
 .harmony .card-subtitle,
 .assure .card-subtitle {
   color: rgba(255, 255, 255, 0.7);
+}
+
+.subtitle-main {
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.6;
+  display: block;
+}
+
+.subtitle-target {
+  font-size: 0.9rem;
+  font-weight: 500;
+  opacity: 0.8;
+  display: block;
+  font-style: italic;
+  margin-top: 0.25rem;
+}
+
+.harmony .subtitle-main,
+.assure .subtitle-main {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.harmony .subtitle-target,
+.assure .subtitle-target {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.custom-price .card-subtitle {
+  margin-top: 1rem;
+  text-align: center;
 }
 
 .price {
