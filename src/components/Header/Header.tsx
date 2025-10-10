@@ -4,9 +4,10 @@ import './Header.css';
 
 interface HeaderProps {
   hideTopLogo?: boolean;
+  showNavigation?: boolean;
 }
 
-const Header: React.FC<HeaderProps> = ({ hideTopLogo = false }) => {
+const Header: React.FC<HeaderProps> = ({ hideTopLogo = false, showNavigation = true }) => {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -55,20 +56,23 @@ const Header: React.FC<HeaderProps> = ({ hideTopLogo = false }) => {
          </div>
        )}
 
-        
-        <nav className="main-nav">
-          <ul>
-            <li><a href="#features" onClick={(e) => { e.preventDefault(); scrollToSection('features'); }}>Features</a></li>
-            <li><a href="#pricing" onClick={(e) => { e.preventDefault(); scrollToSection('pricing'); }}>Pricing</a></li>
-            <li><a href="#testimonials" onClick={(e) => { e.preventDefault(); scrollToSection('testimonials'); }}>About</a></li>
-            <li><a href="#faq" onClick={(e) => { e.preventDefault(); scrollToSection('faq'); }}>FAQ</a></li>
-          </ul>
-        </nav>
-        
-        <div className="header-actions">
-          <a href="#login" className="login-link">Log in</a>
-          <a href="#signup" className="signup-button">Start Free Trial</a>
-        </div>
+        {showNavigation && (
+          <>
+            <nav className="main-nav">
+              <ul>
+                <li><a href="#features" onClick={(e) => { e.preventDefault(); scrollToSection('features'); }}>Features</a></li>
+                <li><a href="#pricing" onClick={(e) => { e.preventDefault(); scrollToSection('pricing'); }}>Pricing</a></li>
+                <li><a href="#testimonials" onClick={(e) => { e.preventDefault(); scrollToSection('testimonials'); }}>About</a></li>
+                <li><a href="#faq" onClick={(e) => { e.preventDefault(); scrollToSection('faq'); }}>FAQ</a></li>
+              </ul>
+            </nav>
+
+            <div className="header-actions">
+              <a href="#login" className="login-link">Log in</a>
+              <a href="#signup" className="signup-button">Start Free Trial</a>
+            </div>
+          </>
+        )}
       </div>
     </header>
   );
