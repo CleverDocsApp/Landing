@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import Header from './components/Header/Header';
 import ChatInterface from './components/ChatInterface/ChatInterface';
 import WhySection from './components/WhySection/WhySection';
@@ -8,7 +8,135 @@ import FeaturesSection from './components/FeaturesSection/FeaturesSection';
 import PricingTeaser from './components/PricingTeaser/PricingTeaser';
 import Footer from './components/Footer/Footer';
 
+const OkHowToPage = lazy(() => import('./pages/OkHowToPage'));
+const OkHowAdminPage = lazy(() => import('./pages/OkHowAdminPage'));
+
 function App() {
+  const raw = typeof window !== 'undefined' ? window.location.pathname : '/';
+  const path = (raw.replace(/\/+$/, '') || '/').toLowerCase();
+
+  const isDeployPreview = typeof window !== 'undefined' &&
+    (window.location.hostname.includes('deploy-preview') ||
+     window.location.search.includes('debug=1'));
+
+  let routeBranch: 'admin' | 'okhowto' | 'landing' = 'landing';
+
+  if (path === '/ok-how-admin-7x9k2mq8p') {
+    routeBranch = 'admin';
+  } else if (path === '/ok-how-admin') {
+    routeBranch = 'admin';
+  } else if (path === '/ok-how-to') {
+    routeBranch = 'okhowto';
+  }
+
+  console.log('[App Debug]', {
+    rawPathname: raw,
+    normalizedPath: path,
+    routeBranch: routeBranch
+  });
+
+  const DebugBanner = () => {
+    if (!isDeployPreview) return null;
+
+    return (
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 9999,
+        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+        color: '#20BDAA',
+        padding: '8px 16px',
+        fontSize: '12px',
+        fontFamily: 'monospace',
+        borderBottom: '2px solid #20BDAA',
+        display: 'flex',
+        gap: '20px',
+        flexWrap: 'wrap'
+      }}>
+        <span><strong>RAW:</strong> {raw}</span>
+        <span><strong>NORMALIZED:</strong> {path}</span>
+        <span><strong>BRANCH:</strong> {routeBranch}</span>
+      </div>
+    );
+  };
+
+  if (path === '/ok-how-admin-7x9k2mq8p' || path === '/ok-how-admin') {
+    if (path === '/ok-how-admin' && typeof window !== 'undefined') {
+      window.history.replaceState({}, '', '/ok-how-admin-7x9k2mq8p');
+    }
+
+    return (
+      <>
+        <DebugBanner />
+        <Suspense fallback={
+          <div style={{
+            minHeight: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'linear-gradient(135deg, #0A2540 0%, #1E3A5F 100%)'
+          }}>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '1rem'
+            }}>
+              <div style={{
+                width: '48px',
+                height: '48px',
+                border: '4px solid rgba(255, 255, 255, 0.2)',
+                borderTopColor: '#20BDAA',
+                borderRadius: '50%',
+                animation: 'spin 0.8s linear infinite'
+              }}></div>
+              <p style={{ color: '#E5E7EB', fontSize: '1rem' }}>Loading...</p>
+            </div>
+          </div>
+        }>
+          <OkHowAdminPage />
+        </Suspense>
+      </>
+    );
+  }
+
+  if (path === '/ok-how-to') {
+    return (
+      <>
+        <DebugBanner />
+        <Suspense fallback={
+          <div style={{
+            minHeight: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'linear-gradient(135deg, #0A2540 0%, #1E3A5F 100%)'
+          }}>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '1rem'
+            }}>
+              <div style={{
+                width: '48px',
+                height: '48px',
+                border: '4px solid rgba(255, 255, 255, 0.2)',
+                borderTopColor: '#20BDAA',
+                borderRadius: '50%',
+                animation: 'spin 0.8s linear infinite'
+              }}></div>
+              <p style={{ color: '#E5E7EB', fontSize: '1rem' }}>Loading...</p>
+            </div>
+          </div>
+        }>
+          <OkHowToPage />
+        </Suspense>
+      </>
+    );
+  }
   const [backgroundProgress, setBackgroundProgress] = useState(0);
   const [activeSection, setActiveSection] = useState<string>('');
 

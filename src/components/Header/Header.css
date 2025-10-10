@@ -50,18 +50,6 @@
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.logo-img.scrolled {
-  display: none;
-}
-
-.site-header.scrolled .logo-img {
-  display: none;
-}
-
-.site-header.scrolled .logo-img.scrolled {
-  display: inline-block;
-}
-
 /* Texto legado (si queda) */
 .logo-text {
   font-weight: 700;
