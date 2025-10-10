@@ -4,7 +4,7 @@ import './OkHowToHero.css';
 const OkHowToHero: React.FC = () => {
   return (
     <section className="okhowto-hero">
-      <div className="container mx-auto px-4 py-16 md:py-24 text-center">
+      <div className="container mx-auto px-4 py-10 md:py-14 text-center">
         <div className="hero-logo-container">
           <img
             src="/images/logo-scrolled.svg"
