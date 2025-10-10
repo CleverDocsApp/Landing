@@ -100,13 +100,13 @@ export const handler: Handler = async (event: HandlerEvent) => {
 
     const cloudinaryCloudName = process.env.CLOUDINARY_CLOUD_NAME;
     const cloudinaryUploadPreset = process.env.CLOUDINARY_UPLOAD_PRESET;
-    const cloudinaryFolder = process.env.CLOUDINARY_FOLDER || 'okhowto-thumbs';
+    const cloudinaryFolder = process.env.CLOUDINARY_FOLDER;
 
-    if (!cloudinaryCloudName || !cloudinaryUploadPreset) {
+    if (!cloudinaryCloudName || !cloudinaryUploadPreset || !cloudinaryFolder) {
       return {
         statusCode: 500,
         headers: setCorsHeaders(origin),
-        body: 'Server configuration error: Missing Cloudinary credentials',
+        body: 'Server configuration error: Missing CLOUDINARY_CLOUD_NAME, CLOUDINARY_UPLOAD_PRESET, or CLOUDINARY_FOLDER',
       };
     }
 

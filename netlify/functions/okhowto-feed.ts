@@ -34,7 +34,16 @@ export const handler: Handler = async (event: HandlerEvent) => {
   }
 
   try {
-    const namespace = process.env.BLOBS_NAMESPACE || 'okhowto';
+    const namespace = process.env.BLOBS_NAMESPACE;
+
+    if (!namespace) {
+      return {
+        statusCode: 500,
+        headers: setCorsHeaders(origin),
+        body: JSON.stringify([]),
+      };
+    }
+
     const store = getStore(namespace);
 
     const existingData = await store.get('videos.json', { type: 'text' });

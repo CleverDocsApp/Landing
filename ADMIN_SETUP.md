@@ -31,9 +31,9 @@ This guide will help you set up and use the private admin panel for managing OK 
 
 #### Preset Configuration:
 
-- **Preset name**: `okhowto-unsigned`
+- **Preset name**: `<your-preset>` (e.g., choose any name for your unsigned preset)
 - **Signing Mode**: **Unsigned** (CRITICAL: Must be unsigned)
-- **Folder**: `okhowto-thumbs` (fixed, not user-modifiable)
+- **Folder**: `<your-folder>` (fixed, not user-modifiable)
 - **Allowed formats**: `jpg,png,webp`
 - **Max file size**: `300000` bytes (300KB)
 - **Transformation**: Leave empty (no automatic transformations)
@@ -46,7 +46,7 @@ This guide will help you set up and use the private admin panel for managing OK 
 
 1. Go to **Dashboard** (home page)
 2. Find your **Cloud name** (e.g., `dxyz1234abc`)
-3. Note down the upload preset name: `okhowto-unsigned`
+3. Note down the upload preset name: `<your-preset>`
 
 ---
 
@@ -62,9 +62,9 @@ This guide will help you set up and use the private admin panel for managing OK 
 |---------------|-------|-------|
 | `OKH_PASS` | Your secure passphrase (min 16 characters) | Production + Deploy Previews |
 | `CLOUDINARY_CLOUD_NAME` | Your Cloudinary cloud name | Production + Deploy Previews |
-| `CLOUDINARY_UPLOAD_PRESET` | `okhowto-unsigned` | Production + Deploy Previews |
-| `CLOUDINARY_FOLDER` | `okhowto-thumbs` | Production + Deploy Previews |
-| `BLOBS_NAMESPACE` | `okhowto` | Production + Deploy Previews |
+| `CLOUDINARY_UPLOAD_PRESET` | `<your-preset>` | Production + Deploy Previews |
+| `CLOUDINARY_FOLDER` | `<your-folder>` | Production + Deploy Previews |
+| `BLOBS_NAMESPACE` | `<your-namespace>` | Production + Deploy Previews |
 
 **IMPORTANT**: Make sure all variables are set for both **Production** and **Deploy Previews**.
 
@@ -243,7 +243,7 @@ This guide will help you set up and use the private admin panel for managing OK 
 
 **Cloudinary preset restrictions**:
 - Unsigned upload (no signature required)
-- Fixed folder: `okhowto-thumbs`
+- Fixed folder: `<your-folder>`
 - Allowed formats: `jpg,png,webp`
 - Max file size: 300KB
 - No transformations applied
@@ -453,7 +453,7 @@ For issues not covered in this guide:
 ## Checklist for Initial Setup
 
 - [ ] Cloudinary account created
-- [ ] Upload preset `okhowto-unsigned` configured
+- [ ] Upload preset `<your-preset>` configured
 - [ ] All environment variables set in Netlify
 - [ ] Deploy Preview tested
 - [ ] Upload functionality tested

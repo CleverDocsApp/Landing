@@ -106,7 +106,16 @@ export const handler: Handler = async (event: HandlerEvent) => {
       updatedAt: new Date().toISOString(),
     };
 
-    const namespace = process.env.BLOBS_NAMESPACE || 'okhowto';
+    const namespace = process.env.BLOBS_NAMESPACE;
+
+    if (!namespace) {
+      return {
+        statusCode: 500,
+        headers: setCorsHeaders(origin),
+        body: 'Server configuration error: Missing BLOBS_NAMESPACE',
+      };
+    }
+
     const store = getStore(namespace);
 
     let videos: VideoRecord[] = [];
