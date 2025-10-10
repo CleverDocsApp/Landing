@@ -2,7 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Activity } from 'lucide-react';
 import './Header.css';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  hideTopLogo?: boolean;
+}
+
+const Header: React.FC<HeaderProps> = ({ hideTopLogo = false }) => {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -37,22 +41,19 @@ const Header: React.FC = () => {
   return (
     <header className={`site-header ${scrolled ? 'scrolled' : ''}`}>
       <div className="header-container">
-       <div
-  className="logo"
-  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-  style={{ cursor: 'pointer' }}
->
-  <img
-    src="/images/logo-default.svg"
-    alt="On Klinic"
-    className="logo-img"
-  />
-  <img
-    src="/images/logo-scrolled.svg"
-    alt="On Klinic Scrolled"
-    className="logo-img scrolled"
-  />
-</div>
+       {!hideTopLogo && (
+         <div
+           className="logo"
+           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+           style={{ cursor: 'pointer' }}
+         >
+           <img
+             src="/images/logo-scrolled.svg"
+             alt="On Klinic"
+             className="logo-img"
+           />
+         </div>
+       )}
 
         
         <nav className="main-nav">

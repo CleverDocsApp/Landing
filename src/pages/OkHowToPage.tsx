@@ -110,7 +110,7 @@ const OkHowToPage: React.FC = () => {
   if (error) {
     return (
       <div className="okhowto-page">
-        <Header />
+        <Header hideTopLogo={true} />
         <main className="okhowto-main">
           <div className="error-container">
             <h2 className="error-title">Oops! Something went wrong</h2>
@@ -125,7 +125,7 @@ const OkHowToPage: React.FC = () => {
   if (!data) {
     return (
       <div className="okhowto-page">
-        <Header />
+        <Header hideTopLogo={true} />
         <main className="okhowto-main">
           <div className="loading-container">
             <div className="loading-spinner"></div>
@@ -146,7 +146,7 @@ const OkHowToPage: React.FC = () => {
 
   return (
     <div className="okhowto-page">
-      <Header />
+      <Header hideTopLogo={true} />
       <main className="okhowto-main">
         <OkHowToHero />
 

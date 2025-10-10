@@ -7,7 +7,7 @@ const OkHowToHero: React.FC = () => {
       <div className="container mx-auto px-4 py-16 md:py-24 text-center">
         <div className="hero-logo-container">
           <img
-            src="/images/logo-default.svg"
+            src="/images/logo-scrolled.svg"
             alt="On Klinic"
             className="hero-logo"
           />
