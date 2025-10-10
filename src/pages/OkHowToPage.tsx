@@ -39,8 +39,34 @@ const OkHowToPage: React.FC = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const response = await import('../data/okhowto.json');
-        setData(response.default);
+        const { isRemoteModeEnabled } = await import('../config/okhowto.runtime');
+
+        if (isRemoteModeEnabled()) {
+          try {
+            const { fetchRemoteFeed } = await import('../utils/okhowtoAdmin');
+            const remoteVideos = await fetchRemoteFeed(4000);
+
+            const localData = await import('../data/okhowto.json');
+
+            setData({
+              categories: localData.default.categories,
+              videos: remoteVideos.length > 0 ? remoteVideos : localData.default.videos,
+            });
+
+            if (remoteVideos.length > 0) {
+              console.log('[OK How To] Loaded videos from remote feed');
+            } else {
+              console.log('[OK How To] Remote feed empty, using local data');
+            }
+          } catch (remoteFetchError) {
+            console.log('[OK How To] Remote feed failed, falling back to local data:', remoteFetchError);
+            const response = await import('../data/okhowto.json');
+            setData(response.default);
+          }
+        } else {
+          const response = await import('../data/okhowto.json');
+          setData(response.default);
+        }
       } catch (err) {
         console.error('Error loading video data:', err);
         setError('Failed to load videos. Please try again later.');

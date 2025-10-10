@@ -9,9 +9,42 @@ import PricingTeaser from './components/PricingTeaser/PricingTeaser';
 import Footer from './components/Footer/Footer';
 
 const OkHowToPage = lazy(() => import('./pages/OkHowToPage'));
+const OkHowAdminPage = lazy(() => import('./pages/OkHowAdminPage'));
 
 function App() {
-  // Soft-routing: check pathname and render OK How To page if needed
+  if (window.location.pathname === '/ok-how-admin-7x9k2mq8p') {
+    return (
+      <Suspense fallback={
+        <div style={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'linear-gradient(135deg, #0A2540 0%, #1E3A5F 100%)'
+        }}>
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '1rem'
+          }}>
+            <div style={{
+              width: '48px',
+              height: '48px',
+              border: '4px solid rgba(255, 255, 255, 0.2)',
+              borderTopColor: '#20BDAA',
+              borderRadius: '50%',
+              animation: 'spin 0.8s linear infinite'
+            }}></div>
+            <p style={{ color: '#E5E7EB', fontSize: '1rem' }}>Loading...</p>
+          </div>
+        </div>
+      }>
+        <OkHowAdminPage />
+      </Suspense>
+    );
+  }
+
   if (window.location.pathname === '/ok-how-to') {
     return (
       <Suspense fallback={
