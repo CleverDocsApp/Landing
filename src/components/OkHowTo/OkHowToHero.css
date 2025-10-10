@@ -16,6 +16,19 @@
   pointer-events: none;
 }
 
+.hero-logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.hero-logo {
+  height: 120px;
+  width: auto;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
 .hero-title {
   font-size: 3rem;
   font-weight: 800;
@@ -32,6 +45,10 @@
 }
 
 @media (max-width: 768px) {
+  .hero-logo {
+    height: 80px;
+  }
+
   .hero-title {
     font-size: 2rem;
   }
