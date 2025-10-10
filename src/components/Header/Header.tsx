@@ -49,7 +49,7 @@ const Header: React.FC<HeaderProps> = ({ hideTopLogo = false, showNavigation = t
            style={{ cursor: 'pointer' }}
          >
            <img
-             src="/images/logo-scrolled.svg"
+             src={scrolled ? "/images/logo-scrolled.svg" : "/images/logo-default.svg"}
              alt="On Klinic"
              className="logo-img"
            />
