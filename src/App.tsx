@@ -12,7 +12,10 @@ const OkHowToPage = lazy(() => import('./pages/OkHowToPage'));
 const OkHowAdminPage = lazy(() => import('./pages/OkHowAdminPage'));
 
 function App() {
-  if (window.location.pathname === '/ok-how-admin-7x9k2mq8p') {
+  const raw = typeof window !== 'undefined' ? window.location.pathname : '/';
+  const path = raw.replace(/\/+$/, '') || '/';
+
+  if (path === '/ok-how-admin-7x9k2mq8p') {
     return (
       <Suspense fallback={
         <div style={{
@@ -45,7 +48,7 @@ function App() {
     );
   }
 
-  if (window.location.pathname === '/ok-how-to') {
+  if (path === '/ok-how-to') {
     return (
       <Suspense fallback={
         <div style={{
