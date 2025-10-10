@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { getVimeoEmbedUrl, formatDuration, isPlaceholderId } from '../../utils/vimeoHelpers';
 import './VideoCard.css';
 
@@ -15,16 +15,35 @@ interface VideoCardProps {
   video: Video;
   isExpanded: boolean;
   onToggle: () => void;
+  onOpenLightbox?: () => void;
 }
 
-const VideoCard: React.FC<VideoCardProps> = ({ video, isExpanded, onToggle }) => {
+const VideoCard: React.FC<VideoCardProps> = ({ video, isExpanded, onToggle, onOpenLightbox }) => {
   const [imageError, setImageError] = useState(false);
+  const expandButtonRef = useRef<HTMLButtonElement>(null);
   const isPlaceholder = isPlaceholderId(video.id);
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       onToggle();
+    }
+  };
+
+  const handleExpandClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onOpenLightbox) {
+      onOpenLightbox();
+    }
+  };
+
+  const handleExpandKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      e.stopPropagation();
+      if (onOpenLightbox) {
+        onOpenLightbox();
+      }
     }
   };
 
@@ -67,6 +86,20 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, isExpanded, onToggle }) =>
                 </svg>
               </div>
             </div>
+            {onOpenLightbox && (
+              <button
+                ref={expandButtonRef}
+                className="expand-button"
+                onClick={handleExpandClick}
+                onKeyPress={handleExpandKeyPress}
+                aria-label={`View ${video.title} in large view`}
+                type="button"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M15 3H21V9M9 21H3V15M21 3L14 10M3 21L10 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+            )}
             {video.duration && (
               <div className="duration-badge">{formatDuration(video.duration)}</div>
             )}
@@ -105,4 +138,5 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, isExpanded, onToggle }) =>
   );
 };
 
+export { type Video };
 export default VideoCard;

@@ -56,6 +56,49 @@
   transform: scale(1);
 }
 
+.expand-button {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  z-index: 5;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+}
+
+.expand-button:hover {
+  background: rgba(32, 189, 170, 0.9);
+  border-color: #20BDAA;
+  transform: scale(1.1);
+}
+
+.expand-button:focus {
+  outline: 2px solid #20BDAA;
+  outline-offset: 2px;
+}
+
+.expand-button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .expand-button {
+    transition: none;
+  }
+  .expand-button:hover {
+    transform: none;
+  }
+}
+
 .duration-badge {
   position: absolute;
   bottom: 0.75rem;

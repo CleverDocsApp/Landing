@@ -1,23 +1,15 @@
 import React from 'react';
-import VideoCard from './VideoCard';
+import VideoCard, { type Video } from './VideoCard';
 import './VideoGrid.css';
-
-interface Video {
-  id: string | number;
-  title: string;
-  description: string;
-  category: string;
-  thumb: string;
-  duration?: number;
-}
 
 interface VideoGridProps {
   videos: Video[];
   expandedVideoId: string | number | null;
   onVideoToggle: (videoId: string | number) => void;
+  onOpenLightbox?: (videoId: string | number) => void;
 }
 
-const VideoGrid: React.FC<VideoGridProps> = ({ videos, expandedVideoId, onVideoToggle }) => {
+const VideoGrid: React.FC<VideoGridProps> = ({ videos, expandedVideoId, onVideoToggle, onOpenLightbox }) => {
   if (videos.length === 0) {
     return (
       <div className="empty-state">
@@ -43,6 +35,7 @@ const VideoGrid: React.FC<VideoGridProps> = ({ videos, expandedVideoId, onVideoT
           video={video}
           isExpanded={expandedVideoId === video.id}
           onToggle={() => onVideoToggle(video.id)}
+          onOpenLightbox={onOpenLightbox ? () => onOpenLightbox(video.id) : undefined}
         />
       ))}
     </div>

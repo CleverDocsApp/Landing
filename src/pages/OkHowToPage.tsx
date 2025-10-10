@@ -5,6 +5,7 @@ import OkHowToHero from '../components/OkHowTo/OkHowToHero';
 import SearchBar from '../components/OkHowTo/SearchBar';
 import CategoryFilter from '../components/OkHowTo/CategoryFilter';
 import VideoGrid from '../components/OkHowTo/VideoGrid';
+import VideoLightbox from '../components/OkHowTo/VideoLightbox';
 import './OkHowToPage.css';
 
 interface Category {
@@ -32,6 +33,7 @@ const OkHowToPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [expandedVideoId, setExpandedVideoId] = useState<string | number | null>(null);
+  const [lightboxVideoId, setLightboxVideoId] = useState<string | number | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -71,6 +73,15 @@ const OkHowToPage: React.FC = () => {
 
   const handleVideoToggle = (videoId: string | number) => {
     setExpandedVideoId((prevId) => (prevId === videoId ? null : videoId));
+  };
+
+  const handleOpenLightbox = (videoId: string | number) => {
+    setExpandedVideoId(null);
+    setLightboxVideoId(videoId);
+  };
+
+  const handleCloseLightbox = () => {
+    setLightboxVideoId(null);
   };
 
   const handleCategoryChange = (slug: string) => {
@@ -129,6 +140,9 @@ const OkHowToPage: React.FC = () => {
   const filteredVideos = filterVideos();
   const videoCounts = getVideoCounts();
   const hasActiveFilters = selectedCategory !== 'all' || searchTerm.trim() !== '';
+  const lightboxVideo = lightboxVideoId !== null
+    ? data?.videos.find(v => v.id === lightboxVideoId)
+    : null;
 
   return (
     <div className="okhowto-page">
@@ -159,11 +173,19 @@ const OkHowToPage: React.FC = () => {
               videos={filteredVideos}
               expandedVideoId={expandedVideoId}
               onVideoToggle={handleVideoToggle}
+              onOpenLightbox={handleOpenLightbox}
             />
           </div>
         </section>
       </main>
       <Footer />
+
+      {lightboxVideo && (
+        <VideoLightbox
+          video={lightboxVideo}
+          onClose={handleCloseLightbox}
+        />
+      )}
     </div>
   );
 };
