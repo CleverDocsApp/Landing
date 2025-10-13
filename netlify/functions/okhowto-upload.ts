@@ -1,124 +1,86 @@
 import type { Context } from "@netlify/functions";
 import { corsHeaders, preflight } from "./utils/cors";
 
-const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
-const MAX_FILE_SIZE = 300000;
+const MAX_BYTES = 300 * 1024;
 
 export default async (req: Request, _ctx: Context) => {
   const pf = preflight(req);
   if (pf) return pf;
 
   const origin = req.headers.get("Origin");
-  const headers = { ...corsHeaders(origin) };
+  const baseHeaders = { "Content-Type": "application/json; charset=utf-8", ...corsHeaders(origin) };
 
   if (req.method !== "POST") {
-    return new Response(JSON.stringify({ code: "METHOD_NOT_ALLOWED" }), {
-      status: 405,
-      headers: { "Content-Type": "application/json; charset=utf-8", ...headers }
+    return new Response(JSON.stringify({ code: "METHOD_NOT_ALLOWED", message: "Use POST" }), {
+      status: 405, headers: baseHeaders
     });
   }
 
   const pass = req.headers.get("x-ok-pass") ?? "";
   if (!process.env.OKH_PASS || pass !== process.env.OKH_PASS) {
     return new Response(JSON.stringify({ code: "UNAUTHORIZED", message: "Invalid passphrase" }), {
-      status: 401,
-      headers: { "Content-Type": "application/json; charset=utf-8", ...headers }
+      status: 401, headers: baseHeaders
     });
   }
 
   try {
-    const contentType = req.headers.get("content-type") || "";
-    if (!contentType.includes("multipart/form-data")) {
-      return new Response(JSON.stringify({ code: "BAD_REQUEST", message: "Expected multipart/form-data" }), {
-        status: 400,
-        headers: { "Content-Type": "application/json; charset=utf-8", ...headers }
+    const form = await req.formData();
+    const blob = form.get("thumb");
+
+    if (!blob || typeof blob === "string") {
+      return new Response(JSON.stringify({ code: "BAD_REQUEST", message: "Expected multipart field 'thumb' with a file" }), {
+        status: 400, headers: baseHeaders
       });
     }
 
-    const formData = await req.formData();
-    const fileEntry = formData.get("thumb");
-
-    if (!fileEntry || !(fileEntry instanceof File)) {
-      return new Response(JSON.stringify({ code: "BAD_REQUEST", message: "No file uploaded with name 'thumb'" }), {
-        status: 400,
-        headers: { "Content-Type": "application/json; charset=utf-8", ...headers }
+    const size = (blob as Blob).size ?? 0;
+    if (size > MAX_BYTES) {
+      return new Response(JSON.stringify({ code: "PAYLOAD_TOO_LARGE", message: "Thumbnail must be ≤ 300KB" }), {
+        status: 413, headers: baseHeaders
       });
     }
 
-    if (!ALLOWED_MIME_TYPES.includes(fileEntry.type)) {
-      return new Response(JSON.stringify({ code: "BAD_REQUEST", message: `Invalid file type. Allowed: ${ALLOWED_MIME_TYPES.join(', ')}` }), {
-        status: 400,
-        headers: { "Content-Type": "application/json; charset=utf-8", ...headers }
-      });
-    }
+    const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+    const uploadPreset = process.env.CLOUDINARY_UPLOAD_PRESET;
+    const folder = process.env.CLOUDINARY_FOLDER || "";
 
-    if (fileEntry.size > MAX_FILE_SIZE) {
-      return new Response(JSON.stringify({ code: "FILE_TOO_LARGE", message: `File too large. Maximum size: ${MAX_FILE_SIZE} bytes (300KB)` }), {
-        status: 413,
-        headers: { "Content-Type": "application/json; charset=utf-8", ...headers }
-      });
-    }
-
-    const cloudinaryCloudName = process.env.CLOUDINARY_CLOUD_NAME;
-    const cloudinaryUploadPreset = process.env.CLOUDINARY_UPLOAD_PRESET;
-    const cloudinaryFolder = process.env.CLOUDINARY_FOLDER;
-
-    if (!cloudinaryCloudName || !cloudinaryUploadPreset || !cloudinaryFolder) {
-      const missing = [];
-      if (!cloudinaryCloudName) missing.push('CLOUDINARY_CLOUD_NAME');
-      if (!cloudinaryUploadPreset) missing.push('CLOUDINARY_UPLOAD_PRESET');
-      if (!cloudinaryFolder) missing.push('CLOUDINARY_FOLDER');
+    if (!cloudName || !uploadPreset) {
       return new Response(JSON.stringify({
-        code: "CONFIG_ERROR",
-        message: `Missing configuration: ${missing.join(', ')}`
-      }), {
-        status: 500,
-        headers: { "Content-Type": "application/json; charset=utf-8", ...headers }
-      });
+        code: "CONFIG_MISSING",
+        message: "Missing CLOUDINARY_CLOUD_NAME or CLOUDINARY_UPLOAD_PRESET"
+      }), { status: 500, headers: baseHeaders });
     }
 
-    const cloudinaryFormData = new FormData();
-    cloudinaryFormData.append('file', fileEntry);
-    cloudinaryFormData.append('upload_preset', cloudinaryUploadPreset);
-    cloudinaryFormData.append('folder', cloudinaryFolder);
+    const up = new FormData();
+    up.append("file", blob as Blob, "thumb");
+    up.append("upload_preset", uploadPreset);
+    if (folder) up.append("folder", folder);
 
-    const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/image/upload`;
-    const uploadResponse = await fetch(cloudinaryUrl, {
-      method: 'POST',
-      body: cloudinaryFormData,
+    const cloudRes = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`, {
+      method: "POST",
+      body: up
     });
 
-    if (!uploadResponse.ok) {
-      const errorText = await uploadResponse.text();
-      console.error('[Upload] Cloudinary error:', uploadResponse.status, errorText);
-      return new Response(JSON.stringify({
-        code: "UPLOAD_FAILED",
-        message: `Cloudinary upload failed: ${uploadResponse.status}`
-      }), {
-        status: 502,
-        headers: { "Content-Type": "application/json; charset=utf-8", ...headers }
+    const data = await cloudRes.json();
+
+    if (!cloudRes.ok) {
+      const msg = data?.error?.message || "Upload failed";
+      return new Response(JSON.stringify({ code: "CLOUDINARY_ERROR", message: msg }), {
+        status: 502, headers: baseHeaders
       });
     }
 
-    const uploadResult = await uploadResponse.json();
+    const { secure_url, width, height, format, bytes } = data;
     return new Response(JSON.stringify({
-      url: uploadResult.secure_url,
-      width: uploadResult.width,
-      height: uploadResult.height,
-      bytes: uploadResult.bytes,
-      publicId: uploadResult.public_id,
-    }), {
-      status: 200,
-      headers: { "Content-Type": "application/json; charset=utf-8", ...headers }
-    });
-  } catch (error: any) {
-    console.error('[Upload] Error:', error);
+      ok: true,
+      url: secure_url,
+      width, height, format, bytes
+    }), { status: 200, headers: baseHeaders });
+
+  } catch (err: any) {
     return new Response(JSON.stringify({
       code: "INTERNAL_ERROR",
-      message: error?.message || "Upload failed"
-    }), {
-      status: 500,
-      headers: { "Content-Type": "application/json; charset=utf-8", ...headers }
-    });
+      message: String(err?.message || err)
+    }), { status: 500, headers: baseHeaders });
   }
 };
