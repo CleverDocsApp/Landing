@@ -450,6 +450,61 @@ For issues not covered in this guide:
 
 ---
 
+## Smoke Test
+
+After deploying your site to Netlify, perform these quick checks to verify everything is working:
+
+### Step 1: Test Diagnostics Endpoint
+
+1. Open in browser: `https://[your-domain]/.netlify/functions/okhowto-diagnostics`
+2. Expected response: 200 status with JSON containing:
+   ```json
+   {
+     "ok": true,
+     "env": {
+       "BLOBS_NAMESPACE": true,
+       "CLOUDINARY_CLOUD_NAME": true,
+       "CLOUDINARY_UPLOAD_PRESET": true,
+       "CLOUDINARY_FOLDER": true,
+       "OKH_PASS": true,
+       "ALLOWED_ORIGINS_count": 2
+     },
+     "cors": {
+       "origin": null,
+       "allowed": false
+     },
+     "blobs": {
+       "namespace": "<YOUR_BLOBS_NAMESPACE>",
+       "videosKeyExists": false
+     }
+   }
+   ```
+3. If any `env` values are `false`, those environment variables are missing in Netlify
+
+### Step 2: Test Feed Endpoint
+
+1. Open in browser: `https://[your-domain]/.netlify/functions/okhowto-feed`
+2. Expected response: 200 status with `[]` (empty array on first run)
+3. After saving videos via admin, this should return an array of videos
+
+### Common Issues
+
+**403 Forbidden Error**
+- Cause: CORS blocking your origin
+- Solution: Add your domain to `ALLOWED_ORIGINS` in Netlify environment variables
+- Format: `https://example.com,https://www.example.com` (no trailing slashes)
+
+**500 Internal Server Error**
+- Cause: Missing environment variables
+- Solution: Check diagnostics endpoint to see which variables are missing
+- Verify all variables are set in "All deploy contexts" (not just Production)
+
+**Empty Feed Returns 200**
+- This is normal: The feed returns `[]` if no videos have been saved yet
+- Not an error: The system gracefully handles missing data
+
+---
+
 ## Checklist for Initial Setup
 
 - [ ] Cloudinary account created

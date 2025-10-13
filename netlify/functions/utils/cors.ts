@@ -1,59 +1,75 @@
-const ALLOWED_ORIGINS = [
-  'https://onklinic.com',
-  'https://www.onklinic.com',
-];
+export const PREVIEW_RE = /^https:\/\/[a-z0-9-]+--onkliniclp\.netlify\.app$/i;
 
-export const validateOrigin = (origin: string | null): boolean => {
+export const parseOrigins = (): string[] => {
+  const envOrigins = process.env.ALLOWED_ORIGINS || '';
+  const parsed = envOrigins
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  const defaults = ['https://onklinic.com', 'https://www.onklinic.com'];
+
+  return parsed.length > 0 ? parsed : defaults;
+};
+
+export const isAllowedOrigin = (origin: string | undefined): boolean => {
   if (!origin) {
-    console.log('[CORS] No origin provided');
     return false;
   }
 
-  if (ALLOWED_ORIGINS.includes(origin)) {
-    console.log('[CORS] Origin allowed (exact match):', origin);
+  const allowedOrigins = parseOrigins();
+  if (allowedOrigins.includes(origin)) {
+    return true;
+  }
+
+  if (PREVIEW_RE.test(origin)) {
     return true;
   }
 
   if (origin.endsWith('.netlify.app')) {
-    console.log('[CORS] Origin allowed (Netlify preview):', origin);
     return true;
   }
 
   if (origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) {
-    console.log('[CORS] Origin allowed (localhost):', origin);
     return true;
   }
 
-  console.log('[CORS] Origin rejected:', origin);
   return false;
 };
 
-export const setCorsHeaders = (origin: string | null): Record<string, string> => {
+export const corsHeaders = (origin: string | undefined): Record<string, string> => {
   const headers: Record<string, string> = {
+    'Vary': 'Origin',
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, X-OK-PASS',
     'Access-Control-Max-Age': '86400',
   };
 
-  if (origin && validateOrigin(origin)) {
+  if (origin && isAllowedOrigin(origin)) {
     headers['Access-Control-Allow-Origin'] = origin;
+  } else {
+    headers['Access-Control-Allow-Origin'] = 'https://onkliniclp.netlify.app';
   }
 
   return headers;
 };
 
-export const handleCorsPrelight = (origin: string | null) => {
-  if (!validateOrigin(origin)) {
-    return {
-      statusCode: 403,
-      headers: { 'Content-Type': 'text/plain' },
-      body: 'Forbidden: Invalid origin',
-    };
-  }
-
+export const preflight = (origin: string | undefined) => {
   return {
     statusCode: 204,
-    headers: setCorsHeaders(origin),
+    headers: corsHeaders(origin),
     body: '',
   };
+};
+
+export const validateOrigin = (origin: string | null): boolean => {
+  return isAllowedOrigin(origin || undefined);
+};
+
+export const setCorsHeaders = (origin: string | null): Record<string, string> => {
+  return corsHeaders(origin || undefined);
+};
+
+export const handleCorsPrelight = (origin: string | null) => {
+  return preflight(origin || undefined);
 };

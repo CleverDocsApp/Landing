@@ -1,5 +1,26 @@
-import { UPLOAD_URL, SAVE_URL, FEED_URL } from '../config/okhowto.runtime';
+import { UPLOAD_URL, SAVE_URL, FEED_URL, DIAGNOSTICS_URL } from '../config/okhowto.runtime';
 import type { UploadResponse, SaveRequest, FeedResponse } from '../types/okhowto';
+
+export interface DiagnosticsResponse {
+  ok: boolean;
+  env: {
+    BLOBS_NAMESPACE: boolean;
+    CLOUDINARY_CLOUD_NAME: boolean;
+    CLOUDINARY_UPLOAD_PRESET: boolean;
+    CLOUDINARY_FOLDER: boolean;
+    OKH_PASS: boolean;
+    ALLOWED_ORIGINS_count: number;
+  };
+  cors: {
+    origin: string | null;
+    allowed: boolean;
+  };
+  blobs: {
+    namespace: string;
+    videosKeyExists: boolean;
+  };
+  notes: string;
+}
 
 export const validatePassphrase = (passphrase: string): boolean => {
   return passphrase.trim().length >= 8;
@@ -93,12 +114,32 @@ export const saveVideo = async (
   }
 };
 
+export const fetchDiagnostics = async (): Promise<DiagnosticsResponse> => {
+  try {
+    const response = await fetch(DIAGNOSTICS_URL, {
+      method: 'GET',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Diagnostics request failed with status ${response.status}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    if (error instanceof TypeError && error.message.includes('fetch')) {
+      throw new Error('Network error. Unable to reach diagnostics endpoint.');
+    }
+    throw error;
+  }
+};
+
 export const fetchRemoteFeed = async (timeoutMs = 4000): Promise<FeedResponse> => {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
     const response = await fetch(FEED_URL, {
+      method: 'GET',
       signal: controller.signal,
     });
 
@@ -129,7 +170,31 @@ export const fetchRemoteFeed = async (timeoutMs = 4000): Promise<FeedResponse> =
     }
 
     if (error instanceof TypeError && error.message.includes('fetch')) {
-      throw new Error('Network error. Please check your internet connection.');
+      try {
+        const diagnostics = await fetchDiagnostics();
+
+        if (!diagnostics.env.BLOBS_NAMESPACE) {
+          throw new Error('Missing BLOBS_NAMESPACE in Netlify environment variables');
+        }
+
+        if (!diagnostics.cors.allowed) {
+          throw new Error('Origin not allowed by CORS. Check ALLOWED_ORIGINS in Netlify settings');
+        }
+
+        if (!diagnostics.blobs.videosKeyExists) {
+          return [];
+        }
+
+        throw new Error('Network error accessing feed. Check diagnostics.');
+      } catch (diagError) {
+        if (diagError instanceof Error && diagError.message.includes('BLOBS_NAMESPACE')) {
+          throw diagError;
+        }
+        if (diagError instanceof Error && diagError.message.includes('CORS')) {
+          throw diagError;
+        }
+        throw new Error('Network error. Please check your internet connection.');
+      }
     }
 
     throw error;

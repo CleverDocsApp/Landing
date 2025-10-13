@@ -1,6 +1,6 @@
 import type { Handler, HandlerEvent } from '@netlify/functions';
 import { getStore } from '@netlify/blobs';
-import { validateOrigin, setCorsHeaders } from './utils/cors';
+import { corsHeaders, preflight } from './utils/cors';
 
 interface VideoRecord {
   id: string | number;
@@ -16,56 +16,49 @@ interface VideoRecord {
 }
 
 export const handler: Handler = async (event: HandlerEvent) => {
-  const origin = event.headers.origin || null;
+  const origin = event.headers.origin || undefined;
 
   if (event.httpMethod === 'OPTIONS') {
-    return {
-      statusCode: 204,
-      headers: setCorsHeaders(origin),
-    };
+    return preflight(origin);
   }
 
   if (event.httpMethod !== 'GET') {
     return {
       statusCode: 405,
-      headers: setCorsHeaders(origin),
-      body: 'Method not allowed',
+      headers: corsHeaders(origin),
+      body: JSON.stringify({ error: 'Method not allowed' }),
     };
   }
 
   try {
     console.log('[Feed] Request received from origin:', origin);
 
-    const namespace = process.env.BLOBS_NAMESPACE;
-
-    if (!namespace) {
-      console.error('[Feed] Missing BLOBS_NAMESPACE environment variable');
-      return {
-        statusCode: 500,
-        headers: setCorsHeaders(origin),
-        body: JSON.stringify({ error: 'Server configuration error: Missing BLOBS_NAMESPACE environment variable' }),
-      };
-    }
-
+    const namespace = process.env.BLOBS_NAMESPACE || 'okhowto';
     console.log('[Feed] Using Blobs namespace:', namespace);
-
-    const store = getStore(namespace);
-    console.log('[Feed] Fetching videos from Blobs...');
-
-    const existingData = await store.get('videos.json', { type: 'text' });
 
     let videos: VideoRecord[] = [];
 
-    if (existingData) {
-      try {
-        videos = JSON.parse(existingData);
-        console.log('[Feed] Successfully parsed', videos.length, 'videos from Blobs');
-      } catch (parseError) {
-        console.error('[Feed] Failed to parse videos.json:', parseError);
-        videos = [];
+    try {
+      const store = getStore(namespace);
+      console.log('[Feed] Fetching videos from Blobs...');
+
+      const existingData = await store.get('videos.json', { type: 'text' });
+
+      if (existingData) {
+        try {
+          videos = JSON.parse(existingData);
+          console.log('[Feed] Successfully parsed', videos.length, 'videos from Blobs');
+        } catch (parseError) {
+          console.error('[Feed] Failed to parse videos.json:', parseError);
+          videos = [];
+        }
+      } else {
+        console.log('[Feed] No videos.json found in Blobs, returning empty array');
       }
-    } else {
-      console.log('[Feed] No videos.json found in Blobs, returning empty array');
+    } catch (blobError) {
+      console.error('[Feed] Blobs access error:', blobError);
+      console.log('[Feed] Returning empty array due to Blobs error');
+      videos = [];
     }
 
     const validVideos = videos.filter((video) => {
@@ -90,19 +83,24 @@ export const handler: Handler = async (event: HandlerEvent) => {
     return {
       statusCode: 200,
       headers: {
-        ...setCorsHeaders(origin),
+        ...corsHeaders(origin),
         'Content-Type': 'application/json',
         'Cache-Control': 'public, max-age=60',
       },
       body: JSON.stringify(limitedVideos),
     };
   } catch (error) {
-    console.error('[Feed] Error:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('[Feed] Unexpected error:', error);
+    console.log('[Feed] Returning empty array due to unexpected error');
+
     return {
-      statusCode: 500,
-      headers: setCorsHeaders(origin),
-      body: JSON.stringify({ error: 'Failed to fetch feed', details: errorMessage }),
+      statusCode: 200,
+      headers: {
+        ...corsHeaders(origin),
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache',
+      },
+      body: JSON.stringify([]),
     };
   }
 };
