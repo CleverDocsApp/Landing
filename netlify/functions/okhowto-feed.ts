@@ -16,10 +16,11 @@ interface VideoRecord {
 }
 
 export const handler: Handler = async (event: HandlerEvent) => {
-  const origin = event.headers.origin || undefined;
+  const origin = event.headers.origin || null;
 
-  if (event.httpMethod === 'OPTIONS') {
-    return preflight(origin);
+  const preflightResponse = preflight(event);
+  if (preflightResponse) {
+    return preflightResponse;
   }
 
   if (event.httpMethod !== 'GET') {

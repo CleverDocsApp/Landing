@@ -3,10 +3,10 @@ import { getStore } from '@netlify/blobs';
 import { corsHeaders, preflight, isAllowedOrigin } from './utils/cors';
 
 export const handler: Handler = async (event: HandlerEvent) => {
-  const origin = event.headers.origin || undefined;
+  const origin = event.headers.origin || null;
 
   if (event.httpMethod === 'OPTIONS') {
-    return preflight(origin);
+    return preflight(event);
   }
 
   if (event.httpMethod !== 'GET') {
@@ -36,6 +36,9 @@ export const handler: Handler = async (event: HandlerEvent) => {
       .map((s) => s.trim())
       .filter(Boolean).length;
 
+    const allowed = !origin ? true : isAllowedOrigin(origin);
+    const corsMode = !origin ? 'same-origin' : 'cors';
+
     const diagnostics = {
       ok: true,
       env: {
@@ -48,7 +51,8 @@ export const handler: Handler = async (event: HandlerEvent) => {
       },
       cors: {
         origin: origin || null,
-        allowed: isAllowedOrigin(origin),
+        allowed,
+        corsMode,
       },
       blobs: {
         namespace,

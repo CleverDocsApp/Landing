@@ -14,6 +14,7 @@ export interface DiagnosticsResponse {
   cors: {
     origin: string | null;
     allowed: boolean;
+    corsMode: 'same-origin' | 'cors';
   };
   blobs: {
     namespace: string;

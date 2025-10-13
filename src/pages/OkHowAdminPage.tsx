@@ -244,7 +244,11 @@ const OkHowAdminPage: React.FC = () => {
                     <div className="diagnostics-row">
                       <span className="diagnostics-label">CORS:</span>
                       <span className={diagnostics.cors.allowed ? 'diagnostics-value-ok' : 'diagnostics-value-error'}>
-                        {diagnostics.cors.allowed ? 'OK' : 'Blocked (check ALLOWED_ORIGINS)'}
+                        {diagnostics.cors.origin === null
+                          ? 'OK (same-origin)'
+                          : diagnostics.cors.allowed
+                            ? 'OK'
+                            : 'Blocked (check ALLOWED_ORIGINS)'}
                       </span>
                     </div>
                     <div className="diagnostics-row">
