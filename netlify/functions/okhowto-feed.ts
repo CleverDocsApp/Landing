@@ -7,7 +7,11 @@ export default async (req: Request, _ctx: Context) => {
   if (pf) return pf;
 
   const origin = req.headers.get("Origin");
-  const headers = { "Content-Type": "application/json; charset=utf-8", ...corsHeaders(origin) };
+  const headers = {
+    "Content-Type": "application/json; charset=utf-8",
+    "Cache-Control": "no-store",
+    ...corsHeaders(origin)
+  };
 
   try {
     const ns = process.env.BLOBS_NAMESPACE || "okhowto";

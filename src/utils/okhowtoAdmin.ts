@@ -19,6 +19,14 @@ export interface DiagnosticsResponse {
   blobs: {
     namespace: string;
     videosKeyExists: boolean;
+    currentCount: number;
+    error?: string;
+  };
+  context: {
+    CONTEXT: string | null;
+    SITE_NAME: string | null;
+    BRANCH: string | null;
+    DEPLOY_PRIME_URL: string | null;
   };
   notes: string;
 }
@@ -137,6 +145,7 @@ export const fetchDiagnostics = async (): Promise<DiagnosticsResponse> => {
   try {
     const response = await fetch(DIAGNOSTICS_URL, {
       method: 'GET',
+      cache: 'no-store',
     });
 
     if (!response.ok) {
@@ -159,6 +168,7 @@ export const fetchRemoteFeed = async (timeoutMs = 4000): Promise<FeedResponse> =
   try {
     const response = await fetch(FEED_URL, {
       method: 'GET',
+      cache: 'no-store',
       signal: controller.signal,
     });
 

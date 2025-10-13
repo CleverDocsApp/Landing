@@ -289,6 +289,28 @@ const OkHowAdminPage: React.FC = () => {
                         {diagnostics.blobs.videosKeyExists ? 'Yes' : 'No (will be created on first save)'}
                       </span>
                     </div>
+                    <div className="diagnostics-row">
+                      <span className="diagnostics-label">Current count:</span>
+                      <span className="diagnostics-value">{diagnostics.blobs.currentCount}</span>
+                    </div>
+                    <div className="diagnostics-row">
+                      <span className="diagnostics-label">Context:</span>
+                      <span className="diagnostics-value">
+                        {diagnostics.context.CONTEXT || 'unknown'}
+                      </span>
+                    </div>
+                    <div className="diagnostics-row">
+                      <span className="diagnostics-label">Site:</span>
+                      <span className="diagnostics-value">
+                        {diagnostics.context.SITE_NAME || 'unknown'}
+                      </span>
+                    </div>
+                    <div className="diagnostics-row">
+                      <span className="diagnostics-label">Branch:</span>
+                      <span className="diagnostics-value">
+                        {diagnostics.context.BRANCH || 'unknown'}
+                      </span>
+                    </div>
                     {feedOk === false && (
                       <div className="diagnostics-row">
                         <span className="diagnostics-label">Feed status:</span>

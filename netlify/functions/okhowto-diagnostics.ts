@@ -7,8 +7,13 @@ export default async (req: Request, _ctx: Context) => {
   if (pf) return pf;
 
   const origin = req.headers.get("Origin");
-  const headers = { "Content-Type": "application/json; charset=utf-8", ...corsHeaders(origin) };
+  const headers = {
+    "Content-Type": "application/json; charset=utf-8",
+    "Cache-Control": "no-store",
+    ...corsHeaders(origin)
+  };
 
+  const ns = process.env.BLOBS_NAMESPACE || "okhowto";
   const result: any = {
     ok: true,
     env: {
@@ -25,16 +30,29 @@ export default async (req: Request, _ctx: Context) => {
       allowed: isAllowedOrigin(origin)
     },
     blobs: {
-      namespace: process.env.BLOBS_NAMESPACE || "okhowto",
-      videosKeyExists: false
+      namespace: ns,
+      videosKeyExists: false,
+      currentCount: 0
+    },
+    context: {
+      CONTEXT: process.env.CONTEXT || null,
+      SITE_NAME: process.env.SITE_NAME || null,
+      BRANCH: process.env.BRANCH || null,
+      DEPLOY_PRIME_URL: process.env.DEPLOY_PRIME_URL || null
     },
     notes: "No secret values are returned."
   };
 
   try {
-    const store = getStore({ name: result.blobs.namespace });
+    const store = getStore({ name: ns });
     const data = await store.get("videos.json", { type: "json" });
-    result.blobs.videosKeyExists = !!data;
+    if (Array.isArray(data)) {
+      result.blobs.videosKeyExists = true;
+      result.blobs.currentCount = data.length;
+    } else if (data) {
+      result.blobs.videosKeyExists = true;
+      result.blobs.currentCount = -1;
+    }
   } catch (err: any) {
     result.blobs.error = String(err?.name || err);
   }
