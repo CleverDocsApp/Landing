@@ -1,5 +1,7 @@
 # Quick Start Guide - Fixing Admin Panel Errors
 
+> ⚠️ **IMPORTANT**: Use placeholder values in this documentation. Never paste your real environment variable values into docs or version control.
+
 If you're seeing "500 Internal Server Error" when trying to upload videos through the admin panel, it's likely due to missing environment variables in Netlify.
 
 ## Required Netlify Environment Variables
@@ -14,11 +16,11 @@ You need to configure these environment variables in your Netlify dashboard:
 
    | Variable Name | Description | Example Value |
    |---------------|-------------|---------------|
-   | `OKH_PASS` | Admin passphrase (min 16 characters) | `your-secure-passphrase-here` |
-   | `BLOBS_NAMESPACE` | Netlify Blobs storage namespace | `okhowto` |
-   | `CLOUDINARY_CLOUD_NAME` | Your Cloudinary cloud name | `dxyz1234abc` |
-   | `CLOUDINARY_UPLOAD_PRESET` | Cloudinary upload preset (must be unsigned) | `okhowto-uploads` |
-   | `CLOUDINARY_FOLDER` | Cloudinary folder for thumbnails | `okhowto-thumbs` |
+   | `OKH_PASS` | Admin passphrase (min 16 characters) | `<YOUR_STRONG_PASSPHRASE>` |
+   | `BLOBS_NAMESPACE` | Netlify Blobs storage namespace | `<YOUR_BLOBS_NAMESPACE>` |
+   | `CLOUDINARY_CLOUD_NAME` | Your Cloudinary cloud name | `<YOUR_CLOUD_NAME>` |
+   | `CLOUDINARY_UPLOAD_PRESET` | Cloudinary upload preset (must be unsigned) | `<YOUR_UNSIGNED_PRESET>` |
+   | `CLOUDINARY_FOLDER` | Cloudinary folder for thumbnails | `<YOUR_CLOUDINARY_FOLDER>` |
 
 3. **Set Variable Scope**
    - Make sure to set each variable for both:
@@ -34,7 +36,7 @@ If you haven't set up Cloudinary yet:
    - Go to Settings > Upload
    - Add upload preset
    - **IMPORTANT**: Set "Signing Mode" to "Unsigned"
-   - Set folder name (e.g., `okhowto-thumbs`)
+   - Set folder name (e.g., `example-folder`)
    - Allowed formats: `jpg,png,webp`
    - Max file size: `300000` bytes
 
@@ -51,10 +53,12 @@ After adding environment variables:
 3. Try uploading a video
 4. Check Netlify Functions logs if issues persist
 
+> 💡 **Remember**: All values shown in this guide are placeholders. Use your actual configuration values in Netlify's environment variables dashboard, not in documentation files.
+
 ## Common Error Messages (Now Fixed)
 
 ✅ **"Server configuration error: Missing BLOBS_NAMESPACE"**
-   - Solution: Add `BLOBS_NAMESPACE=okhowto` to Netlify env vars
+   - Solution: Add `BLOBS_NAMESPACE=<YOUR_BLOBS_NAMESPACE>` to Netlify env vars
 
 ✅ **"Server configuration error: Missing CLOUDINARY_CLOUD_NAME"**
    - Solution: Add all three Cloudinary variables to Netlify env vars

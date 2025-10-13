@@ -45,7 +45,7 @@ This guide will help you set up and use the private admin panel for managing OK 
 ### Step 3: Get Your Credentials
 
 1. Go to **Dashboard** (home page)
-2. Find your **Cloud name** (e.g., `dxyz1234abc`)
+2. Find your **Cloud name** (e.g., `<YOUR_CLOUD_NAME>`)
 3. Note down the upload preset name: `<your-preset>`
 
 ---
