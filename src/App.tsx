@@ -229,14 +229,14 @@ function App() {
             </div>
 
             <div className="text-center mb-6 md:mb-12 animate-slide-up order-1 md:order-2">
-              <h1 
+              <h1
                 className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-4 md:mb-6 relative"
-                style={{ 
+                style={{
                   color: `rgb(${heroTitleColor[0]}, ${heroTitleColor[1]}, ${heroTitleColor[2]})`,
                   transition: 'color 0.4s ease-out'
                 }}
               >
-                You Care, <span className="gradient-text">We Chart</span>
+                You Care, <span className="gradient-text-primary">We Chart</span>
                 <div className="absolute -top-12 -right-12 w-24 h-24 bg-primary opacity-10 rounded-full blur-3xl animate-pulse-slow hidden md:block"></div>
               </h1>
 
