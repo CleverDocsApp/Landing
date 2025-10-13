@@ -117,6 +117,7 @@ const OkHowAdminPage: React.FC = () => {
     }
 
     setThumbFile(file);
+    setThumbUrl('');
     setError('');
 
     const reader = new FileReader();
@@ -144,6 +145,7 @@ const OkHowAdminPage: React.FC = () => {
     try {
       const result = await uploadThumbnail(thumbFile, passphrase);
       setThumbUrl(result.url);
+      setThumbFile(null);
       setSuccess(`Thumbnail uploaded successfully (${formatFileSize(result.bytes)})`);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Upload failed');
@@ -166,6 +168,11 @@ const OkHowAdminPage: React.FC = () => {
     setThumbUrl('');
     setThumbPreview('');
     setVimeoIdError('');
+
+    const fileInput = document.getElementById('thumbFile') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
   };
 
   const handleEditVideo = (video: OkHowToVideo) => {
@@ -657,27 +664,42 @@ const OkHowAdminPage: React.FC = () => {
                   </div>
                 )}
 
-                {thumbFile && !thumbUrl && (
-                  <button
-                    className="btn btn-secondary"
-                    onClick={handleUploadThumbnail}
-                    disabled={isUploading}
-                    style={{ marginTop: '1rem' }}
-                  >
-                    {isUploading ? (
-                      <>
-                        <span className="loading-spinner"></span>
-                        Uploading...
-                      </>
-                    ) : (
-                      <>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                        Upload Thumbnail
-                      </>
+                {thumbFile && (
+                  <>
+                    {editingVideoId && !thumbUrl && (
+                      <div style={{
+                        marginTop: '0.75rem',
+                        padding: '0.5rem 0.75rem',
+                        backgroundColor: '#fef3c7',
+                        border: '1px solid #f59e0b',
+                        borderRadius: '0.375rem',
+                        fontSize: '0.875rem',
+                        color: '#92400e'
+                      }}>
+                        <strong>⚠️ New thumbnail selected.</strong> You must upload it before saving.
+                      </div>
                     )}
-                  </button>
+                    <button
+                      className="btn btn-secondary"
+                      onClick={handleUploadThumbnail}
+                      disabled={isUploading}
+                      style={{ marginTop: '1rem' }}
+                    >
+                      {isUploading ? (
+                        <>
+                          <span className="loading-spinner"></span>
+                          Uploading...
+                        </>
+                      ) : (
+                        <>
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                          {editingVideoId && thumbUrl ? 'Upload New Thumbnail' : 'Upload Thumbnail'}
+                        </>
+                      )}
+                    </button>
+                  </>
                 )}
 
                 {thumbUrl && (
