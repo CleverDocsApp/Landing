@@ -34,11 +34,16 @@ const OkHowAdminPage: React.FC = () => {
 
   const loadFeed = async () => {
     setIsLoadingFeed(true);
+    setError('');
     try {
       const videos = await fetchRemoteFeed();
       setFeedVideos(videos.slice(0, 20));
     } catch (err) {
       console.error('Failed to load feed:', err);
+      const errorMsg = err instanceof Error ? err.message : 'Unknown error';
+      if (errorMsg.includes('Server configuration error')) {
+        setError(`Configuration issue: ${errorMsg}. Please check the ADMIN_SETUP.md file for setup instructions.`);
+      }
     } finally {
       setIsLoadingFeed(false);
     }

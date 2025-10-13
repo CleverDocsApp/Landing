@@ -34,17 +34,23 @@ export const handler: Handler = async (event: HandlerEvent) => {
   }
 
   try {
+    console.log('[Feed] Request received from origin:', origin);
+
     const namespace = process.env.BLOBS_NAMESPACE;
 
     if (!namespace) {
+      console.error('[Feed] Missing BLOBS_NAMESPACE environment variable');
       return {
         statusCode: 500,
         headers: setCorsHeaders(origin),
-        body: JSON.stringify([]),
+        body: JSON.stringify({ error: 'Server configuration error: Missing BLOBS_NAMESPACE environment variable' }),
       };
     }
 
+    console.log('[Feed] Using Blobs namespace:', namespace);
+
     const store = getStore(namespace);
+    console.log('[Feed] Fetching videos from Blobs...');
 
     const existingData = await store.get('videos.json', { type: 'text' });
 
@@ -53,10 +59,13 @@ export const handler: Handler = async (event: HandlerEvent) => {
     if (existingData) {
       try {
         videos = JSON.parse(existingData);
+        console.log('[Feed] Successfully parsed', videos.length, 'videos from Blobs');
       } catch (parseError) {
-        console.error('Failed to parse videos.json:', parseError);
+        console.error('[Feed] Failed to parse videos.json:', parseError);
         videos = [];
       }
+    } else {
+      console.log('[Feed] No videos.json found in Blobs, returning empty array');
     }
 
     const validVideos = videos.filter((video) => {
@@ -76,6 +85,7 @@ export const handler: Handler = async (event: HandlerEvent) => {
     });
 
     const limitedVideos = sortedVideos.slice(0, 100);
+    console.log('[Feed] Returning', limitedVideos.length, 'videos');
 
     return {
       statusCode: 200,
@@ -87,11 +97,12 @@ export const handler: Handler = async (event: HandlerEvent) => {
       body: JSON.stringify(limitedVideos),
     };
   } catch (error) {
-    console.error('Feed error:', error);
+    console.error('[Feed] Error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return {
       statusCode: 500,
       headers: setCorsHeaders(origin),
-      body: JSON.stringify([]),
+      body: JSON.stringify({ error: 'Failed to fetch feed', details: errorMessage }),
     };
   }
 };

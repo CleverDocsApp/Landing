@@ -19,13 +19,17 @@ interface VideoRecord {
 export const handler: Handler = async (event: HandlerEvent) => {
   const origin = event.headers.origin || null;
 
+  console.log('[Save] Request received from origin:', origin);
+
   if (event.httpMethod === 'OPTIONS') {
     return handleCorsPrelight(origin);
   }
 
   if (!validateOrigin(origin)) {
+    console.error('[Save] Invalid origin:', origin);
     return {
       statusCode: 403,
+      headers: setCorsHeaders(origin),
       body: 'Forbidden: Invalid origin',
     };
   }
@@ -42,13 +46,25 @@ export const handler: Handler = async (event: HandlerEvent) => {
   const passphrase = event.headers['x-ok-pass'];
   const expectedPass = process.env.OKH_PASS;
 
-  if (!passphrase || !expectedPass || passphrase !== expectedPass) {
+  if (!expectedPass) {
+    console.error('[Save] Missing OKH_PASS environment variable');
+    return {
+      statusCode: 500,
+      headers: setCorsHeaders(origin),
+      body: 'Server configuration error: Missing OKH_PASS environment variable',
+    };
+  }
+
+  if (!passphrase || passphrase !== expectedPass) {
+    console.error('[Save] Invalid passphrase provided');
     return {
       statusCode: 401,
       headers: setCorsHeaders(origin),
       body: 'Unauthorized: Invalid passphrase',
     };
   }
+
+  console.log('[Save] Authentication successful');
 
   if (event.httpMethod !== 'POST') {
     return {
@@ -109,16 +125,21 @@ export const handler: Handler = async (event: HandlerEvent) => {
     const namespace = process.env.BLOBS_NAMESPACE;
 
     if (!namespace) {
+      console.error('[Save] Missing BLOBS_NAMESPACE environment variable');
       return {
         statusCode: 500,
         headers: setCorsHeaders(origin),
-        body: 'Server configuration error: Missing BLOBS_NAMESPACE',
+        body: 'Server configuration error: Missing BLOBS_NAMESPACE environment variable. Please configure it in Netlify dashboard.',
       };
     }
+
+    console.log('[Save] Using Blobs namespace:', namespace);
+    console.log('[Save] Saving video with ID:', normalizedRecord.id);
 
     const store = getStore(namespace);
 
     let videos: VideoRecord[] = [];
+    console.log('[Save] Fetching existing videos from Blobs...');
     const existingData = await store.get('videos.json', { type: 'text' });
 
     if (existingData) {
@@ -133,12 +154,16 @@ export const handler: Handler = async (event: HandlerEvent) => {
     const existingIndex = videos.findIndex((v) => v.id === normalizedRecord.id);
 
     if (existingIndex !== -1) {
+      console.log('[Save] Updating existing video at index:', existingIndex);
       videos[existingIndex] = normalizedRecord;
     } else {
+      console.log('[Save] Adding new video, total count will be:', videos.length + 1);
       videos.push(normalizedRecord);
     }
 
+    console.log('[Save] Writing updated videos to Blobs...');
     await store.set('videos.json', JSON.stringify(videos, null, 2));
+    console.log('[Save] Successfully saved video');
 
     return {
       statusCode: 200,
@@ -149,11 +174,14 @@ export const handler: Handler = async (event: HandlerEvent) => {
       body: JSON.stringify(normalizedRecord),
     };
   } catch (error) {
-    console.error('Save error:', error);
+    console.error('[Save] Error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const errorStack = error instanceof Error ? error.stack : '';
+    console.error('[Save] Error details:', errorStack);
     return {
       statusCode: 500,
       headers: setCorsHeaders(origin),
-      body: 'Internal server error',
+      body: JSON.stringify({ error: 'Internal server error', details: errorMessage }),
     };
   }
 };

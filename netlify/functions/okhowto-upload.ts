@@ -8,13 +8,17 @@ const MAX_FILE_SIZE = 300000;
 export const handler: Handler = async (event: HandlerEvent) => {
   const origin = event.headers.origin || null;
 
+  console.log('[Upload] Request received from origin:', origin);
+
   if (event.httpMethod === 'OPTIONS') {
     return handleCorsPrelight(origin);
   }
 
   if (!validateOrigin(origin)) {
+    console.error('[Upload] Invalid origin:', origin);
     return {
       statusCode: 403,
+      headers: setCorsHeaders(origin),
       body: 'Forbidden: Invalid origin',
     };
   }
@@ -31,13 +35,25 @@ export const handler: Handler = async (event: HandlerEvent) => {
   const passphrase = event.headers['x-ok-pass'];
   const expectedPass = process.env.OKH_PASS;
 
-  if (!passphrase || !expectedPass || passphrase !== expectedPass) {
+  if (!expectedPass) {
+    console.error('[Upload] Missing OKH_PASS environment variable');
+    return {
+      statusCode: 500,
+      headers: setCorsHeaders(origin),
+      body: 'Server configuration error: Missing OKH_PASS environment variable',
+    };
+  }
+
+  if (!passphrase || passphrase !== expectedPass) {
+    console.error('[Upload] Invalid passphrase provided');
     return {
       statusCode: 401,
       headers: setCorsHeaders(origin),
       body: 'Unauthorized: Invalid passphrase',
     };
   }
+
+  console.log('[Upload] Authentication successful');
 
   if (event.httpMethod !== 'POST') {
     return {
@@ -103,12 +119,22 @@ export const handler: Handler = async (event: HandlerEvent) => {
     const cloudinaryFolder = process.env.CLOUDINARY_FOLDER;
 
     if (!cloudinaryCloudName || !cloudinaryUploadPreset || !cloudinaryFolder) {
+      console.error('[Upload] Missing Cloudinary environment variables');
+      const missing = [];
+      if (!cloudinaryCloudName) missing.push('CLOUDINARY_CLOUD_NAME');
+      if (!cloudinaryUploadPreset) missing.push('CLOUDINARY_UPLOAD_PRESET');
+      if (!cloudinaryFolder) missing.push('CLOUDINARY_FOLDER');
+      console.error('[Upload] Missing variables:', missing.join(', '));
       return {
         statusCode: 500,
         headers: setCorsHeaders(origin),
-        body: 'Server configuration error: Missing CLOUDINARY_CLOUD_NAME, CLOUDINARY_UPLOAD_PRESET, or CLOUDINARY_FOLDER',
+        body: `Server configuration error: Missing ${missing.join(', ')}. Please configure these in Netlify dashboard.`,
       };
     }
+
+    console.log('[Upload] Using Cloudinary cloud:', cloudinaryCloudName);
+    console.log('[Upload] File size:', filePart.data.length, 'bytes');
+    console.log('[Upload] File type:', filePart.contentType);
 
     const formData = new FormData();
     const blob = new Blob([filePart.data], { type: filePart.contentType });
@@ -118,6 +144,7 @@ export const handler: Handler = async (event: HandlerEvent) => {
 
     const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/image/upload`;
 
+    console.log('[Upload] Uploading to Cloudinary...');
     const uploadResponse = await fetch(cloudinaryUrl, {
       method: 'POST',
       body: formData,
@@ -125,15 +152,16 @@ export const handler: Handler = async (event: HandlerEvent) => {
 
     if (!uploadResponse.ok) {
       const errorText = await uploadResponse.text();
-      console.error('Cloudinary upload failed:', errorText);
+      console.error('[Upload] Cloudinary upload failed:', uploadResponse.status, errorText);
       return {
         statusCode: 502,
         headers: setCorsHeaders(origin),
-        body: 'Failed to upload to Cloudinary',
+        body: `Failed to upload to Cloudinary: ${uploadResponse.status} ${errorText}`,
       };
     }
 
     const uploadResult = await uploadResponse.json();
+    console.log('[Upload] Successfully uploaded to Cloudinary:', uploadResult.secure_url);
 
     return {
       statusCode: 200,
@@ -150,11 +178,14 @@ export const handler: Handler = async (event: HandlerEvent) => {
       }),
     };
   } catch (error) {
-    console.error('Upload error:', error);
+    console.error('[Upload] Error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const errorStack = error instanceof Error ? error.stack : '';
+    console.error('[Upload] Error details:', errorStack);
     return {
       statusCode: 500,
       headers: setCorsHeaders(origin),
-      body: 'Internal server error',
+      body: JSON.stringify({ error: 'Internal server error', details: errorMessage }),
     };
   }
 };

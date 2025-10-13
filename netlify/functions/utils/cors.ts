@@ -4,16 +4,27 @@ const ALLOWED_ORIGINS = [
 ];
 
 export const validateOrigin = (origin: string | null): boolean => {
-  if (!origin) return false;
+  if (!origin) {
+    console.log('[CORS] No origin provided');
+    return false;
+  }
 
   if (ALLOWED_ORIGINS.includes(origin)) {
+    console.log('[CORS] Origin allowed (exact match):', origin);
     return true;
   }
 
   if (origin.endsWith('.netlify.app')) {
+    console.log('[CORS] Origin allowed (Netlify preview):', origin);
     return true;
   }
 
+  if (origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) {
+    console.log('[CORS] Origin allowed (localhost):', origin);
+    return true;
+  }
+
+  console.log('[CORS] Origin rejected:', origin);
   return false;
 };
 
@@ -33,14 +44,16 @@ export const setCorsHeaders = (origin: string | null): Record<string, string> =>
 
 export const handleCorsPrelight = (origin: string | null) => {
   if (!validateOrigin(origin)) {
-    return new Response('Forbidden', {
-      status: 403,
+    return {
+      statusCode: 403,
       headers: { 'Content-Type': 'text/plain' },
-    });
+      body: 'Forbidden: Invalid origin',
+    };
   }
 
-  return new Response(null, {
-    status: 204,
+  return {
+    statusCode: 204,
     headers: setCorsHeaders(origin),
-  });
+    body: '',
+  };
 };

@@ -12,41 +12,85 @@ export const uploadThumbnail = async (
   const formData = new FormData();
   formData.append('thumb', file);
 
-  const response = await fetch(UPLOAD_URL, {
-    method: 'POST',
-    headers: {
-      'X-OK-PASS': passphrase,
-    },
-    body: formData,
-  });
+  try {
+    const response = await fetch(UPLOAD_URL, {
+      method: 'POST',
+      headers: {
+        'X-OK-PASS': passphrase,
+      },
+      body: formData,
+    });
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText || `Upload failed with status ${response.status}`);
+    if (!response.ok) {
+      let errorText = '';
+      try {
+        const errorJson = await response.json();
+        errorText = errorJson.error || errorJson.details || JSON.stringify(errorJson);
+      } catch {
+        errorText = await response.text();
+      }
+
+      if (response.status === 401) {
+        throw new Error('Authentication failed. Please check your passphrase.');
+      } else if (response.status === 403) {
+        throw new Error('Access forbidden. CORS issue detected.');
+      } else if (response.status === 500) {
+        throw new Error(`Server configuration error: ${errorText}`);
+      }
+
+      throw new Error(errorText || `Upload failed with status ${response.status}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    if (error instanceof TypeError && error.message.includes('fetch')) {
+      throw new Error('Network error. Please check your internet connection.');
+    }
+    throw error;
   }
-
-  return response.json();
 };
 
 export const saveVideo = async (
   data: SaveRequest,
   passphrase: string
 ): Promise<SaveRequest> => {
-  const response = await fetch(SAVE_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-OK-PASS': passphrase,
-    },
-    body: JSON.stringify(data),
-  });
+  try {
+    const response = await fetch(SAVE_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-OK-PASS': passphrase,
+      },
+      body: JSON.stringify(data),
+    });
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText || `Save failed with status ${response.status}`);
+    if (!response.ok) {
+      let errorText = '';
+      try {
+        const errorJson = await response.json();
+        errorText = errorJson.error || errorJson.details || JSON.stringify(errorJson);
+      } catch {
+        errorText = await response.text();
+      }
+
+      if (response.status === 401) {
+        throw new Error('Authentication failed. Please check your passphrase.');
+      } else if (response.status === 403) {
+        throw new Error('Access forbidden. CORS issue detected.');
+      } else if (response.status === 500) {
+        throw new Error(`Server configuration error: ${errorText}`);
+      }
+
+      throw new Error(errorText || `Save failed with status ${response.status}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    if (error instanceof TypeError && error.message.includes('fetch')) {
+      throw new Error('Network error. Please check your internet connection.');
+    }
+    throw error;
   }
-
-  return response.json();
 };
 
 export const fetchRemoteFeed = async (timeoutMs = 4000): Promise<FeedResponse> => {
@@ -61,12 +105,33 @@ export const fetchRemoteFeed = async (timeoutMs = 4000): Promise<FeedResponse> =
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      throw new Error(`Feed request failed with status ${response.status}`);
+      let errorText = '';
+      try {
+        const errorJson = await response.json();
+        errorText = errorJson.error || errorJson.details || JSON.stringify(errorJson);
+      } catch {
+        errorText = await response.text();
+      }
+
+      if (response.status === 500) {
+        throw new Error(`Server configuration error: ${errorText}`);
+      }
+
+      throw new Error(errorText || `Feed request failed with status ${response.status}`);
     }
 
     return response.json();
   } catch (error) {
     clearTimeout(timeoutId);
+
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new Error('Request timeout. Please try again.');
+    }
+
+    if (error instanceof TypeError && error.message.includes('fetch')) {
+      throw new Error('Network error. Please check your internet connection.');
+    }
+
     throw error;
   }
 };
