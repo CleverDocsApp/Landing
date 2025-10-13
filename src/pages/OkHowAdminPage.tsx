@@ -23,7 +23,7 @@ const OkHowAdminPage: React.FC = () => {
   const [success, setSuccess] = useState('');
   const [feedVideos, setFeedVideos] = useState<OkHowToVideo[]>([]);
   const [isLoadingFeed, setIsLoadingFeed] = useState(false);
-  const [remoteMode, setRemoteMode] = useState(isRemoteModeEnabled());
+  const [remoteMode, setLocalRemoteMode] = useState(isRemoteModeEnabled());
   const [diagnostics, setDiagnostics] = useState<DiagnosticsResponse | null>(null);
   const [feedOk, setFeedOk] = useState<boolean | null>(null);
   const [isRunningDiagnostics, setIsRunningDiagnostics] = useState(false);
@@ -195,9 +195,18 @@ const OkHowAdminPage: React.FC = () => {
 
   const handleToggleRemoteMode = () => {
     const newMode = !remoteMode;
+    setLocalRemoteMode(newMode);
     setRemoteMode(newMode);
-    setRemoteMode(newMode);
-    setSuccess(newMode ? 'Remote mode enabled. Public page will now load from remote feed.' : 'Remote mode disabled. Public page will use local data.');
+
+    if (newMode) {
+      setSuccess('Remote mode enabled! The public page will now show live content. If you have the public page open in another tab, it will update automatically.');
+    } else {
+      setSuccess('Remote mode disabled. Public page will use local placeholder data.');
+    }
+  };
+
+  const handleOpenPublicPage = () => {
+    window.open('/ok-how-to', '_blank');
   };
 
   return (
@@ -570,23 +579,50 @@ const OkHowAdminPage: React.FC = () => {
               </div>
 
               <div className="toggle-section">
-                <label className="toggle-label">
-                  <div
-                    className={`toggle-switch ${remoteMode ? 'active' : ''}`}
-                    onClick={handleToggleRemoteMode}
-                    role="switch"
-                    aria-checked={remoteMode}
-                    tabIndex={0}
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        handleToggleRemoteMode();
-                      }
-                    }}
-                  >
-                    <div className="toggle-slider"></div>
-                  </div>
-                  <span>Use remote feed on /ok-how-to page</span>
-                </label>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <label className="toggle-label">
+                    <div
+                      className={`toggle-switch ${remoteMode ? 'active' : ''}`}
+                      onClick={handleToggleRemoteMode}
+                      role="switch"
+                      aria-checked={remoteMode}
+                      tabIndex={0}
+                      onKeyPress={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          handleToggleRemoteMode();
+                        }
+                      }}
+                    >
+                      <div className="toggle-slider"></div>
+                    </div>
+                    <span>Use remote feed on /ok-how-to page</span>
+                  </label>
+
+                  {remoteMode && (
+                    <div style={{
+                      padding: '0.75rem 1rem',
+                      backgroundColor: '#e0f2fe',
+                      border: '1px solid #0ea5e9',
+                      borderRadius: '0.375rem',
+                      fontSize: '0.875rem',
+                      color: '#0c4a6e'
+                    }}>
+                      <strong>ℹ️ Remote mode is active.</strong> Any open tabs showing <code style={{ backgroundColor: '#fff', padding: '0.125rem 0.25rem', borderRadius: '0.25rem' }}>/ok-how-to</code> will automatically refresh to show the latest content.
+                      <div style={{ marginTop: '0.5rem' }}>
+                        <button
+                          className="btn btn-secondary btn-sm"
+                          onClick={handleOpenPublicPage}
+                          style={{ fontSize: '0.875rem', padding: '0.375rem 0.75rem' }}
+                        >
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '16px', height: '16px' }}>
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                          Open Public Page in New Tab
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
