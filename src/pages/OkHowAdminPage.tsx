@@ -763,7 +763,7 @@ const OkHowAdminPage: React.FC = () => {
               </button>
 
               {feedVideos.length === 0 ? (
-                <div className="empty-state">
+                <div className="empty-table">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <rect x="2" y="7" width="20" height="15" rx="2" ry="2" strokeLinecap="round" strokeLinejoin="round" />
                     <polyline points="17 2 12 7 7 2" strokeLinecap="round" strokeLinejoin="round" />
@@ -771,71 +771,94 @@ const OkHowAdminPage: React.FC = () => {
                   <p>No videos yet. Add your first video above!</p>
                 </div>
               ) : (
-                <div className="feed-list">
-                  {feedVideos.map((video) => {
-                    const videoId = (video as any).id || video.id.toString();
-                    return (
-                      <div key={videoId} className="feed-item">
-                        <img
-                          src={video.thumb}
-                          alt={video.title}
-                          className="feed-thumb"
-                        />
-                        <div className="feed-info">
-                          <h3 className="feed-title">{video.title}</h3>
-                          <p className="feed-description">{video.description}</p>
-                          <div className="feed-meta">
-                            <span>Vimeo ID: {video.id}</span>
-                            <span>Category: {video.category}</span>
-                            {video.duration && <span>Duration: {video.duration}s</span>}
-                            {(video as any).updatedAt && (
-                              <span>Updated: {new Date((video as any).updatedAt).toLocaleDateString()}</span>
-                            )}
-                          </div>
-                          <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem' }}>
-                            <button
-                              className="btn btn-secondary btn-sm"
-                              onClick={() => handleEditVideo(video)}
-                              style={{ fontSize: '0.875rem', padding: '0.375rem 0.75rem' }}
-                            >
-                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '14px', height: '14px' }}>
-                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" strokeLinecap="round" strokeLinejoin="round"/>
-                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" strokeLinecap="round" strokeLinejoin="round"/>
-                              </svg>
-                              Edit
-                            </button>
-                            <button
-                              className="btn btn-sm"
-                              onClick={() => handleDeleteVideo(videoId)}
-                              disabled={isDeleting === videoId}
-                              style={{
-                                fontSize: '0.875rem',
-                                padding: '0.375rem 0.75rem',
-                                backgroundColor: '#ef4444',
-                                color: 'white',
-                                border: 'none'
-                              }}
-                            >
-                              {isDeleting === videoId ? (
-                                <>
-                                  <span className="loading-spinner" style={{ width: '14px', height: '14px' }}></span>
-                                  Deleting...
-                                </>
-                              ) : (
-                                <>
-                                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '14px', height: '14px' }}>
-                                    <polyline points="3 6 5 6 21 6" strokeLinecap="round" strokeLinejoin="round"/>
-                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" strokeLinecap="round" strokeLinejoin="round"/>
+                <div style={{ overflowX: 'auto' }}>
+                  <table className="videos-table">
+                    <thead>
+                      <tr>
+                        <th>Title</th>
+                        <th>Vimeo ID</th>
+                        <th>Category</th>
+                        <th>Created</th>
+                        <th>Updated</th>
+                        <th style={{ textAlign: 'center' }}>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {feedVideos.map((video) => {
+                        const videoId = (video as any).id || video.id.toString();
+                        const createdAt = (video as any).createdAt;
+                        const updatedAt = (video as any).updatedAt;
+
+                        return (
+                          <tr key={videoId}>
+                            <td>
+                              <div className="video-title" title={video.title}>
+                                {video.title}
+                              </div>
+                            </td>
+                            <td>{video.id}</td>
+                            <td style={{ textTransform: 'capitalize' }}>
+                              {video.category.replace(/-/g, ' ')}
+                            </td>
+                            <td>
+                              {createdAt
+                                ? new Date(createdAt).toLocaleDateString('en-US', {
+                                    month: 'short',
+                                    day: 'numeric',
+                                    year: 'numeric'
+                                  })
+                                : '-'}
+                            </td>
+                            <td>
+                              {updatedAt
+                                ? new Date(updatedAt).toLocaleDateString('en-US', {
+                                    month: 'short',
+                                    day: 'numeric',
+                                    year: 'numeric'
+                                  })
+                                : '-'}
+                            </td>
+                            <td>
+                              <div className="video-actions" style={{ justifyContent: 'center' }}>
+                                <button
+                                  className="btn-icon btn-edit"
+                                  onClick={() => handleEditVideo(video)}
+                                  title="Edit video"
+                                >
+                                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" strokeLinecap="round" strokeLinejoin="round"/>
                                   </svg>
-                                  Delete
-                                </>
-                              )}
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
+                                  Edit
+                                </button>
+                                <button
+                                  className="btn-icon btn-delete"
+                                  onClick={() => handleDeleteVideo(videoId)}
+                                  disabled={isDeleting === videoId}
+                                  title="Delete video"
+                                >
+                                  {isDeleting === videoId ? (
+                                    <>
+                                      <span className="loading-spinner" style={{ width: '14px', height: '14px' }}></span>
+                                      Deleting...
+                                    </>
+                                  ) : (
+                                    <>
+                                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                        <polyline points="3 6 5 6 21 6" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" strokeLinecap="round" strokeLinejoin="round"/>
+                                      </svg>
+                                      Delete
+                                    </>
+                                  )}
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
                 </div>
               )}
             </div>
