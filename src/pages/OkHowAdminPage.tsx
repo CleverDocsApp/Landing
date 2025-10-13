@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { uploadThumbnail, saveVideo, fetchRemoteFeed, validateVideoData, formatFileSize, fetchDiagnostics, type DiagnosticsResponse } from '../utils/okhowtoAdmin';
+import { uploadThumbnail, saveVideo, fetchRemoteFeed, validateVideoData, formatFileSize, fetchDiagnostics, toVimeoId, type DiagnosticsResponse } from '../utils/okhowtoAdmin';
 import { isRemoteModeEnabled, toggleRemoteMode, DIAGNOSTICS_URL, FEED_URL } from '../config/okhowto.runtime';
 import type { SaveRequest, OkHowToVideo } from '../types/okhowto';
 import './OkHowAdminPage.css';
@@ -81,12 +81,10 @@ const OkHowAdminPage: React.FC = () => {
     setVimeoIdError('');
     if (!vimeoId.trim()) return;
 
-    const vimeoUrlPattern = /(?:https?:\/\/)?(?:www\.)?(?:vimeo\.com\/|player\.vimeo\.com\/video\/)?(\d+)/;
-    const match = vimeoId.match(vimeoUrlPattern);
-
-    if (match && match[1]) {
-      setVimeoId(match[1]);
-    } else if (!/^\d+$/.test(vimeoId.trim())) {
+    const normalized = toVimeoId(vimeoId);
+    if (normalized && /^\d+$/.test(normalized)) {
+      setVimeoId(normalized);
+    } else {
       setVimeoIdError('Enter a numeric Vimeo ID or a valid Vimeo URL');
     }
   };

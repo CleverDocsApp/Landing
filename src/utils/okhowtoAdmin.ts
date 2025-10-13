@@ -27,6 +27,14 @@ export const validatePassphrase = (passphrase: string): boolean => {
   return passphrase.trim().length >= 8;
 };
 
+export const toVimeoId = (input: string): string => {
+  const t = (input || "").trim();
+  if (/^\d+$/.test(t)) return t;
+  const m = t.match(/vimeo\.com\/(?:video\/)?(\d+)/i);
+  if (m?.[1]) return m[1];
+  return t;
+};
+
 export const uploadThumbnail = async (
   file: File,
   passphrase: string
@@ -76,6 +84,16 @@ export const saveVideo = async (
   data: SaveRequest,
   passphrase: string
 ): Promise<SaveRequest> => {
+  const payload = { ...data };
+  payload.vimeoId = toVimeoId(
+    (payload as any).vimeoId ||
+    (payload as any).vimeo ||
+    (payload as any).id ||
+    (payload as any).vimeoUrl ||
+    (payload as any).url ||
+    ""
+  );
+
   try {
     const response = await fetch(SAVE_URL, {
       method: 'POST',
@@ -83,7 +101,7 @@ export const saveVideo = async (
         'Content-Type': 'application/json',
         'X-OK-PASS': passphrase,
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {

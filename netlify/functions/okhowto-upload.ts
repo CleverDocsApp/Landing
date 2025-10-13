@@ -52,7 +52,7 @@ export default async (req: Request, _ctx: Context) => {
     }
 
     const up = new FormData();
-    up.append("file", blob as Blob, "thumb");
+    up.append("file", blob as Blob);
     up.append("upload_preset", uploadPreset);
     if (folder) up.append("folder", folder);
 

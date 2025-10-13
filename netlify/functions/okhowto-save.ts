@@ -25,7 +25,29 @@ function slugify(input = ""): string {
     .replace(/^-+|-+$/g, "");
 }
 
+function extractVimeoId(raw: any): string {
+  const candidates = [
+    raw?.vimeoId,
+    raw?.vimeoID,
+    raw?.vimeo,
+    raw?.id,
+    raw?.url,
+    raw?.vimeoUrl,
+    raw?.link
+  ]
+    .map(v => (v ?? "").toString().trim())
+    .filter(Boolean);
+
+  for (const c of candidates) {
+    if (/^\d+$/.test(c)) return c;
+    const m = c.match(/vimeo\.com\/(?:video\/)?(\d+)/i);
+    if (m?.[1]) return m[1];
+  }
+  return "";
+}
+
 function normalize(v: any): Video {
+  const extracted = extractVimeoId(v);
   const caption = v?.captionLanguages;
   const captionLanguages =
     Array.isArray(caption)
@@ -35,8 +57,8 @@ function normalize(v: any): Video {
         : [];
 
   const out: Video = {
-    id: v?.id ?? String(v?.vimeoId ?? "").trim(),
-    vimeoId: String(v?.vimeoId ?? "").trim(),
+    id: v?.id ? String(v.id).trim() : (extracted || ""),
+    vimeoId: extracted,
     title: String(v?.title ?? "").trim(),
     description: String(v?.description ?? "").trim(),
     category: slugify(String(v?.category ?? "")),
