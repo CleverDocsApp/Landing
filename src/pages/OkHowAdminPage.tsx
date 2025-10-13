@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { uploadThumbnail, saveVideo, fetchRemoteFeed, validateVideoData, formatFileSize } from '../utils/okhowtoAdmin';
-import { isRemoteModeEnabled, toggleRemoteMode } from '../config/okhowto.runtime';
+import { uploadThumbnail, saveVideo, fetchRemoteFeed, validateVideoData, formatFileSize, fetchDiagnostics, type DiagnosticsResponse } from '../utils/okhowtoAdmin';
+import { isRemoteModeEnabled, toggleRemoteMode, DIAGNOSTICS_URL, FEED_URL } from '../config/okhowto.runtime';
 import type { SaveRequest, OkHowToVideo } from '../types/okhowto';
 import './OkHowAdminPage.css';
 
@@ -23,6 +23,10 @@ const OkHowAdminPage: React.FC = () => {
   const [feedVideos, setFeedVideos] = useState<OkHowToVideo[]>([]);
   const [isLoadingFeed, setIsLoadingFeed] = useState(false);
   const [remoteMode, setRemoteMode] = useState(isRemoteModeEnabled());
+  const [diagnostics, setDiagnostics] = useState<DiagnosticsResponse | null>(null);
+  const [feedOk, setFeedOk] = useState<boolean | null>(null);
+  const [isRunningDiagnostics, setIsRunningDiagnostics] = useState(false);
+  const [vimeoIdError, setVimeoIdError] = useState('');
 
   useEffect(() => {
     document.title = 'OK How To Admin - Private';
@@ -38,14 +42,52 @@ const OkHowAdminPage: React.FC = () => {
     try {
       const videos = await fetchRemoteFeed();
       setFeedVideos(videos.slice(0, 20));
+      setFeedOk(true);
     } catch (err) {
       console.error('Failed to load feed:', err);
+      setFeedOk(false);
       const errorMsg = err instanceof Error ? err.message : 'Unknown error';
       if (errorMsg.includes('Server configuration error')) {
         setError(`Configuration issue: ${errorMsg}. Please check the ADMIN_SETUP.md file for setup instructions.`);
       }
     } finally {
       setIsLoadingFeed(false);
+    }
+  };
+
+  const handleRunDiagnostics = async () => {
+    setIsRunningDiagnostics(true);
+    setError('');
+    try {
+      const diagResponse = await fetch(DIAGNOSTICS_URL);
+      if (diagResponse.ok) {
+        const diagData: DiagnosticsResponse = await diagResponse.json();
+        setDiagnostics(diagData);
+      } else {
+        setError(`Diagnostics failed with status ${diagResponse.status}`);
+      }
+
+      const feedResponse = await fetch(FEED_URL);
+      setFeedOk(feedResponse.ok);
+    } catch (err) {
+      console.error('Diagnostics error:', err);
+      setError('Failed to run diagnostics. Check network connection.');
+    } finally {
+      setIsRunningDiagnostics(false);
+    }
+  };
+
+  const handleVimeoIdBlur = () => {
+    setVimeoIdError('');
+    if (!vimeoId.trim()) return;
+
+    const vimeoUrlPattern = /(?:https?:\/\/)?(?:www\.)?(?:vimeo\.com\/|player\.vimeo\.com\/video\/)?(\d+)/;
+    const match = vimeoId.match(vimeoUrlPattern);
+
+    if (match && match[1]) {
+      setVimeoId(match[1]);
+    } else if (!/^\d+$/.test(vimeoId.trim())) {
+      setVimeoIdError('Enter a numeric Vimeo ID or a valid Vimeo URL');
     }
   };
 
@@ -162,16 +204,112 @@ const OkHowAdminPage: React.FC = () => {
       <div className="admin-page">
         <div className="admin-container">
           <header className="admin-header">
-            <h1>OK How To Admin</h1>
-            <p>Private admin panel for managing video content</p>
+            <div>
+              <h1>OK How To Admin</h1>
+              <p>Private admin panel for managing video content</p>
+            </div>
+            <button
+              className="btn btn-secondary btn-sm"
+              onClick={handleRunDiagnostics}
+              disabled={isRunningDiagnostics}
+              style={{ marginLeft: 'auto' }}
+            >
+              {isRunningDiagnostics ? 'Running...' : 'Run Diagnostics'}
+            </button>
           </header>
 
           <div className="admin-content">
             <div className="admin-card">
               <h2>Add/Edit Video</h2>
 
-              {error && <div className="alert alert-error">{error}</div>}
+              {error && (
+                <div className={`alert ${
+                  diagnostics &&
+                  diagnostics.env.BLOBS_NAMESPACE &&
+                  diagnostics.env.CLOUDINARY_CLOUD_NAME &&
+                  diagnostics.env.CLOUDINARY_UPLOAD_PRESET &&
+                  diagnostics.env.CLOUDINARY_FOLDER &&
+                  diagnostics.env.OKH_PASS &&
+                  diagnostics.cors.allowed
+                    ? 'alert-warning'
+                    : 'alert-error'
+                }`}>{error}</div>
+              )}
               {success && <div className="alert alert-success">{success}</div>}
+
+              {diagnostics && (
+                <div className="diagnostics-panel">
+                  <h3>Diagnostics</h3>
+                  <div className="diagnostics-table">
+                    <div className="diagnostics-row">
+                      <span className="diagnostics-label">CORS:</span>
+                      <span className={diagnostics.cors.allowed ? 'diagnostics-value-ok' : 'diagnostics-value-error'}>
+                        {diagnostics.cors.allowed ? 'OK' : 'Blocked (check ALLOWED_ORIGINS)'}
+                      </span>
+                    </div>
+                    <div className="diagnostics-row">
+                      <span className="diagnostics-label">Origin:</span>
+                      <span className="diagnostics-value">{diagnostics.cors.origin || 'null'}</span>
+                    </div>
+                    <div className="diagnostics-row">
+                      <span className="diagnostics-label">BLOBS_NAMESPACE present:</span>
+                      <span className={diagnostics.env.BLOBS_NAMESPACE ? 'diagnostics-value-ok' : 'diagnostics-value-error'}>
+                        {diagnostics.env.BLOBS_NAMESPACE ? 'Yes' : 'Missing'}
+                      </span>
+                    </div>
+                    <div className="diagnostics-row">
+                      <span className="diagnostics-label">Cloudinary vars present:</span>
+                      <span className={
+                        diagnostics.env.CLOUDINARY_CLOUD_NAME &&
+                        diagnostics.env.CLOUDINARY_UPLOAD_PRESET &&
+                        diagnostics.env.CLOUDINARY_FOLDER
+                          ? 'diagnostics-value-ok'
+                          : 'diagnostics-value-error'
+                      }>
+                        {diagnostics.env.CLOUDINARY_CLOUD_NAME &&
+                         diagnostics.env.CLOUDINARY_UPLOAD_PRESET &&
+                         diagnostics.env.CLOUDINARY_FOLDER ? 'Yes' : 'Missing'}
+                      </span>
+                    </div>
+                    <div className="diagnostics-row">
+                      <span className="diagnostics-label">OKH_PASS set:</span>
+                      <span className={diagnostics.env.OKH_PASS ? 'diagnostics-value-ok' : 'diagnostics-value-error'}>
+                        {diagnostics.env.OKH_PASS ? 'Yes' : 'Missing/too short'}
+                      </span>
+                    </div>
+                    <div className="diagnostics-row">
+                      <span className="diagnostics-label">Blobs namespace:</span>
+                      <span className="diagnostics-value">{diagnostics.blobs.namespace}</span>
+                    </div>
+                    <div className="diagnostics-row">
+                      <span className="diagnostics-label">videos.json exists:</span>
+                      <span className="diagnostics-value">
+                        {diagnostics.blobs.videosKeyExists ? 'Yes' : 'No (will be created on first save)'}
+                      </span>
+                    </div>
+                    {feedOk === false && (
+                      <div className="diagnostics-row">
+                        <span className="diagnostics-label">Feed status:</span>
+                        <span className="diagnostics-value-error">Failed (403 or 500)</span>
+                      </div>
+                    )}
+                  </div>
+                  {(!diagnostics.env.BLOBS_NAMESPACE ||
+                    !diagnostics.env.CLOUDINARY_CLOUD_NAME ||
+                    !diagnostics.env.CLOUDINARY_UPLOAD_PRESET ||
+                    !diagnostics.env.CLOUDINARY_FOLDER ||
+                    !diagnostics.env.OKH_PASS) && (
+                    <div className="diagnostics-hint">
+                      Add the missing env in Netlify → Site settings → Environment → All deploy contexts, then Clear cache & deploy.
+                    </div>
+                  )}
+                  {!diagnostics.cors.allowed && (
+                    <div className="diagnostics-hint">
+                      Set ALLOWED_ORIGINS to include the site origin (no trailing slash). Example: https://onkliniclp.netlify.app
+                    </div>
+                  )}
+                </div>
+              )}
 
               <div className="form-group">
                 <label htmlFor="passphrase">Passphrase *</label>
@@ -193,8 +331,11 @@ const OkHowAdminPage: React.FC = () => {
                     id="vimeoId"
                     value={vimeoId}
                     onChange={(e) => setVimeoId(e.target.value)}
-                    placeholder="e.g., 123456789"
+                    onBlur={handleVimeoIdBlur}
+                    placeholder="e.g., 123456789 or https://vimeo.com/123456789"
+                    className={vimeoIdError ? 'input-error' : ''}
                   />
+                  {vimeoIdError && <div className="field-error">{vimeoIdError}</div>}
                 </div>
 
                 <div className="form-group">
