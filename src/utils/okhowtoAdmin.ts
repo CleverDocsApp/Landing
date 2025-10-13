@@ -157,7 +157,7 @@ export const deleteVideo = async (
 ): Promise<void> => {
   try {
     const response = await fetch(`/.netlify/functions/okhowto-delete`, {
-      method: 'POST',
+      method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
         'X-OK-PASS': passphrase,
@@ -169,7 +169,7 @@ export const deleteVideo = async (
       let errorText = '';
       try {
         const errorJson = await response.json();
-        errorText = errorJson.message || errorJson.error || JSON.stringify(errorJson);
+        errorText = errorJson.error || errorJson.message || JSON.stringify(errorJson);
       } catch {
         errorText = await response.text();
       }
@@ -181,6 +181,11 @@ export const deleteVideo = async (
       }
 
       throw new Error(errorText || `Delete failed with status ${response.status}`);
+    }
+
+    const result = await response.json();
+    if (!result.ok) {
+      throw new Error(result.error || 'Delete failed');
     }
   } catch (error) {
     if (error instanceof TypeError && error.message.includes('fetch')) {
