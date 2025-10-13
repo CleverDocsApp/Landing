@@ -43,6 +43,12 @@ export const toVimeoId = (input: string): string => {
   return t;
 };
 
+export const extractVimeoHash = (input: string): string | undefined => {
+  const t = (input || "").trim();
+  const m = t.match(/[?&]h=([a-zA-Z0-9]+)/);
+  return m?.[1];
+};
+
 export const uploadThumbnail = async (
   file: File,
   passphrase: string

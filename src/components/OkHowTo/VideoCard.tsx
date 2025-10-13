@@ -9,6 +9,7 @@ interface Video {
   category: string;
   thumb: string;
   duration?: number;
+  h?: string;
 }
 
 interface VideoCardProps {
@@ -115,7 +116,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, isExpanded, onToggle, onOp
               </div>
             ) : (
               <iframe
-                src={getVimeoEmbedUrl(video.id)}
+                src={getVimeoEmbedUrl(video.id, video.h)}
                 frameBorder="0"
                 allow="fullscreen; picture-in-picture"
                 className="video-iframe"

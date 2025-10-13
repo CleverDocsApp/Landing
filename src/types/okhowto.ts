@@ -11,6 +11,7 @@ export interface OkHowToVideo {
   category: string;
   thumb: string;
   duration?: number;
+  h?: string;
   captionLangs?: string[];
   defaultCaption?: string;
   groupId?: string;
@@ -37,6 +38,7 @@ export interface SaveRequest {
   category: string;
   thumbUrl: string;
   duration?: number;
+  h?: string;
   captionLangs?: string[];
   defaultCaption?: string;
   groupId?: string;

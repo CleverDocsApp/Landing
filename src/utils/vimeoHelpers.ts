@@ -1,5 +1,17 @@
-export const getVimeoEmbedUrl = (videoId: string | number): string => {
-  return `https://player.vimeo.com/video/${videoId}?dnt=1&title=0&byline=0&portrait=0`;
+export const getVimeoEmbedUrl = (videoId: string | number, privacyHash?: string): string => {
+  const baseUrl = `https://player.vimeo.com/video/${videoId}`;
+  const params = new URLSearchParams({
+    dnt: '1',
+    title: '0',
+    byline: '0',
+    portrait: '0'
+  });
+
+  if (privacyHash) {
+    params.set('h', privacyHash);
+  }
+
+  return `${baseUrl}?${params.toString()}`;
 };
 
 export const formatDuration = (seconds: number): string => {

@@ -5,6 +5,7 @@ export type OkVideo = {
   description?: string;
   category?: string;
   duration?: number;
+  h?: string;
   thumb?: string;
   thumbUrl?: string;
   createdAt?: number;
@@ -20,8 +21,9 @@ export function ensureId(v: any): OkVideo {
       : (vid || '');
 
   const thumb = v?.thumb || v?.thumbUrl || '';
+  const h = v?.h ? String(v.h).trim() : undefined;
 
-  return { ...v, id, thumb };
+  return { ...v, id, thumb, h };
 }
 
 export function normalizeList(arr: any[]): OkVideo[] {

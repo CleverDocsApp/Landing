@@ -9,6 +9,7 @@ interface Video {
   category: string;
   thumb: string;
   duration?: number;
+  h?: string;
 }
 
 interface VideoLightboxProps {
@@ -134,7 +135,7 @@ const VideoLightbox: React.FC<VideoLightboxProps> = ({ video, onClose, triggerRe
               </div>
             ) : (
               <iframe
-                src={getVimeoEmbedUrl(video.id)}
+                src={getVimeoEmbedUrl(video.id, video.h)}
                 frameBorder="0"
                 allow="fullscreen; picture-in-picture"
                 className="video-lightbox-iframe"

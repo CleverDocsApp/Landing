@@ -9,6 +9,7 @@ type Video = {
   description?: string;
   category?: string;
   duration?: number;
+  h?: string;
   thumbUrl: string;
   defaultCaptionLanguage?: string;
   captionLanguages?: string[] | string;
@@ -56,6 +57,8 @@ function normalize(v: any): Video {
         ? caption.split(",").map((s) => s.trim()).filter(Boolean)
         : [];
 
+  const privacyHash = v?.h ? String(v.h).trim() : undefined;
+
   const out: Video = {
     id: v?.id ? String(v.id).trim() : (extracted || ""),
     vimeoId: extracted,
@@ -63,6 +66,7 @@ function normalize(v: any): Video {
     description: String(v?.description ?? "").trim(),
     category: slugify(String(v?.category ?? "")),
     duration: Number(v?.duration ?? 0) || 0,
+    h: privacyHash,
     thumbUrl: String(v?.thumbUrl ?? "").trim(),
     defaultCaptionLanguage: v?.defaultCaptionLanguage ? String(v?.defaultCaptionLanguage).trim() : undefined,
     captionLanguages,

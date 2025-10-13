@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { uploadThumbnail, saveVideo, fetchRemoteFeed, validateVideoData, formatFileSize, fetchDiagnostics, toVimeoId, type DiagnosticsResponse } from '../utils/okhowtoAdmin';
+import { uploadThumbnail, saveVideo, fetchRemoteFeed, validateVideoData, formatFileSize, fetchDiagnostics, toVimeoId, extractVimeoHash, type DiagnosticsResponse } from '../utils/okhowtoAdmin';
 import { isRemoteModeEnabled, setRemoteMode, DIAGNOSTICS_URL, FEED_URL } from '../config/okhowto.runtime';
 import { normalizeList } from '../utils/okhowto/normalize';
 import type { SaveRequest, OkHowToVideo } from '../types/okhowto';
@@ -8,6 +8,7 @@ import './OkHowAdminPage.css';
 const OkHowAdminPage: React.FC = () => {
   const [passphrase, setPassphrase] = useState('');
   const [vimeoId, setVimeoId] = useState('');
+  const [privacyHash, setPrivacyHash] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('onboarding');
@@ -86,8 +87,13 @@ const OkHowAdminPage: React.FC = () => {
     if (!vimeoId.trim()) return;
 
     const normalized = toVimeoId(vimeoId);
+    const hash = extractVimeoHash(vimeoId);
+
     if (normalized && /^\d+$/.test(normalized)) {
       setVimeoId(normalized);
+      if (hash) {
+        setPrivacyHash(hash);
+      }
     } else {
       setVimeoIdError('Enter a numeric Vimeo ID or a valid Vimeo URL');
     }
@@ -157,6 +163,7 @@ const OkHowAdminPage: React.FC = () => {
       category,
       thumbUrl,
       duration: duration ? Number(duration) : undefined,
+      h: privacyHash || undefined,
       captionLangs: captionLangs ? captionLangs.split(',').map(l => l.trim()) : undefined,
       defaultCaption: defaultCaption || undefined,
     };
@@ -176,6 +183,7 @@ const OkHowAdminPage: React.FC = () => {
       setSuccess('Video saved successfully');
 
       setVimeoId('');
+      setPrivacyHash('');
       setTitle('');
       setDescription('');
       setDuration('');
@@ -405,17 +413,20 @@ const OkHowAdminPage: React.FC = () => {
 
               <div className="form-row">
                 <div className="form-group">
-                  <label htmlFor="vimeoId">Vimeo ID *</label>
+                  <label htmlFor="vimeoId">Vimeo URL or ID *</label>
                   <input
                     type="text"
                     id="vimeoId"
                     value={vimeoId}
                     onChange={(e) => setVimeoId(e.target.value)}
                     onBlur={handleVimeoIdBlur}
-                    placeholder="e.g., 123456789 or https://vimeo.com/123456789"
+                    placeholder="e.g., https://vimeo.com/123456789?h=abc123def or 123456789"
                     className={vimeoIdError ? 'input-error' : ''}
                   />
                   {vimeoIdError && <div className="field-error">{vimeoIdError}</div>}
+                  <small style={{ display: 'block', marginTop: '0.25rem', fontSize: '0.75rem', color: '#6b7280' }}>
+                    For "unlisted" videos, paste the full share URL including ?h= parameter
+                  </small>
                 </div>
 
                 <div className="form-group">
@@ -431,6 +442,28 @@ const OkHowAdminPage: React.FC = () => {
                   </select>
                 </div>
               </div>
+
+              {privacyHash && (
+                <div style={{
+                  marginTop: '-0.5rem',
+                  marginBottom: '1rem',
+                  padding: '0.5rem 0.75rem',
+                  backgroundColor: '#d1fae5',
+                  border: '1px solid #10b981',
+                  borderRadius: '0.375rem',
+                  fontSize: '0.75rem',
+                  color: '#065f46',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem'
+                }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" strokeLinecap="round" strokeLinejoin="round"/>
+                    <polyline points="22 4 12 14.01 9 11.01" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  <span>Privacy hash detected: <code style={{ backgroundColor: '#fff', padding: '0.125rem 0.25rem', borderRadius: '0.125rem' }}>{privacyHash}</code></span>
+                </div>
+              )}
 
               <div className="form-group">
                 <label htmlFor="title">Title *</label>
