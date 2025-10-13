@@ -111,6 +111,12 @@ const OkHowToPage: React.FC = () => {
     return cleanup;
   }, [loadData]);
 
+  const getCategoryPriority = useCallback((categorySlug: string): number => {
+    if (!data) return 999;
+    const index = data.categories.findIndex(cat => cat.slug === categorySlug);
+    return index === -1 ? 999 : index;
+  }, [data]);
+
   const filterVideos = useCallback((): Video[] => {
     if (!data) return [];
 
@@ -127,10 +133,25 @@ const OkHowToPage: React.FC = () => {
           video.title.toLowerCase().includes(term) ||
           video.description.toLowerCase().includes(term)
       );
+      // When searching, return results in relevance order (no sorting)
+      return filtered;
+    }
+
+    // Apply sorting based on context
+    if (selectedCategory === 'all') {
+      // Sort by category first, then alphabetically by title
+      filtered.sort((a, b) => {
+        const categoryDiff = getCategoryPriority(a.category) - getCategoryPriority(b.category);
+        if (categoryDiff !== 0) return categoryDiff;
+        return a.title.localeCompare(b.title);
+      });
+    } else {
+      // Sort alphabetically by title only
+      filtered.sort((a, b) => a.title.localeCompare(b.title));
     }
 
     return filtered;
-  }, [data, selectedCategory, searchTerm]);
+  }, [data, selectedCategory, searchTerm, getCategoryPriority]);
 
   const handleOpenLightbox = (videoId: string | number) => {
     setLightboxVideoId(videoId);
