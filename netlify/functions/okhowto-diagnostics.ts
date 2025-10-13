@@ -1,81 +1,43 @@
-import type { Handler, HandlerEvent } from '@netlify/functions';
-import { getStore } from '@netlify/blobs';
-import { corsHeaders, preflight, isAllowedOrigin } from './utils/cors';
+import { getStore } from "@netlify/blobs";
+import type { Context } from "@netlify/functions";
+import { corsHeaders, preflight, isAllowedOrigin } from "./utils/cors";
 
-export const handler: Handler = async (event: HandlerEvent) => {
-  const origin = event.headers.origin || null;
+export default async (req: Request, _ctx: Context) => {
+  const pf = preflight(req);
+  if (pf) return pf;
 
-  if (event.httpMethod === 'OPTIONS') {
-    return preflight(event);
-  }
+  const origin = req.headers.get("Origin");
+  const headers = { "Content-Type": "application/json; charset=utf-8", ...corsHeaders(origin) };
 
-  if (event.httpMethod !== 'GET') {
-    return {
-      statusCode: 405,
-      headers: corsHeaders(origin),
-      body: JSON.stringify({ error: 'Method not allowed' }),
-    };
-  }
+  const result: any = {
+    ok: true,
+    env: {
+      BLOBS_NAMESPACE: !!process.env.BLOBS_NAMESPACE,
+      CLOUDINARY_CLOUD_NAME: !!process.env.CLOUDINARY_CLOUD_NAME,
+      CLOUDINARY_UPLOAD_PRESET: !!process.env.CLOUDINARY_UPLOAD_PRESET,
+      CLOUDINARY_FOLDER: !!process.env.CLOUDINARY_FOLDER,
+      OKH_PASS: !!process.env.OKH_PASS && (process.env.OKH_PASS!.length >= 8),
+      ALLOWED_ORIGINS_count: (process.env.ALLOWED_ORIGINS || "").split(",").map(s=>s.trim()).filter(Boolean).length
+    },
+    cors: {
+      origin: origin ?? null,
+      mode: origin ? "cors" : "same-origin",
+      allowed: isAllowedOrigin(origin)
+    },
+    blobs: {
+      namespace: process.env.BLOBS_NAMESPACE || "okhowto",
+      videosKeyExists: false
+    },
+    notes: "No secret values are returned."
+  };
 
   try {
-    const namespace = process.env.BLOBS_NAMESPACE || 'okhowto';
-    let videosKeyExists = false;
-
-    try {
-      const store = getStore(namespace);
-      const data = await store.get('videos.json', { type: 'text' });
-      videosKeyExists = data !== null;
-    } catch (blobError) {
-      console.warn('[Diagnostics] Error checking blobs:', blobError);
-      videosKeyExists = false;
-    }
-
-    const allowedOriginsEnv = process.env.ALLOWED_ORIGINS || '';
-    const allowedOriginsCount = allowedOriginsEnv
-      .split(',')
-      .map((s) => s.trim())
-      .filter(Boolean).length;
-
-    const allowed = !origin ? true : isAllowedOrigin(origin);
-    const corsMode = !origin ? 'same-origin' : 'cors';
-
-    const diagnostics = {
-      ok: true,
-      env: {
-        BLOBS_NAMESPACE: !!process.env.BLOBS_NAMESPACE,
-        CLOUDINARY_CLOUD_NAME: !!process.env.CLOUDINARY_CLOUD_NAME,
-        CLOUDINARY_UPLOAD_PRESET: !!process.env.CLOUDINARY_UPLOAD_PRESET,
-        CLOUDINARY_FOLDER: !!process.env.CLOUDINARY_FOLDER,
-        OKH_PASS: process.env.OKH_PASS ? process.env.OKH_PASS.length >= 8 : false,
-        ALLOWED_ORIGINS_count: allowedOriginsCount,
-      },
-      cors: {
-        origin: origin || null,
-        allowed,
-        corsMode,
-      },
-      blobs: {
-        namespace,
-        videosKeyExists,
-      },
-      notes: 'No secret values are returned.',
-    };
-
-    return {
-      statusCode: 200,
-      headers: {
-        ...corsHeaders(origin),
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(diagnostics, null, 2),
-    };
-  } catch (error) {
-    console.error('[Diagnostics] Error:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    return {
-      statusCode: 500,
-      headers: corsHeaders(origin),
-      body: JSON.stringify({ error: 'Diagnostics check failed', details: errorMessage }),
-    };
+    const store = getStore({ name: result.blobs.namespace });
+    const data = await store.get("videos.json", { type: "json" });
+    result.blobs.videosKeyExists = !!data;
+  } catch (err: any) {
+    result.blobs.error = String(err?.name || err);
   }
+
+  return new Response(JSON.stringify(result), { status: 200, headers });
 };
