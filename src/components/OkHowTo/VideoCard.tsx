@@ -27,7 +27,11 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, isExpanded, onToggle, onOp
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      onToggle();
+      if (onOpenLightbox) {
+        onOpenLightbox();
+      } else {
+        onToggle();
+      }
     }
   };
 
@@ -48,15 +52,23 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, isExpanded, onToggle, onOp
     }
   };
 
+  const handleThumbnailClick = () => {
+    if (onOpenLightbox) {
+      onOpenLightbox();
+    } else {
+      onToggle();
+    }
+  };
+
   return (
     <div className="video-card">
       <div
         className="video-thumbnail-container"
-        onClick={onToggle}
+        onClick={handleThumbnailClick}
         onKeyPress={handleKeyPress}
         role="button"
         tabIndex={0}
-        aria-label={`${isExpanded ? 'Collapse' : 'Expand'} video: ${video.title}`}
+        aria-label={`Play video: ${video.title}`}
       >
         {!isExpanded ? (
           <>

@@ -65,7 +65,7 @@ const Footer: React.FC = () => {
               <h3>Resources</h3>
               <ul>
                 <li><a href="#blog">Blog</a></li>
-                <li><a href="#support">Help Center</a></li>
+                <li><a href="/ok-how-to">Help Center</a></li>
                 <li><a href="#guides">Guides</a></li>
                 <li><a href="#webinars">Webinars</a></li>
               </ul>

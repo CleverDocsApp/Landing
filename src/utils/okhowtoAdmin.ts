@@ -97,8 +97,8 @@ export const uploadThumbnail = async (
 export const saveVideo = async (
   data: SaveRequest,
   passphrase: string
-): Promise<SaveRequest> => {
-  const payload = { ...data };
+): Promise<any> => {
+  const payload: any = { ...data };
   payload.vimeoId = toVimeoId(
     (payload as any).vimeoId ||
     (payload as any).vimeo ||
@@ -122,7 +122,7 @@ export const saveVideo = async (
       let errorText = '';
       try {
         const errorJson = await response.json();
-        errorText = errorJson.error || errorJson.details || JSON.stringify(errorJson);
+        errorText = errorJson.message || errorJson.error || errorJson.details || JSON.stringify(errorJson);
       } catch {
         errorText = await response.text();
       }
@@ -131,6 +131,10 @@ export const saveVideo = async (
         throw new Error('Authentication failed. Please check your passphrase.');
       } else if (response.status === 403) {
         throw new Error('Access forbidden. CORS issue detected.');
+      } else if (response.status === 404) {
+        throw new Error('Video not found for update.');
+      } else if (response.status === 422) {
+        throw new Error(`Validation error: ${errorText}`);
       } else if (response.status === 500) {
         throw new Error(`Server configuration error: ${errorText}`);
       }
@@ -139,6 +143,45 @@ export const saveVideo = async (
     }
 
     return response.json();
+  } catch (error) {
+    if (error instanceof TypeError && error.message.includes('fetch')) {
+      throw new Error('Network error. Please check your internet connection.');
+    }
+    throw error;
+  }
+};
+
+export const deleteVideo = async (
+  videoId: string,
+  passphrase: string
+): Promise<void> => {
+  try {
+    const response = await fetch(`/.netlify/functions/okhowto-delete`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-OK-PASS': passphrase,
+      },
+      body: JSON.stringify({ id: videoId }),
+    });
+
+    if (!response.ok) {
+      let errorText = '';
+      try {
+        const errorJson = await response.json();
+        errorText = errorJson.message || errorJson.error || JSON.stringify(errorJson);
+      } catch {
+        errorText = await response.text();
+      }
+
+      if (response.status === 401) {
+        throw new Error('Authentication failed. Please check your passphrase.');
+      } else if (response.status === 404) {
+        throw new Error('Video not found.');
+      }
+
+      throw new Error(errorText || `Delete failed with status ${response.status}`);
+    }
   } catch (error) {
     if (error instanceof TypeError && error.message.includes('fetch')) {
       throw new Error('Network error. Please check your internet connection.');
@@ -236,11 +279,12 @@ export const fetchRemoteFeed = async (timeoutMs = 4000): Promise<FeedResponse> =
   }
 };
 
-export const validateVideoData = (data: SaveRequest): string[] => {
+export const validateVideoData = (data: SaveRequest, isEdit: boolean = false): string[] => {
   const errors: string[] = [];
 
-  if (!data.id) {
-    errors.push('Video ID is required');
+  const vimeoId = toVimeoId((data as any).vimeoId || (data as any).id || '');
+  if (!vimeoId || !/^\d+$/.test(vimeoId)) {
+    errors.push('Valid Vimeo ID is required');
   }
 
   if (!data.title || data.title.trim().length === 0) {

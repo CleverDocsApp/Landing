@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { uploadThumbnail, saveVideo, fetchRemoteFeed, validateVideoData, formatFileSize, fetchDiagnostics, toVimeoId, extractVimeoHash, type DiagnosticsResponse } from '../utils/okhowtoAdmin';
+import { uploadThumbnail, saveVideo, deleteVideo, fetchRemoteFeed, validateVideoData, formatFileSize, fetchDiagnostics, toVimeoId, extractVimeoHash, type DiagnosticsResponse } from '../utils/okhowtoAdmin';
 import { isRemoteModeEnabled, setRemoteMode, DIAGNOSTICS_URL, FEED_URL } from '../config/okhowto.runtime';
 import { normalizeList } from '../utils/okhowto/normalize';
 import type { SaveRequest, OkHowToVideo } from '../types/okhowto';
@@ -7,6 +7,7 @@ import './OkHowAdminPage.css';
 
 const OkHowAdminPage: React.FC = () => {
   const [passphrase, setPassphrase] = useState('');
+  const [editingVideoId, setEditingVideoId] = useState<string | null>(null);
   const [vimeoId, setVimeoId] = useState('');
   const [privacyHash, setPrivacyHash] = useState('');
   const [title, setTitle] = useState('');
@@ -20,6 +21,7 @@ const OkHowAdminPage: React.FC = () => {
   const [thumbPreview, setThumbPreview] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState<string | null>(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [feedVideos, setFeedVideos] = useState<OkHowToVideo[]>([]);
@@ -150,14 +152,72 @@ const OkHowAdminPage: React.FC = () => {
     }
   };
 
+  const clearForm = () => {
+    setEditingVideoId(null);
+    setVimeoId('');
+    setPrivacyHash('');
+    setTitle('');
+    setDescription('');
+    setCategory('onboarding');
+    setDuration('');
+    setCaptionLangs('');
+    setDefaultCaption('');
+    setThumbFile(null);
+    setThumbUrl('');
+    setThumbPreview('');
+    setVimeoIdError('');
+  };
+
+  const handleEditVideo = (video: OkHowToVideo) => {
+    setEditingVideoId((video as any).id || null);
+    setVimeoId(video.id.toString());
+    setPrivacyHash((video as any).h || '');
+    setTitle(video.title);
+    setDescription(video.description);
+    setCategory(video.category);
+    setDuration(video.duration?.toString() || '');
+    setThumbUrl(video.thumb);
+    setThumbPreview(video.thumb);
+    setCaptionLangs('');
+    setDefaultCaption('');
+    setError('');
+    setSuccess('');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleDeleteVideo = async (videoId: string) => {
+    if (!passphrase) {
+      setError('Please enter passphrase first');
+      return;
+    }
+
+    if (!confirm('Are you sure you want to delete this video? This action cannot be undone.')) {
+      return;
+    }
+
+    setIsDeleting(videoId);
+    setError('');
+    setSuccess('');
+
+    try {
+      await deleteVideo(videoId, passphrase);
+      setSuccess('Video deleted successfully');
+      loadFeed();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Delete failed');
+    } finally {
+      setIsDeleting(null);
+    }
+  };
+
   const handleSaveVideo = async () => {
     if (!passphrase) {
       setError('Please enter passphrase');
       return;
     }
 
-    const videoData: SaveRequest = {
-      id: vimeoId,
+    const videoData: any = {
+      vimeoId: vimeoId,
       title,
       description,
       category,
@@ -168,7 +228,11 @@ const OkHowAdminPage: React.FC = () => {
       defaultCaption: defaultCaption || undefined,
     };
 
-    const validationErrors = validateVideoData(videoData);
+    if (editingVideoId) {
+      videoData.id = editingVideoId;
+    }
+
+    const validationErrors = validateVideoData(videoData, !!editingVideoId);
     if (validationErrors.length > 0) {
       setError(validationErrors.join(', '));
       return;
@@ -179,20 +243,9 @@ const OkHowAdminPage: React.FC = () => {
     setSuccess('');
 
     try {
-      await saveVideo(videoData, passphrase);
-      setSuccess('Video saved successfully');
-
-      setVimeoId('');
-      setPrivacyHash('');
-      setTitle('');
-      setDescription('');
-      setDuration('');
-      setCaptionLangs('');
-      setDefaultCaption('');
-      setThumbFile(null);
-      setThumbUrl('');
-      setThumbPreview('');
-
+      const result = await saveVideo(videoData, passphrase);
+      setSuccess(editingVideoId ? 'Video updated successfully' : 'Video created successfully');
+      clearForm();
       loadFeed();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Save failed');
@@ -261,7 +314,32 @@ const OkHowAdminPage: React.FC = () => {
 
           <div className="admin-content">
             <div className="admin-card">
-              <h2>Add/Edit Video</h2>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                <h2 style={{ margin: 0 }}>{editingVideoId ? 'Edit Video' : 'Add New Video'}</h2>
+                {editingVideoId && (
+                  <button
+                    className="btn btn-secondary btn-sm"
+                    onClick={clearForm}
+                    style={{ fontSize: '0.875rem', padding: '0.375rem 0.75rem' }}
+                  >
+                    Cancel Edit
+                  </button>
+                )}
+              </div>
+
+              {editingVideoId && (
+                <div style={{
+                  marginBottom: '1rem',
+                  padding: '0.75rem 1rem',
+                  backgroundColor: '#e0f2fe',
+                  border: '1px solid #0ea5e9',
+                  borderRadius: '0.375rem',
+                  fontSize: '0.875rem',
+                  color: '#0c4a6e'
+                }}>
+                  <strong>📝 Edit Mode:</strong> You are editing video ID: <code style={{ backgroundColor: '#fff', padding: '0.125rem 0.25rem', borderRadius: '0.25rem' }}>{editingVideoId}</code>
+                </div>
+              )}
 
               {!remoteMode && (
                 <div style={{
@@ -596,7 +674,7 @@ const OkHowAdminPage: React.FC = () => {
                   {isSaving ? (
                     <>
                       <span className="loading-spinner"></span>
-                      Saving...
+                      {editingVideoId ? 'Updating...' : 'Saving...'}
                     </>
                   ) : (
                     <>
@@ -605,7 +683,7 @@ const OkHowAdminPage: React.FC = () => {
                         <polyline points="17 21 17 13 7 13 7 21" strokeLinecap="round" strokeLinejoin="round" />
                         <polyline points="7 3 7 8 15 8" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
-                      Save Video
+                      {editingVideoId ? 'Update Video' : 'Save Video'}
                     </>
                   )}
                 </button>
@@ -694,27 +772,70 @@ const OkHowAdminPage: React.FC = () => {
                 </div>
               ) : (
                 <div className="feed-list">
-                  {feedVideos.map((video) => (
-                    <div key={video.id} className="feed-item">
-                      <img
-                        src={video.thumb}
-                        alt={video.title}
-                        className="feed-thumb"
-                      />
-                      <div className="feed-info">
-                        <h3 className="feed-title">{video.title}</h3>
-                        <p className="feed-description">{video.description}</p>
-                        <div className="feed-meta">
-                          <span>ID: {video.id}</span>
-                          <span>Category: {video.category}</span>
-                          {video.duration && <span>Duration: {video.duration}s</span>}
-                          {video.updatedAt && (
-                            <span>Updated: {new Date(video.updatedAt).toLocaleDateString()}</span>
-                          )}
+                  {feedVideos.map((video) => {
+                    const videoId = (video as any).id || video.id.toString();
+                    return (
+                      <div key={videoId} className="feed-item">
+                        <img
+                          src={video.thumb}
+                          alt={video.title}
+                          className="feed-thumb"
+                        />
+                        <div className="feed-info">
+                          <h3 className="feed-title">{video.title}</h3>
+                          <p className="feed-description">{video.description}</p>
+                          <div className="feed-meta">
+                            <span>Vimeo ID: {video.id}</span>
+                            <span>Category: {video.category}</span>
+                            {video.duration && <span>Duration: {video.duration}s</span>}
+                            {(video as any).updatedAt && (
+                              <span>Updated: {new Date((video as any).updatedAt).toLocaleDateString()}</span>
+                            )}
+                          </div>
+                          <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem' }}>
+                            <button
+                              className="btn btn-secondary btn-sm"
+                              onClick={() => handleEditVideo(video)}
+                              style={{ fontSize: '0.875rem', padding: '0.375rem 0.75rem' }}
+                            >
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '14px', height: '14px' }}>
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" strokeLinecap="round" strokeLinejoin="round"/>
+                              </svg>
+                              Edit
+                            </button>
+                            <button
+                              className="btn btn-sm"
+                              onClick={() => handleDeleteVideo(videoId)}
+                              disabled={isDeleting === videoId}
+                              style={{
+                                fontSize: '0.875rem',
+                                padding: '0.375rem 0.75rem',
+                                backgroundColor: '#ef4444',
+                                color: 'white',
+                                border: 'none'
+                              }}
+                            >
+                              {isDeleting === videoId ? (
+                                <>
+                                  <span className="loading-spinner" style={{ width: '14px', height: '14px' }}></span>
+                                  Deleting...
+                                </>
+                              ) : (
+                                <>
+                                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '14px', height: '14px' }}>
+                                    <polyline points="3 6 5 6 21 6" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" strokeLinecap="round" strokeLinejoin="round"/>
+                                  </svg>
+                                  Delete
+                                </>
+                              )}
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </div>

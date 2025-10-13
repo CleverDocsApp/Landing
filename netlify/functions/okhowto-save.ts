@@ -3,7 +3,7 @@ import type { Context } from "@netlify/functions";
 import { corsHeaders, preflight } from "./utils/cors";
 
 type Video = {
-  id?: string;
+  id: string;
   vimeoId: string;
   title: string;
   description?: string;
@@ -13,9 +13,17 @@ type Video = {
   thumbUrl: string;
   defaultCaptionLanguage?: string;
   captionLanguages?: string[] | string;
-  createdAt?: number;
-  updatedAt?: number;
+  createdAt: string;
+  updatedAt: string;
 };
+
+function generateUUID(): string {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
 
 function slugify(input = ""): string {
   return input
@@ -47,7 +55,7 @@ function extractVimeoId(raw: any): string {
   return "";
 }
 
-function normalize(v: any): Video {
+function normalize(v: any, isUpdate: boolean = false): Partial<Video> {
   const extracted = extractVimeoId(v);
   const caption = v?.captionLanguages;
   const captionLanguages =
@@ -59,8 +67,7 @@ function normalize(v: any): Video {
 
   const privacyHash = v?.h ? String(v.h).trim() : undefined;
 
-  const out: Video = {
-    id: v?.id ? String(v.id).trim() : (extracted || ""),
+  const out: Partial<Video> = {
     vimeoId: extracted,
     title: String(v?.title ?? "").trim(),
     description: String(v?.description ?? "").trim(),
@@ -70,17 +77,46 @@ function normalize(v: any): Video {
     thumbUrl: String(v?.thumbUrl ?? "").trim(),
     defaultCaptionLanguage: v?.defaultCaptionLanguage ? String(v?.defaultCaptionLanguage).trim() : undefined,
     captionLanguages,
-    createdAt: v?.createdAt ? Number(v?.createdAt) : undefined,
-    updatedAt: v?.updatedAt ? Number(v?.updatedAt) : undefined,
   };
+
+  if (isUpdate && v?.id) {
+    out.id = String(v.id).trim();
+  }
+
   return out;
 }
 
-function validate(v: Video): string | null {
+function validate(v: Partial<Video>): string | null {
   if (!v.vimeoId || !/^\d+$/.test(v.vimeoId)) return "Missing or invalid vimeoId";
   if (!v.title) return "Missing title";
   if (!v.thumbUrl || !/^https?:\/\//i.test(v.thumbUrl)) return "Missing or invalid thumbUrl";
   return null;
+}
+
+async function saveWithRetry(store: any, list: Video[], maxRetries: number = 1): Promise<void> {
+  let attempt = 0;
+
+  while (attempt <= maxRetries) {
+    try {
+      const metadata = await store.getMetadata("videos.json");
+      const etag = metadata?.etag;
+
+      await store.set("videos.json", JSON.stringify(list), {
+        contentType: "application/json; charset=utf-8",
+        metadata: etag ? { etag } : undefined
+      });
+
+      return;
+    } catch (err: any) {
+      if (err?.status === 412 && attempt < maxRetries) {
+        attempt++;
+        const freshData = await store.get("videos.json", { type: "json" });
+        list = Array.isArray(freshData) ? freshData : list;
+        continue;
+      }
+      throw err;
+    }
+  }
 }
 
 export default async (req: Request, _ctx: Context) => {
@@ -113,42 +149,65 @@ export default async (req: Request, _ctx: Context) => {
     const existing = (await store.get("videos.json", { type: "json" })) as any[] | null;
     let list: Video[] = Array.isArray(existing) ? existing : [];
 
-    const now = Date.now();
+    const now = new Date().toISOString();
 
     if (Array.isArray(payload)) {
-      list = payload.map((p) => {
-        const v = normalize(p);
-        if (!v.createdAt) v.createdAt = now;
-        v.updatedAt = now;
-        return v;
-      });
-      await store.set("videos.json", JSON.stringify(list), { contentType: "application/json; charset=utf-8" });
-      return new Response(JSON.stringify({ ok: true, mode: "replaceAll", count: list.length }), { status: 200, headers });
+      return new Response(JSON.stringify({
+        code: "BULK_NOT_SUPPORTED",
+        message: "Bulk operations not supported. Use individual CREATE or UPDATE."
+      }), { status: 400, headers });
     }
 
-    const item = normalize(payload);
-    const errMsg = validate(item);
+    const isUpdate = !!payload.id;
+    const itemData = normalize(payload, isUpdate);
+
+    const errMsg = validate(itemData);
     if (errMsg) {
       return new Response(JSON.stringify({ code: "VALIDATION_ERROR", message: errMsg }), { status: 422, headers });
     }
 
-    const idx = list.findIndex((x) => String(x.vimeoId) === String(item.vimeoId));
-    if (idx >= 0) {
-      const prev = list[idx];
-      item.createdAt = prev.createdAt ?? now;
-      item.updatedAt = now;
-      list[idx] = { ...prev, ...item };
+    let savedVideo: Video;
+
+    if (isUpdate) {
+      const idx = list.findIndex((x) => x.id === payload.id);
+      if (idx < 0) {
+        return new Response(JSON.stringify({
+          code: "NOT_FOUND",
+          message: `Video with id ${payload.id} not found`
+        }), { status: 404, headers });
+      }
+
+      const existingVideo = list[idx];
+      savedVideo = {
+        ...existingVideo,
+        ...itemData,
+        id: existingVideo.id,
+        createdAt: existingVideo.createdAt,
+        updatedAt: now
+      } as Video;
+
+      list[idx] = savedVideo;
     } else {
-      item.createdAt = now;
-      item.updatedAt = now;
-      list.push(item);
+      const newId = generateUUID();
+      savedVideo = {
+        ...itemData,
+        id: newId,
+        createdAt: now,
+        updatedAt: now
+      } as Video;
+
+      list.push(savedVideo);
     }
 
-    list.sort((a, b) => (b.updatedAt ?? 0) - (a.updatedAt ?? 0));
+    list.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
 
-    await store.set("videos.json", JSON.stringify(list), { contentType: "application/json; charset=utf-8" });
+    await saveWithRetry(store, list);
 
-    return new Response(JSON.stringify({ ok: true, mode: "upsert", count: list.length, id: item.vimeoId }), { status: 200, headers });
+    return new Response(JSON.stringify({
+      ok: true,
+      mode: isUpdate ? "UPDATE" : "CREATE",
+      video: savedVideo
+    }), { status: 200, headers });
   } catch (err: any) {
     if (String(err?.name) === "MissingBlobsEnvironmentError") {
       return new Response(JSON.stringify({
@@ -157,6 +216,10 @@ export default async (req: Request, _ctx: Context) => {
       }), { status: 503, headers });
     }
     console.error("[Save] ERROR:", err);
-    return new Response(JSON.stringify({ code: "SAVE_ERROR", message: "Failed to save videos.json" }), { status: 500, headers });
+    return new Response(JSON.stringify({
+      code: "SAVE_ERROR",
+      message: "Failed to save videos.json",
+      details: err?.message
+    }), { status: 500, headers });
   }
 };
