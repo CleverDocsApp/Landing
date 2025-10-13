@@ -44,30 +44,25 @@ const Footer: React.FC = () => {
             <div className="footer-links-column">
               <h3>Product</h3>
               <ul>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#pricing">Pricing</a></li>
-                <li><a href="#security">Security</a></li>
-                <li><a href="#compliance">Compliance</a></li>
+                <li><a href="/#features">Features</a></li>
+                <li><a href="/#pricing">Pricing</a></li>
+                <li><a href="/#features">Security</a></li>
+                <li><a href="/#features">Compliance</a></li>
               </ul>
             </div>
-            
+
             <div className="footer-links-column">
               <h3>Company</h3>
               <ul>
-                <li><a href="#about">About Us</a></li>
-                <li><a href="#careers">Careers</a></li>
-                <li><a href="#press">Press</a></li>
+                <li><a href="/#why">About Us</a></li>
                 <li><a href="#contact">Contact</a></li>
               </ul>
             </div>
-            
+
             <div className="footer-links-column">
               <h3>Resources</h3>
               <ul>
-                <li><a href="#blog">Blog</a></li>
                 <li><a href="/ok-how-to">Help Center</a></li>
-                <li><a href="#guides">Guides</a></li>
-                <li><a href="#webinars">Webinars</a></li>
               </ul>
             </div>
           </div>

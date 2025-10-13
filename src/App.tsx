@@ -142,7 +142,7 @@ function App() {
 
   React.useEffect(() => {
     document.title = 'On Klinic - AI Assistant for Mental Health Clinicians';
-    
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -152,6 +152,37 @@ function App() {
     }, { threshold: 0.1 });
 
     document.querySelectorAll('.section-title').forEach((el) => observer.observe(el));
+
+    // Handle hash navigation on page load
+    if (window.location.hash) {
+      setTimeout(() => {
+        const element = document.querySelector(window.location.hash);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
+
+    // Handle smooth scrolling for anchor links
+    const handleAnchorClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const anchor = target.closest('a');
+
+      if (anchor && anchor.hash && anchor.pathname === window.location.pathname) {
+        e.preventDefault();
+        const element = document.querySelector(anchor.hash);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          window.history.pushState(null, '', anchor.hash);
+        }
+      }
+    };
+
+    document.addEventListener('click', handleAnchorClick);
+
+    return () => {
+      document.removeEventListener('click', handleAnchorClick);
+    };
   }, []);
 
   // Section scroll observer
