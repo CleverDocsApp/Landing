@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useCallback } from 'react';
-import { getVimeoEmbedUrl, isPlaceholderId } from '../../utils/vimeoHelpers';
+import { buildVimeoEmbed } from '../../types/okhowto';
+import { isPlaceholderId } from '../../utils/vimeoHelpers';
 import './VideoLightbox.css';
 
 interface Video {
@@ -135,7 +136,7 @@ const VideoLightbox: React.FC<VideoLightboxProps> = ({ video, onClose, triggerRe
               </div>
             ) : (
               <iframe
-                src={getVimeoEmbedUrl(video.id, video.h)}
+                src={buildVimeoEmbed(video.id, video.h)}
                 frameBorder="0"
                 allow="fullscreen; picture-in-picture"
                 className="video-lightbox-iframe"

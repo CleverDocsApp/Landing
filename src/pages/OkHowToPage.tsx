@@ -35,7 +35,6 @@ const OkHowToPage: React.FC = () => {
   const [data, setData] = useState<OkHowToData | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [expandedVideoId, setExpandedVideoId] = useState<string | number | null>(null);
   const [lightboxVideoId, setLightboxVideoId] = useState<string | number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isRemoteFeed, setIsRemoteFeed] = useState<boolean>(false);
@@ -133,12 +132,7 @@ const OkHowToPage: React.FC = () => {
     return filtered;
   }, [data, selectedCategory, searchTerm]);
 
-  const handleVideoToggle = (videoId: string | number) => {
-    setExpandedVideoId((prevId) => (prevId === videoId ? null : videoId));
-  };
-
   const handleOpenLightbox = (videoId: string | number) => {
-    setExpandedVideoId(null);
     setLightboxVideoId(videoId);
   };
 
@@ -148,12 +142,10 @@ const OkHowToPage: React.FC = () => {
 
   const handleCategoryChange = (slug: string) => {
     setSelectedCategory(slug);
-    setExpandedVideoId(null);
   };
 
   const handleSearch = useCallback((term: string) => {
     setSearchTerm(term);
-    setExpandedVideoId(null);
   }, []);
 
   const getVideoCounts = (): Record<string, number> => {
@@ -254,8 +246,6 @@ const OkHowToPage: React.FC = () => {
 
             <VideoGrid
               videos={filteredVideos}
-              expandedVideoId={expandedVideoId}
-              onVideoToggle={handleVideoToggle}
               onOpenLightbox={handleOpenLightbox}
             />
           </div>

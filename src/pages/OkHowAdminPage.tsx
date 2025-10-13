@@ -228,11 +228,24 @@ const OkHowAdminPage: React.FC = () => {
       defaultCaption: defaultCaption || undefined,
     };
 
-    if (editingVideoId) {
+    const isUpdate = !!editingVideoId;
+
+    if (isUpdate) {
       videoData.id = editingVideoId;
+    } else {
+      // Check for duplicate vimeoId before creating
+      const duplicate = feedVideos.find(v => v.id.toString() === vimeoId);
+      if (duplicate) {
+        const confirmCreate = confirm(
+          `Warning: A video with Vimeo ID "${vimeoId}" already exists (${duplicate.title}).\n\nCreating this will add a new entry with a different internal ID. Continue?`
+        );
+        if (!confirmCreate) {
+          return;
+        }
+      }
     }
 
-    const validationErrors = validateVideoData(videoData, !!editingVideoId);
+    const validationErrors = validateVideoData(videoData, isUpdate);
     if (validationErrors.length > 0) {
       setError(validationErrors.join(', '));
       return;
@@ -244,8 +257,17 @@ const OkHowAdminPage: React.FC = () => {
 
     try {
       const result = await saveVideo(videoData, passphrase);
-      setSuccess(editingVideoId ? 'Video updated successfully' : 'Video created successfully');
-      clearForm();
+      const successMessage = isUpdate ? 'Video updated successfully' : 'Video created successfully';
+      setSuccess(successMessage);
+
+      if (isUpdate) {
+        // Keep form values on update, but allow user to continue editing
+        // Don't clear editingVideoId yet
+      } else {
+        // Clear form after successful create
+        clearForm();
+      }
+
       loadFeed();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Save failed');

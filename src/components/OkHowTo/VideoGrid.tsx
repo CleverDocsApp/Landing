@@ -4,12 +4,10 @@ import './VideoGrid.css';
 
 interface VideoGridProps {
   videos: Video[];
-  expandedVideoId: string | number | null;
-  onVideoToggle: (videoId: string | number) => void;
-  onOpenLightbox?: (videoId: string | number) => void;
+  onOpenLightbox: (videoId: string | number) => void;
 }
 
-const VideoGrid: React.FC<VideoGridProps> = ({ videos, expandedVideoId, onVideoToggle, onOpenLightbox }) => {
+const VideoGrid: React.FC<VideoGridProps> = ({ videos, onOpenLightbox }) => {
   if (videos.length === 0) {
     return (
       <div className="empty-state">
@@ -33,9 +31,7 @@ const VideoGrid: React.FC<VideoGridProps> = ({ videos, expandedVideoId, onVideoT
         <VideoCard
           key={video.id}
           video={video}
-          isExpanded={expandedVideoId === video.id}
-          onToggle={() => onVideoToggle(video.id)}
-          onOpenLightbox={onOpenLightbox ? () => onOpenLightbox(video.id) : undefined}
+          onOpenLightbox={() => onOpenLightbox(video.id)}
         />
       ))}
     </div>
