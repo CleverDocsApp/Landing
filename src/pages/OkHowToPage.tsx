@@ -6,6 +6,9 @@ import SearchBar from '../components/OkHowTo/SearchBar';
 import CategoryFilter from '../components/OkHowTo/CategoryFilter';
 import VideoGrid from '../components/OkHowTo/VideoGrid';
 import VideoLightbox from '../components/OkHowTo/VideoLightbox';
+import { FEED_URL, isRemoteModeEnabled } from '../config/okhowto.runtime';
+import { normalizeList } from '../utils/okhowto/normalize';
+import localDataImport from '../data/okhowto.json';
 import './OkHowToPage.css';
 
 interface Category {
@@ -37,43 +40,63 @@ const OkHowToPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    let cancelled = false;
+
     const loadData = async () => {
       try {
-        const { isRemoteModeEnabled } = await import('../config/okhowto.runtime');
+        const remoteEnabled = isRemoteModeEnabled();
 
-        if (isRemoteModeEnabled()) {
+        if (remoteEnabled) {
           try {
-            const { fetchRemoteFeed } = await import('../utils/okhowtoAdmin');
-            const remoteVideos = await fetchRemoteFeed(4000);
+            const url = `${FEED_URL}?ts=${Date.now()}`;
+            const res = await fetch(url, { cache: 'no-store' as RequestCache });
 
-            const localData = await import('../data/okhowto.json');
+            if (!res.ok) {
+              throw new Error(`Feed request failed with status ${res.status}`);
+            }
 
-            setData({
-              categories: localData.default.categories,
-              videos: remoteVideos.length > 0 ? remoteVideos : localData.default.videos,
-            });
+            const remoteData = await res.json();
+            const normalizedVideos = normalizeList(remoteData);
 
-            if (remoteVideos.length > 0) {
-              console.log('[OK How To] Loaded videos from remote feed');
-            } else {
-              console.log('[OK How To] Remote feed empty, using local data');
+            if (!cancelled) {
+              console.log('[OK How To] Source=remote, count=', normalizedVideos.length);
+              setData({
+                categories: localDataImport.categories,
+                videos: normalizedVideos.length > 0 ? normalizedVideos : normalizeList(localDataImport.videos),
+              });
+
+              if (normalizedVideos.length === 0) {
+                console.log('[OK How To] Remote feed empty, using local fallback');
+              }
             }
           } catch (remoteFetchError) {
-            console.log('[OK How To] Remote feed failed, falling back to local data:', remoteFetchError);
-            const response = await import('../data/okhowto.json');
-            setData(response.default);
+            console.warn('[OK How To] Remote feed failed, falling back to local data:', remoteFetchError);
+            if (!cancelled) {
+              setData({
+                categories: localDataImport.categories,
+                videos: normalizeList(localDataImport.videos),
+              });
+            }
           }
         } else {
-          const response = await import('../data/okhowto.json');
-          setData(response.default);
+          console.log('[OK How To] Source=local, count=', localDataImport.videos.length);
+          if (!cancelled) {
+            setData({
+              categories: localDataImport.categories,
+              videos: normalizeList(localDataImport.videos),
+            });
+          }
         }
       } catch (err) {
         console.error('Error loading video data:', err);
-        setError('Failed to load videos. Please try again later.');
+        if (!cancelled) {
+          setError('Failed to load videos. Please try again later.');
+        }
       }
     };
 
     loadData();
+    return () => { cancelled = true; };
   }, []);
 
   const filterVideos = useCallback((): Video[] => {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { uploadThumbnail, saveVideo, fetchRemoteFeed, validateVideoData, formatFileSize, fetchDiagnostics, toVimeoId, type DiagnosticsResponse } from '../utils/okhowtoAdmin';
-import { isRemoteModeEnabled, toggleRemoteMode, DIAGNOSTICS_URL, FEED_URL } from '../config/okhowto.runtime';
+import { isRemoteModeEnabled, setRemoteMode, DIAGNOSTICS_URL, FEED_URL } from '../config/okhowto.runtime';
+import { normalizeList } from '../utils/okhowto/normalize';
 import type { SaveRequest, OkHowToVideo } from '../types/okhowto';
 import './OkHowAdminPage.css';
 
@@ -40,8 +41,11 @@ const OkHowAdminPage: React.FC = () => {
     setIsLoadingFeed(true);
     setError('');
     try {
-      const videos = await fetchRemoteFeed();
-      setFeedVideos(videos.slice(0, 20));
+      const url = `${FEED_URL}?ts=${Date.now()}`;
+      const res = await fetch(url, { cache: 'no-store' as RequestCache });
+      const data = await res.json();
+      const normalized = normalizeList(data);
+      setFeedVideos(normalized.slice(0, 20));
       setFeedOk(true);
     } catch (err) {
       console.error('Failed to load feed:', err);
@@ -192,8 +196,8 @@ const OkHowAdminPage: React.FC = () => {
   const handleToggleRemoteMode = () => {
     const newMode = !remoteMode;
     setRemoteMode(newMode);
-    toggleRemoteMode(newMode);
-    setSuccess(newMode ? 'Remote mode enabled' : 'Remote mode disabled');
+    setRemoteMode(newMode);
+    setSuccess(newMode ? 'Remote mode enabled. Public page will now load from remote feed.' : 'Remote mode disabled. Public page will use local data.');
   };
 
   return (
@@ -205,6 +209,28 @@ const OkHowAdminPage: React.FC = () => {
             <div>
               <h1>OK How To Admin</h1>
               <p>Private admin panel for managing video content</p>
+              <div style={{ marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <span style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  borderRadius: '9999px',
+                  padding: '0.25rem 0.75rem',
+                  fontSize: '0.75rem',
+                  fontWeight: '600',
+                  backgroundColor: remoteMode ? '#d1fae5' : '#e5e7eb',
+                  color: remoteMode ? '#065f46' : '#374151'
+                }}>
+                  {remoteMode ? '● Remote feed: ACTIVE' : '○ Remote feed: DISABLED'}
+                </span>
+                <a
+                  href={FEED_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ fontSize: '0.875rem', textDecoration: 'underline', color: '#0ea5e9' }}
+                >
+                  View feed →
+                </a>
+              </div>
             </div>
             <button
               className="btn btn-secondary btn-sm"
@@ -219,6 +245,27 @@ const OkHowAdminPage: React.FC = () => {
           <div className="admin-content">
             <div className="admin-card">
               <h2>Add/Edit Video</h2>
+
+              {!remoteMode && (
+                <div style={{
+                  marginTop: '1rem',
+                  marginBottom: '1rem',
+                  borderRadius: '0.375rem',
+                  border: '1px solid #fbbf24',
+                  backgroundColor: '#fffbeb',
+                  padding: '0.75rem',
+                  fontSize: '0.875rem'
+                }}>
+                  <strong>⚠️ Warning:</strong> The public page <code style={{ backgroundColor: '#fff', padding: '0.125rem 0.25rem', borderRadius: '0.25rem' }}>/ok-how-to</code> is currently using <strong>local data</strong>.
+                  <br />
+                  Videos you save here will not appear on the public page until you enable the remote feed toggle below.
+                  <div style={{ marginTop: '0.5rem' }}>
+                    <a href={FEED_URL} target="_blank" rel="noreferrer" style={{ textDecoration: 'underline', color: '#0ea5e9' }}>
+                      Open feed endpoint to verify saved videos →
+                    </a>
+                  </div>
+                </div>
+              )}
 
               {error && (
                 <div className={`alert ${
