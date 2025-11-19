@@ -30,13 +30,13 @@ const getOkhowtoVideos = tool({
     language: z.string()
   }),
   execute: async (input: {topic: string, limit: number, language: string}) => {
-    // Stub implementation - returns mock video recommendations
+    // Honest implementation - explains that video library is not yet available via this chat
     const isSpanish = input.language.toLowerCase().includes('es') || input.language.toLowerCase().includes('spanish');
 
     if (isSpanish) {
-      return `Aquí hay algunos videos recomendados sobre "${input.topic}":\n\n1. **Introducción a OnKlinic** (3:45)\n   Una visión general de cómo OnKlinic ayuda con la documentación clínica.\n\n2. **Plantillas y Personalización** (5:20)\n   Aprende a personalizar plantillas para tu práctica.\n\n3. **Seguridad y Cumplimiento** (4:15)\n   Cómo OnKlinic mantiene tus datos seguros y cumple con regulaciones.`;
+      return `La biblioteca de videos OK How-To todavía no está conectada a este chat. Por ahora, puedo describir qué tipo de contenido existirá en esos videos: tours generales de OnKlinic, guías sobre plantillas y personalización, explicaciones de seguridad y cumplimiento normativo, y demostraciones de flujos de trabajo comunes. Si te interesa ver ejemplos visuales, lo mejor es solicitarlo durante una demo en vivo con nuestro equipo.`;
     } else {
-      return `Here are some recommended videos about "${input.topic}":\n\n1. **OnKlinic Overview** (3:45)\n   A comprehensive introduction to how OnKlinic helps with clinical documentation.\n\n2. **Templates and Customization** (5:20)\n   Learn how to customize templates for your practice.\n\n3. **Security and Compliance** (4:15)\n   How OnKlinic keeps your data secure and compliant with regulations.`;
+      return `The OK How-To video library is not wired into this chat yet. For now, I can describe what type of content will be available in those videos: general OnKlinic tours, guides on templates and customization, explanations of security and compliance features, and demonstrations of common workflows. If you'd like to see visual examples, the best approach is to request them during a live demo with our team.`;
     }
   },
 });
