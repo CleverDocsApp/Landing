@@ -1,6 +1,6 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
 import Header from './components/Header/Header';
-import ChatInterface from './components/ChatInterface/ChatInterface';
+import OnKlinicAgentChat from './components/OnKlinicAgentChat/OnKlinicAgentChat';
 import WhySection from './components/WhySection/WhySection';
 import TestimonialsSection from './components/TestimonialsSection/TestimonialsSection';
 import MetricsSection from './components/MetricsSection/MetricsSection';
@@ -256,7 +256,7 @@ function App() {
         <div className="container mx-auto px-4 pt-20 md:pt-32 pb-4 md:pb-6">
           <div className="flex flex-col md:flex-col-reverse">
             <div className="mb-4 md:mb-8 animate-slide-up order-2 md:order-1">
-              <ChatInterface />
+              <OnKlinicAgentChat />
             </div>
 
             <div className="text-center mb-6 md:mb-12 animate-slide-up order-1 md:order-2">

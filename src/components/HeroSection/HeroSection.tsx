@@ -1,5 +1,5 @@
 import React from 'react';
-import ChatInterface from '../ChatInterface/ChatInterface';
+import OnKlinicAgentChat from '../OnKlinicAgentChat/OnKlinicAgentChat';
 import './HeroSection.css';
 
 const HeroSection: React.FC = () => {
@@ -27,7 +27,7 @@ const HeroSection: React.FC = () => {
         
         <div className="hero-chat">
           <div className="chat-window">
-            <ChatInterface />
+            <OnKlinicAgentChat />
           </div>
         </div>
       </div>
