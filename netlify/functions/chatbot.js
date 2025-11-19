@@ -1,3 +1,7 @@
+// DEPRECATED: This function is no longer used.
+// Replaced by onklinic-agent.ts which uses the OpenAI Agents SDK
+// Kept for reference only.
+
 const fetch = require("node-fetch");
 
 exports.handler = async function(event) {

@@ -50,7 +50,6 @@ const ChatInterface: React.FC = () => {
   const [showSuggestions, setShowSuggestions] = useState(true);
   const [showSuggestionsButton, setShowSuggestionsButton] = useState(false);
   const [askedQuestionsIds, setAskedQuestionsIds] = useState<Set<string>>(new Set());
-  const [threadId, setThreadId] = useState<string | null>(localStorage.getItem('onklinicThreadId'));
 
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -60,20 +59,6 @@ const ChatInterface: React.FC = () => {
       container.scrollTop = container.scrollHeight;
     }
   }, [messages]);
-
-  useEffect(() => {
-    if (!threadId) {
-      fetch('/.netlify/functions/create-thread')
-        .then(res => res.json())
-        .then(data => {
-          if (data.thread_id) {
-            setThreadId(data.thread_id);
-            localStorage.setItem('onklinicThreadId', data.thread_id);
-          }
-        })
-        .catch(err => console.error('Error creating thread:', err));
-    }
-  }, [threadId]);
 
   const handleSend = async (messageToSend?: string, optionId?: string) => {
     const messageText = messageToSend || input.trim();
@@ -97,60 +82,18 @@ const ChatInterface: React.FC = () => {
       setAskedQuestionsIds(prev => new Set([...prev, optionId]));
     }
 
-    if (!threadId) {
-      console.error("Thread ID is missing, cannot send message.");
-      setIsTyping(false);
-      return;
-    }
-
     try {
-      const res = await fetch('/.netlify/functions/chatbot', {
+      const res = await fetch('/.netlify/functions/onklinic-agent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: messageText,
-          thread_id: threadId
+          message: messageText
         }),
       });
 
       const data = await res.json();
 
-      if (data.thread_id && data.run_id) {
-        await pollForResponse(data.thread_id, data.run_id);
-      } else {
-        throw new Error("Could not start chat run.");
-      }
-
-    } catch (error) {
-      console.error('Chatbot error:', error);
-      setMessages((prev) => [...prev, {
-        id: Date.now().toString() + '_bot_error',
-        text: 'Sorry, I could not process your request.',
-        sender: 'bot',
-        timestamp: new Date().toISOString(),
-      }]);
-      setIsTyping(false);
-    }
-  };
-
-  const pollForResponse = async (threadId: string, runId: string) => {
-    let completed = false;
-
-    while (!completed) {
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Polling cada 1 segundo
-
-      const res = await fetch('/.netlify/functions/check-run', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          thread_id: threadId,
-          run_id: runId
-        }),
-      });
-
-      const data = await res.json();
-
-      if (data.status === 'completed') {
+      if (data.reply) {
         const botMessage: Message = {
           id: Date.now().toString() + '_bot',
           text: data.reply,
@@ -158,9 +101,21 @@ const ChatInterface: React.FC = () => {
           timestamp: new Date().toISOString(),
         };
         setMessages((prev) => [...prev, botMessage]);
-        setIsTyping(false);
-        completed = true;
+      } else {
+        throw new Error("No reply received from agent.");
       }
+
+      setIsTyping(false);
+
+    } catch (error) {
+      console.error('Agent error:', error);
+      setMessages((prev) => [...prev, {
+        id: Date.now().toString() + '_bot_error',
+        text: 'Sorry, I could not process your request.',
+        sender: 'bot',
+        timestamp: new Date().toISOString(),
+      }]);
+      setIsTyping(false);
     }
   };
 
