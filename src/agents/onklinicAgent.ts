@@ -48,36 +48,17 @@ const calculateTimeSavings = tool({
     notes_per_day: z.number(),
     minutes_per_note: z.number(),
     days_per_week: z.number(),
-    clinicians_count: z.number(),
-    language: z.string().optional()
+    clinicians_count: z.number()
   }),
-  execute: async (input: {notes_per_day: number, minutes_per_note: number, days_per_week: number, clinicians_count: number, language?: string}) => {
-    // Log the call for debugging in Netlify
-    console.log('[calculateTimeSavings] Called with:', {
-      notes_per_day: input.notes_per_day,
-      minutes_per_note: input.minutes_per_note,
-      days_per_week: input.days_per_week,
-      clinicians_count: input.clinicians_count,
-      language: input.language
-    });
-
-    // Calculate exact numbers
+  execute: async (input: {notes_per_day: number, minutes_per_note: number, days_per_week: number, clinicians_count: number}) => {
+    // Real calculation implementation
     const totalMinutesPerWeek = input.notes_per_day * input.minutes_per_note * input.days_per_week;
-    const hoursPerClinician = totalMinutesPerWeek / 60;
-    const hoursForTeam = hoursPerClinician * input.clinicians_count;
+    const totalHoursPerWeek = totalMinutesPerWeek / 60;
+    const totalForTeam = totalHoursPerWeek * input.clinicians_count;
+    const potentialSavings = totalHoursPerWeek * 0.4; // Estimate 40% time savings
+    const potentialSavingsTeam = potentialSavings * input.clinicians_count;
 
-    // Example hypothetical savings (30% as middle ground between 20-40%)
-    const exampleSavingsPercent = 30;
-    const exampleSavingsHours = (hoursForTeam * exampleSavingsPercent) / 100;
-
-    // Detect language
-    const isSpanish = input.language?.toLowerCase().includes('es') || input.language?.toLowerCase().includes('spanish');
-
-    if (isSpanish) {
-      return `Con tus números, estamos hablando de ${hoursPerClinician.toFixed(1)} horas por semana por clínico, y ${hoursForTeam.toFixed(1)} horas totales para ${input.clinicians_count === 1 ? 'ti' : 'el equipo'}.\n\nEn la práctica, un flujo más eficiente podría reducir una parte de ese tiempo (por ejemplo, entre un 20 % y un 40 %), pero eso depende de cómo trabajes hoy y de qué tan optimizada esté tu documentación actual.\n\nSi asumiéramos, a modo de ejemplo, una mejora del ${exampleSavingsPercent} %, recuperarías aproximadamente ${exampleSavingsHours.toFixed(1)} horas por semana para ${input.clinicians_count === 1 ? 'ti' : 'todo el equipo'}, que podrías dedicar a atención directa o a reducir el desgaste profesional.`;
-    } else {
-      return `With your numbers, we're looking at ${hoursPerClinician.toFixed(1)} hours per week per clinician, and ${hoursForTeam.toFixed(1)} total hours for ${input.clinicians_count === 1 ? 'you' : 'the team'}.\n\nIn practice, a more efficient workflow could reduce some portion of that time (for example, somewhere between 20% and 40%), but that depends on how you work today and how optimized your current documentation process is.\n\nIf we assumed, as an example, a ${exampleSavingsPercent}% improvement, you'd recover approximately ${exampleSavingsHours.toFixed(1)} hours per week for ${input.clinicians_count === 1 ? 'yourself' : 'the entire team'}, which you could redirect to direct patient care or reducing professional burnout.`;
-    }
+    return `Time Analysis:\n\n**Current Documentation Time:**\n- Per clinician: ${totalHoursPerWeek.toFixed(1)} hours/week\n- For ${input.clinicians_count} clinician(s): ${totalForTeam.toFixed(1)} hours/week\n\n**Potential Time Savings with OnKlinic:**\n- Per clinician: ~${potentialSavings.toFixed(1)} hours/week\n- For ${input.clinicians_count} clinician(s): ~${potentialSavingsTeam.toFixed(1)} hours/week\n\nThat's approximately ${(potentialSavings / totalHoursPerWeek * 100).toFixed(0)}% reduction in documentation time, which you could redirect to patient care or reduce burnout.`;
   },
 });
 
