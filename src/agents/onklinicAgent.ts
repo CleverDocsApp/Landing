@@ -470,7 +470,7 @@ Always prefer to:
 
 END OF INSTRUCTIONS.
 `,
-  model: "gpt-4o",
+  model: "gpt-5.1-chat-latest",
   tools: [
     scheduleDemo,
     getOkhowtoVideos,
