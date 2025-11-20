@@ -25,10 +25,10 @@ if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
   }
 }
 
-export const FEED_URL = '/.netlify/functions/okhowto-feed';
-export const UPLOAD_URL = '/.netlify/functions/okhowto-upload';
-export const SAVE_URL = '/.netlify/functions/okhowto-save';
-export const DIAGNOSTICS_URL = '/.netlify/functions/okhowto-diagnostics';
+export const FEED_URL = 'https://onkliniclp.netlify.app/.netlify/functions/okhowto-feed';
+export const UPLOAD_URL = 'https://onkliniclp.netlify.app/.netlify/functions/okhowto-upload';
+export const SAVE_URL = 'https://onkliniclp.netlify.app/.netlify/functions/okhowto-save';
+export const DIAGNOSTICS_URL = 'https://onkliniclp.netlify.app/.netlify/functions/okhowto-diagnostics';
 
 export const isRemoteModeEnabled = (): boolean => currentRemoteMode;
 

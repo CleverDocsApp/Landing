@@ -7,6 +7,10 @@ export default async (req: Request, _ctx: Context) => {
   if (pf) return pf;
 
   const origin = req.headers.get("Origin");
+  const referer = req.headers.get("Referer");
+
+  console.log('[okhowto-feed] Request from:', { origin, referer });
+
   const headers = {
     "Content-Type": "application/json; charset=utf-8",
     "Cache-Control": "no-store",
