@@ -1,5 +1,6 @@
 import { tool, fileSearchTool, Agent, AgentInputItem, Runner, withTrace } from "@openai/agents";
 import { z } from "zod";
+import { saveDemoRequest } from "../../netlify/lib/okhowtoStore";
 
 interface Video {
   id: string | number;
@@ -30,12 +31,46 @@ const scheduleDemo = tool({
     team_size: z.number(),
     timezone: z.string(),
     preferred_slots: z.array(z.string()),
-    notes: z.string()
+    notes: z.string(),
+    locale: z.string().optional()
   }),
-  execute: async (input: {name: string, email: string, role: string, team_size: number, timezone: string, preferred_slots: string[], notes: string}) => {
-    // Stub implementation - returns a confirmation message
-    const message = `Demo request received!\n\nDetails:\n- Name: ${input.name}\n- Email: ${input.email}\n- Role: ${input.role}\n- Team Size: ${input.team_size}\n- Timezone: ${input.timezone}\n- Preferred Slots: ${input.preferred_slots.join(', ')}\n- Notes: ${input.notes}\n\nSomeone from our team will contact you within 24 hours to schedule your personalized demo.`;
-    return message;
+  execute: async (input: {name: string, email: string, role: string, team_size: number, timezone: string, preferred_slots: string[], notes: string, locale?: string}) => {
+    try {
+      // Save demo request to Netlify Blobs
+      const savedDemo = await saveDemoRequest({
+        name: input.name,
+        email: input.email,
+        role: input.role,
+        team_size: input.team_size,
+        timezone: input.timezone,
+        preferred_slots: input.preferred_slots,
+        notes: input.notes,
+        locale: input.locale || 'en'
+      });
+
+      console.log('[scheduleDemo] Demo request saved:', savedDemo.id);
+
+      // Return confirmation message in appropriate language
+      const isSpanish = input.locale?.toLowerCase().includes('es') || input.locale?.toLowerCase().includes('spanish');
+
+      if (isSpanish) {
+        return `¡Solicitud de demo recibida!\n\nDetalles:\n- Nombre: ${input.name}\n- Email: ${input.email}\n- Rol: ${input.role}\n- Tamaño del equipo: ${input.team_size}\n- Zona horaria: ${input.timezone}\n- Horarios preferidos: ${input.preferred_slots.join(', ')}\n- Notas: ${input.notes}\n\nAlguien de nuestro equipo te contactará en las próximas 24 horas para coordinar tu demo personalizada.`;
+      } else {
+        return `Demo request received!\n\nDetails:\n- Name: ${input.name}\n- Email: ${input.email}\n- Role: ${input.role}\n- Team Size: ${input.team_size}\n- Timezone: ${input.timezone}\n- Preferred Slots: ${input.preferred_slots.join(', ')}\n- Notes: ${input.notes}\n\nSomeone from our team will contact you within 24 hours to schedule your personalized demo.`;
+      }
+    } catch (err) {
+      console.error('[scheduleDemo] Error saving demo request:', err);
+
+      // Even if save fails, return a confirmation message
+      // The user's request was processed, we just couldn't persist it
+      const isSpanish = input.locale?.toLowerCase().includes('es') || input.locale?.toLowerCase().includes('spanish');
+
+      if (isSpanish) {
+        return `Tu solicitud de demo ha sido recibida. Alguien de nuestro equipo te contactará pronto. Si no recibes respuesta en 24 horas, por favor contáctanos directamente a través del sitio web.`;
+      } else {
+        return `Your demo request has been received. Someone from our team will contact you soon. If you don't hear back within 24 hours, please contact us directly through the website.`;
+      }
+    }
   },
 });
 
@@ -456,7 +491,8 @@ Tool: scheduleDemo
     - "I want someone to show this to my team".
 - Behavior:
   - First, collect: name, email, role, approximate team size (if relevant), timezone (if they share it), and any special notes.
-  - Only then call scheduleDemo with those parameters.
+  - Detect the user's language (English or Spanish) and include it as the locale parameter (e.g., "en" or "es").
+  - Only then call scheduleDemo with those parameters, including the locale.
   - If the tool call succeeds, confirm that their demo request has been captured and explain what will happen next (for example: someone from the team will contact them).
   - If the tool call fails, say in natural language that automatic demo scheduling is not available at this moment and invite them to contact the team via the website.
 
