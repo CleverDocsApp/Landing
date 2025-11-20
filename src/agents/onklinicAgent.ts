@@ -535,7 +535,6 @@ END OF INSTRUCTIONS.
     fileSearch
   ],
   modelSettings: {
-    temperature: 0.2,
     topP: 1,
     parallelToolCalls: true,
     maxTokens: 2048,
