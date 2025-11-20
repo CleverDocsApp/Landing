@@ -56,7 +56,17 @@ const calculateTimeSavings = tool({
     const totalHoursPerWeek = totalMinutesPerWeek / 60;
     const totalForTeam = totalHoursPerWeek * input.clinicians_count;
 
-    return `Time Analysis:\n\nCurrent documentation time (based on what you shared):\n- Per clinician: ${totalHoursPerWeek.toFixed(1)} hours/week\n- For ${input.clinicians_count} clinician(s): ${totalForTeam.toFixed(1)} hours/week\n\nThis gives you a concrete baseline. Any meaningful reduction in documentation time (even a few hours per week) can free capacity for patient care, supervision, or simply reduce end-of-day overload. I can help you think through how OnKlinic could fit into your current workflow, but I can't guarantee a specific percentage of time saved.`;
+    return [
+      "Time Analysis:",
+      "",
+      "Current documentation time (based on what you shared):",
+      `- Per clinician: ${totalHoursPerWeek.toFixed(1)} hours/week`,
+      `- For ${input.clinicians_count} clinician(s): ${totalForTeam.toFixed(1)} hours/week`,
+      "",
+      "This gives you a concrete baseline. Any meaningful reduction in documentation time (even a few hours per week) can free capacity for patient care, supervision, or simply reduce end-of-day overload.",
+      "",
+      "I can help you think through how OnKlinic could fit into your current workflow, but I cannot guarantee a specific percentage of time saved."
+    ].join("\n");
   },
 });
 
