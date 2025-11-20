@@ -1,6 +1,23 @@
 import { tool, fileSearchTool, Agent, AgentInputItem, Runner, withTrace } from "@openai/agents";
 import { z } from "zod";
-import { getAllOkHowToVideos, type Video } from "../../netlify/lib/okhowtoStore";
+
+interface Video {
+  id: string | number;
+  title: string;
+  description?: string;
+  category: string;
+  duration?: number;
+  [key: string]: any;
+}
+
+function formatDuration(seconds?: number): string {
+  if (!seconds || seconds <= 0) return '';
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  if (mins === 0) return `${secs}s`;
+  if (secs === 0) return `${mins} min`;
+  return `${mins}:${secs.toString().padStart(2, '0')} min`;
+}
 
 // Tool definitions
 const scheduleDemo = tool({
@@ -32,89 +49,73 @@ const getOkhowtoVideos = tool({
   }),
   execute: async (input: {topic: string, limit: number, language: string}) => {
     try {
-      const videos = await getAllOkHowToVideos();
+      const feedUrl = process.env.OK_FEED_URL ?? "https://onkliniclp.netlify.app/.netlify/functions/okhowto-feed";
+      const res = await fetch(feedUrl);
+
+      if (!res.ok) {
+        throw new Error(`Feed request failed: ${res.status}`);
+      }
+
+      const videos = await res.json();
       const isSpanish = input.language.toLowerCase().includes('es') || input.language.toLowerCase().includes('spanish');
 
-      if (videos.length === 0) {
+      if (!Array.isArray(videos) || videos.length === 0) {
         return isSpanish
-          ? "Por ahora no puedo cargar videos específicos de la biblioteca OK How-To, pero puedes ver la colección completa en onklinic.com/ok-how-to."
-          : "Right now I can't load specific OK How-To videos from the library. You can still watch the full collection at onklinic.com/ok-how-to.";
+          ? "Por ahora no puedo cargar videos específicos de la biblioteca OK How-To, pero puedes ver la colección completa en https://onklinic.com/ok-how-to."
+          : "Right now I can't load specific OK How-To videos from the library. You can still watch the full collection at https://onklinic.com/ok-how-to.";
       }
 
-      const topicLower = input.topic.toLowerCase();
-      let filteredVideos: Video[] = videos;
+      const topic = input.topic.toLowerCase();
+      let filtered: Video[] = videos;
 
-      // Filter by topic/category
-      if (topicLower.includes('onboarding') || topicLower.includes('tour') || topicLower.includes('getting started')) {
-        filteredVideos = videos.filter(v => v.category === 'onboarding');
-      } else if (topicLower.includes('feature') || topicLower.includes('plantillas') || topicLower.includes('templates')) {
-        filteredVideos = videos.filter(v => v.category === 'features');
-      } else if (topicLower.includes('security') || topicLower.includes('compliance') || topicLower.includes('privacy') || topicLower.includes('ética') || topicLower.includes('best practice')) {
-        filteredVideos = videos.filter(v => v.category === 'best-practices');
-      } else {
-        // Generic topic search - filter by title or description match
-        filteredVideos = videos.filter(v => {
-          const titleMatch = v.title.toLowerCase().includes(topicLower);
-          const descMatch = v.description?.toLowerCase().includes(topicLower) || false;
-          return titleMatch || descMatch;
-        });
-        // If no matches, use all videos
-        if (filteredVideos.length === 0) {
-          filteredVideos = videos;
-        }
+      // Simple topic-to-category mapping
+      if (topic.includes('overall') || topic.includes('tour') || topic.includes('recorrido') || topic.includes('introducción') || topic.includes('onboarding') || topic.includes('getting started')) {
+        filtered = videos.filter(v => v.category === 'onboarding');
+      } else if (topic.includes('template') || topic.includes('plantilla') || topic.includes('feature')) {
+        filtered = videos.filter(v => v.category === 'features');
+      } else if (topic.includes('security') || topic.includes('seguridad') || topic.includes('cumplimiento') || topic.includes('compliance') || topic.includes('best practice')) {
+        filtered = videos.filter(v => v.category === 'best-practices');
       }
 
-      // Filter by language (caption availability)
-      const langCode = isSpanish ? 'es' : 'en';
-      const videosWithCaptions = filteredVideos.filter(v => {
-        if (!v.captionLanguages) return false;
-        const langs = Array.isArray(v.captionLanguages) ? v.captionLanguages : v.captionLanguages.split(',').map(s => s.trim());
-        return langs.includes(langCode);
-      });
+      // If filter returns nothing, use full list
+      if (filtered.length === 0) {
+        filtered = videos;
+      }
 
-      // Prioritize videos with captions in the requested language
-      const finalVideos = videosWithCaptions.length > 0 ? videosWithCaptions : filteredVideos;
+      // Respect limit and avoid token bloat
+      const max = input.limit && input.limit > 0 ? Math.min(input.limit, 5) : 3;
+      const selected = filtered.slice(0, max);
 
-      // Apply limit
-      const limit = input.limit > 0 ? input.limit : 3;
-      const selectedVideos = finalVideos.slice(0, limit);
-
-      if (selectedVideos.length === 0) {
+      if (selected.length === 0) {
         return isSpanish
-          ? "No encontré videos específicos para ese tema, pero puedes explorar toda la colección en onklinic.com/ok-how-to."
-          : "I couldn't find specific videos for that topic, but you can explore the full collection at onklinic.com/ok-how-to.";
+          ? "No encontré videos específicos para ese tema, pero puedes explorar toda la colección en https://onklinic.com/ok-how-to."
+          : "I couldn't find specific videos for that topic, but you can explore the full collection at https://onklinic.com/ok-how-to.";
       }
 
       // Format response
       if (isSpanish) {
-        let response = "Te recomiendo estos videos de la colección OK How-To (puedes verlos en onklinic.com/ok-how-to):\n\n";
-        selectedVideos.forEach((video, idx) => {
-          const categoryName = video.category === 'onboarding' ? 'Primeros pasos' :
-                               video.category === 'features' ? 'Funcionalidades' :
-                               video.category === 'best-practices' ? 'Buenas prácticas' : video.category || 'General';
-          response += `${idx + 1}. ${video.title}\n`;
-          response += `   • De qué trata: ${video.description || 'Video instructivo de OnKlinic'}\n`;
-          response += `   • Categoría: ${categoryName}\n\n`;
+        let response = "He encontrado algunos videos que pueden ayudarte:\n\n";
+        selected.forEach((video, idx) => {
+          const durationStr = video.duration ? ` (${formatDuration(video.duration)})` : '';
+          response += `${idx + 1}. ${video.title}${durationStr}: ${video.description || 'Video instructivo de OnKlinic'}\n`;
         });
-        return response.trim();
+        response += "\nPuedes verlos en https://onklinic.com/ok-how-to.";
+        return response;
       } else {
-        let response = "I'd recommend these OK How-To videos (you can watch them at onklinic.com/ok-how-to):\n\n";
-        selectedVideos.forEach((video, idx) => {
-          const categoryName = video.category === 'onboarding' ? 'Getting Started' :
-                               video.category === 'features' ? 'Features' :
-                               video.category === 'best-practices' ? 'Best Practices' : video.category || 'General';
-          response += `${idx + 1}. ${video.title}\n`;
-          response += `   • What it shows: ${video.description || 'OnKlinic instructional video'}\n`;
-          response += `   • Category: ${categoryName}\n\n`;
+        let response = "Here are a few videos that might help:\n\n";
+        selected.forEach((video, idx) => {
+          const durationStr = video.duration ? ` (${formatDuration(video.duration)})` : '';
+          response += `${idx + 1}. ${video.title}${durationStr}: ${video.description || 'OnKlinic instructional video'}\n`;
         });
-        return response.trim();
+        response += "\nYou can watch them at https://onklinic.com/ok-how-to.";
+        return response;
       }
     } catch (err) {
       console.error('[getOkhowtoVideos] Error:', err);
       const isSpanish = input.language.toLowerCase().includes('es') || input.language.toLowerCase().includes('spanish');
       return isSpanish
-        ? "No puedo cargar videos específicos, pero puedes ver la colección completa en onklinic.com/ok-how-to."
-        : "I can't load specific videos right now, but you can watch the full collection at onklinic.com/ok-how-to.";
+        ? "No puedo cargar videos específicos aquí, pero tenemos una biblioteca con tutoriales sobre primeros pasos, funcionalidades y buenas prácticas. Visita https://onklinic.com/ok-how-to para ver todo el contenido."
+        : "I can't load specific videos right now, but we have a library with tutorials on getting started, features, and best practices. Visit https://onklinic.com/ok-how-to to see all content.";
     }
   },
 });
