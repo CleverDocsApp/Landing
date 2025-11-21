@@ -56,18 +56,76 @@ const exampleQuestions: Option[] = [
   }
 ];
 
-const detectLanguage = (text: string): ConversationLanguage => {
+const detectLanguage = (
+  text: string,
+  previous: ConversationLanguage
+): ConversationLanguage => {
   const lower = text.toLowerCase();
 
-  // crude but effective heuristic for ES vs EN
-  const hasSpanishAccent = /[áéíóúñü]/.test(lower);
-  const spanishHints = [' hola', ' clínica', ' clinica', ' notas', ' semana', ' equipo', 'documentación', 'documentacion', 'gracias'];
+  // Indicadores muy simples de español e inglés
+  const spanishIndicators = [
+    ' hola',
+    ' que ',
+    ' qué ',
+    ' como ',
+    ' cómo ',
+    ' para ',
+    ' por ',
+    ' tengo ',
+    ' quiero ',
+    ' puedes ',
+    ' notas',
+    ' semana',
+    ' equipo',
+    ' clínica',
+    ' clinica',
+    ' documentaci',
+    ' gracias',
+    ' sesión',
+    ' sesion',
+    ' estoy',
+    ' tiene',
+    ' hacer',
+  ];
+  const englishIndicators = [
+    ' the ',
+    ' and ',
+    ' you ',
+    ' for ',
+    ' with ',
+    ' note',
+    ' notes',
+    ' week',
+    ' team',
+    ' clinic',
+    ' thanks',
+    ' have',
+    ' this',
+    ' that',
+  ];
 
-  if (hasSpanishAccent || spanishHints.some((w) => lower.includes(w))) {
-    return 'es';
+  const hasSpanishAccent = /[áéíóúñü]/.test(lower);
+
+  let esScore = hasSpanishAccent ? 2 : 0;
+  let enScore = 0;
+
+  spanishIndicators.forEach((w) => {
+    if (lower.includes(w)) esScore += 1;
+  });
+  englishIndicators.forEach((w) => {
+    if (lower.includes(w)) enScore += 1;
+  });
+
+  // Si no hay señales claras, mantiene el idioma previo
+  if (esScore === 0 && enScore === 0) {
+    return previous;
   }
 
-  return 'en';
+  if (esScore > enScore) return 'es';
+  if (enScore > esScore) return 'en';
+
+  // Empate: mantener lo que veníamos usando
+  return previous;
 };
 
 const ChatInterface: React.FC = () => {
@@ -100,6 +158,16 @@ const ChatInterface: React.FC = () => {
     void handleSend(structuredText);
   };
 
+  const addLocalBotMessage = (text: string) => {
+    const newBotMessage: Message = {
+      id: Date.now().toString(),
+      sender: 'bot',
+      text,
+      timestamp: new Date().toISOString(),
+    };
+    setMessages((prev) => [...prev, newBotMessage]);
+  };
+
   const handleContextSubmit = (context: {
     segment: UserSegment;
     role: UserRole;
@@ -109,6 +177,14 @@ const ChatInterface: React.FC = () => {
     setUserSegment(context.segment);
     setUserRole(context.role);
     setContextWidgetMessageId(null);
+
+    // 🔹 Mensaje de confirmación local
+    const confirmationText =
+      conversationLanguage === 'es'
+        ? 'Perfecto, a partir de ahora voy a adaptar las respuestas a tu rol y al tipo de organización que tienes.'
+        : "Great, I'll tailor my answers to your role and organization from now on.";
+
+    addLocalBotMessage(confirmationText);
   };
 
   const handleContextSkip = () => {
@@ -123,7 +199,9 @@ const ChatInterface: React.FC = () => {
     const isWidgetInput = messageText.trim().startsWith('WidgetInput:');
     if (!isWidgetInput) {
       setUserMessageCount((prev) => prev + 1);
-      setConversationLanguage(detectLanguage(messageText));
+      setConversationLanguage((prevLang) =>
+        detectLanguage(messageText, prevLang)
+      );
     }
 
     const userMessage: Message = {
