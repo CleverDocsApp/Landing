@@ -128,6 +128,65 @@ const detectLanguage = (
   return previous;
 };
 
+// Pure function for local language detection (used by UserContextWidget)
+const detectLanguageFromText = (text: string): ConversationLanguage => {
+  const lower = text.toLowerCase();
+
+  const hasSpanishAccent = /[áéíóúñü]/.test(lower);
+
+  const spanishIndicators = [
+    ' hola',
+    ' que ',
+    ' qué ',
+    ' como ',
+    ' cómo ',
+    ' para ',
+    ' por ',
+    ' tengo ',
+    ' quiero ',
+    ' puedes ',
+    ' notas',
+    ' semana',
+    ' equipo',
+    ' clínica',
+    ' clinica',
+    ' documentaci',
+    ' gracias',
+    ' sesión',
+    ' sesion',
+  ];
+
+  const englishIndicators = [
+    ' the ',
+    ' and ',
+    ' you ',
+    ' for ',
+    ' with ',
+    ' note',
+    ' notes',
+    ' week',
+    ' team',
+    ' clinic',
+    ' thanks',
+  ];
+
+  let esScore = hasSpanishAccent ? 2 : 0;
+  let enScore = 0;
+
+  spanishIndicators.forEach((w) => {
+    if (lower.includes(w)) esScore += 1;
+  });
+  englishIndicators.forEach((w) => {
+    if (lower.includes(w)) enScore += 1;
+  });
+
+  if (esScore > enScore) return 'es';
+  if (enScore > esScore) return 'en';
+
+  // If tie or no clear signal, default to Spanish for this project
+  return 'es';
+};
+
 const ChatInterface: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [input, setInput] = useState('');
@@ -166,29 +225,6 @@ const ChatInterface: React.FC = () => {
       timestamp: new Date().toISOString(),
     };
     setMessages((prev) => [...prev, newBotMessage]);
-  };
-
-  const handleContextSubmit = (context: {
-    segment: UserSegment;
-    role: UserRole;
-    customSegment?: string;
-    customRole?: string;
-  }) => {
-    setUserSegment(context.segment);
-    setUserRole(context.role);
-    setContextWidgetMessageId(null);
-
-    // 🔹 Mensaje de confirmación local
-    const confirmationText =
-      conversationLanguage === 'es'
-        ? 'Perfecto, a partir de ahora voy a adaptar las respuestas a tu rol y al tipo de organización que tienes.'
-        : "Great, I'll tailor my answers to your role and organization from now on.";
-
-    addLocalBotMessage(confirmationText);
-  };
-
-  const handleContextSkip = () => {
-    setContextWidgetMessageId(null);
   };
 
   const handleSend = async (messageToSend?: string, optionId?: string) => {
@@ -335,7 +371,7 @@ const ChatInterface: React.FC = () => {
       </div>
 
       <div className="chat-messages" ref={messagesContainerRef}>
-        {messages.map((msg) => {
+        {messages.map((msg, index) => {
           // Do not render synthetic structured-input messages
           if (
             msg.sender === 'user' &&
@@ -352,8 +388,20 @@ const ChatInterface: React.FC = () => {
           const showDemoForm =
             msg.sender === 'bot' && textLower.includes('[[schedule_demo_form]]');
 
-          const showUserContextWidget =
+          const isContextWidgetAnchor =
             msg.sender === 'bot' && msg.id === contextWidgetMessageId && !userSegment && !userRole;
+
+          // Compute widgetLanguage from the last user message before this index
+          let widgetLanguage: ConversationLanguage = 'es'; // default to ES for this project
+          if (isContextWidgetAnchor) {
+            for (let i = index - 1; i >= 0; i--) {
+              const prevMsg = messages[i];
+              if (prevMsg.sender === 'user' && prevMsg.text.trim().length > 0 && !prevMsg.text.trim().startsWith('WidgetInput:')) {
+                widgetLanguage = detectLanguageFromText(prevMsg.text);
+                break;
+              }
+            }
+          }
 
           return (
             <React.Fragment key={msg.id}>
@@ -377,11 +425,25 @@ const ChatInterface: React.FC = () => {
               )}
 
               {/* User context widget */}
-              {showUserContextWidget && (
+              {isContextWidgetAnchor && (
                 <UserContextWidget
-                  language={conversationLanguage}
-                  onSubmitContext={handleContextSubmit}
-                  onSkip={handleContextSkip}
+                  language={widgetLanguage}
+                  onSubmitContext={(context) => {
+                    setUserSegment(context.segment);
+                    setUserRole(context.role);
+                    setContextWidgetMessageId(null);
+
+                    // Local confirmation message
+                    const confirmationText =
+                      widgetLanguage === 'es'
+                        ? 'Perfecto, a partir de ahora voy a adaptar las respuestas a tu rol y al tipo de organización que tienes.'
+                        : "Great, I'll tailor my answers to your role and organization from now on.";
+
+                    addLocalBotMessage(confirmationText);
+                  }}
+                  onSkip={() => {
+                    setContextWidgetMessageId(null);
+                  }}
                 />
               )}
             </React.Fragment>
