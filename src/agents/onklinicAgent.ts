@@ -711,13 +711,11 @@ END OF INSTRUCTIONS.
   }
 });
 
-type WorkflowInput = { input_as_text: string };
+type WorkflowInput = { messages: AgentInputItem[] };
 
 export const runWorkflow = async (workflow: WorkflowInput): Promise<{ output_text: string }> => {
   return await withTrace("OnKlinic", async () => {
-    const conversationHistory: AgentInputItem[] = [
-      { role: "user", content: [{ type: "input_text", text: workflow.input_as_text }] }
-    ];
+    const conversationHistory: AgentInputItem[] = [...workflow.messages];
     const runner = new Runner({
       traceMetadata: {
         __trace_source__: "agent-builder",

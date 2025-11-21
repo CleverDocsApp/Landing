@@ -1,6 +1,9 @@
 import type { Context } from "@netlify/functions";
+import type { AgentInputItem } from "@openai/agents";
 import { corsHeaders, preflight } from "./utils/cors";
 import { runWorkflow } from "../../src/agents/onklinicAgent";
+
+type ChatMessage = { role: "user" | "assistant"; content: string };
 
 export default async (req: Request, _ctx: Context) => {
   const pf = preflight(req);
@@ -24,19 +27,25 @@ export default async (req: Request, _ctx: Context) => {
 
     // Parse request body
     const body = await req.json();
-    const { message } = body;
+    const { messages } = body as { messages: ChatMessage[] };
 
-    if (!message || typeof message !== "string") {
+    if (!messages || messages.length === 0) {
       return new Response(
-        JSON.stringify({ error: "Invalid message format" }),
+        JSON.stringify({ error: "No messages provided" }),
         { status: 400, headers }
       );
     }
 
-    console.log("[onklinic-agent] Processing message:", message.substring(0, 100));
+    console.log("[onklinic-agent] Processing conversation with", messages.length, "messages");
 
-    // Call the agent workflow
-    const result = await runWorkflow({ input_as_text: message });
+    // Map to agent format
+    const agentMessages: AgentInputItem[] = messages.map((m) => ({
+      role: m.role,
+      content: [{ type: "input_text", text: m.content }],
+    }));
+
+    // Call the agent workflow with full conversation history
+    const result = await runWorkflow({ messages: agentMessages });
 
     console.log("[onklinic-agent] Agent response received");
 
