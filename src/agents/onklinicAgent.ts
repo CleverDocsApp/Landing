@@ -711,11 +711,30 @@ END OF INSTRUCTIONS.
   }
 });
 
-type WorkflowInput = { messages: AgentInputItem[] };
+type WorkflowInput = {
+  input_as_text?: string;
+  messages?: AgentInputItem[];
+};
 
 export const runWorkflow = async (workflow: WorkflowInput): Promise<{ output_text: string }> => {
   return await withTrace("OnKlinic", async () => {
-    const conversationHistory: AgentInputItem[] = [...workflow.messages];
+    let conversationHistory: AgentInputItem[];
+
+    if (workflow.messages && workflow.messages.length > 0) {
+      // New case: full conversation history from frontend
+      conversationHistory = workflow.messages;
+    } else if (workflow.input_as_text) {
+      // Legacy case: single message
+      conversationHistory = [
+        {
+          role: "user",
+          content: [{ type: "input_text", text: workflow.input_as_text }],
+        },
+      ];
+    } else {
+      throw new Error("No input provided to runWorkflow");
+    }
+
     const runner = new Runner({
       traceMetadata: {
         __trace_source__: "agent-builder",
@@ -724,9 +743,7 @@ export const runWorkflow = async (workflow: WorkflowInput): Promise<{ output_tex
     });
     const onklinicResultTemp = await runner.run(
       onklinic,
-      [
-        ...conversationHistory
-      ]
+      conversationHistory
     );
     conversationHistory.push(...onklinicResultTemp.newItems.map((item) => item.rawItem));
 
