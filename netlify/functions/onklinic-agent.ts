@@ -39,10 +39,22 @@ export default async (req: Request, _ctx: Context) => {
     console.log("[onklinic-agent] Processing conversation with", messages.length, "messages");
 
     // Map to agent format
-    const agentMessages: AgentInputItem[] = messages.map((m) => ({
-      role: m.role,
-      content: [{ type: "input_text", text: m.content }],
-    }));
+    const agentMessages: AgentInputItem[] = messages.map((m) => {
+      const contentType =
+        m.role === "assistant"
+          ? "output_text"
+          : "input_text";
+
+      return {
+        role: m.role,
+        content: [
+          {
+            type: contentType,
+            text: m.content,
+          },
+        ],
+      };
+    });
 
     // Call the agent workflow with full conversation history
     const result = await runWorkflow({ messages: agentMessages });
