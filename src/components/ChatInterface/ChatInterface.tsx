@@ -187,6 +187,22 @@ const detectLanguageFromText = (text: string): ConversationLanguage => {
   return 'es';
 };
 
+// Helper to get the widget language for a given assistant message index
+const getWidgetLanguageForMessage = (
+  messages: Message[],
+  index: number
+): ConversationLanguage => {
+  // Look for the last user message before this index
+  for (let i = index - 1; i >= 0; i--) {
+    const prev = messages[i];
+    if (prev.sender === 'user' && prev.text.trim().length > 0 && !prev.text.trim().startsWith('WidgetInput:')) {
+      return detectLanguageFromText(prev.text);
+    }
+  }
+  // Fallback to Spanish
+  return 'es';
+};
+
 const ChatInterface: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [input, setInput] = useState('');
@@ -388,20 +404,16 @@ const ChatInterface: React.FC = () => {
           const showDemoForm =
             msg.sender === 'bot' && textLower.includes('[[schedule_demo_form]]');
 
+          // Language for any widget attached to this assistant message
+          const widgetLanguageForMsg = getWidgetLanguageForMessage(messages, index);
+
           const isContextWidgetAnchor =
             msg.sender === 'bot' && msg.id === contextWidgetMessageId && !userSegment && !userRole;
 
-          // Compute widgetLanguage from the last user message before this index
-          let widgetLanguage: ConversationLanguage = 'es'; // default to ES for this project
-          if (isContextWidgetAnchor) {
-            for (let i = index - 1; i >= 0; i--) {
-              const prevMsg = messages[i];
-              if (prevMsg.sender === 'user' && prevMsg.text.trim().length > 0 && !prevMsg.text.trim().startsWith('WidgetInput:')) {
-                widgetLanguage = detectLanguageFromText(prevMsg.text);
-                break;
-              }
-            }
-          }
+          // IMPORTANT: context widget should NOT appear if this same message
+          // already has an input form widget (demo or time savings)
+          const showUserContextWidget =
+            isContextWidgetAnchor && !showTimeSavingsForm && !showDemoForm;
 
           return (
             <React.Fragment key={msg.id}>
@@ -410,24 +422,24 @@ const ChatInterface: React.FC = () => {
               {/* Output widgets (result) */}
               {widgetType === 'howto' && <HowToWidget />}
               {widgetType === 'time_savings' && (
-                <TimeSavingsWidget messageText={msg.text} />
+                <TimeSavingsWidget messageText={msg.text} language={widgetLanguageForMsg} />
               )}
               {widgetType === 'demo_confirmation' && (
-                <DemoConfirmationWidget messageText={msg.text} />
+                <DemoConfirmationWidget messageText={msg.text} language={widgetLanguageForMsg} />
               )}
 
               {/* Input widgets (forms) */}
               {showTimeSavingsForm && (
-                <TimeSavingsFormWidget onSubmitStructured={handleWidgetSubmit} />
+                <TimeSavingsFormWidget language={widgetLanguageForMsg} onSubmitStructured={handleWidgetSubmit} />
               )}
               {showDemoForm && (
-                <DemoFormWidget onSubmitStructured={handleWidgetSubmit} />
+                <DemoFormWidget language={widgetLanguageForMsg} onSubmitStructured={handleWidgetSubmit} />
               )}
 
-              {/* User context widget */}
-              {isContextWidgetAnchor && (
+              {/* User context widget (only if there's no other input widget on this message) */}
+              {showUserContextWidget && (
                 <UserContextWidget
-                  language={widgetLanguage}
+                  language={widgetLanguageForMsg}
                   onSubmitContext={(context) => {
                     setUserSegment(context.segment);
                     setUserRole(context.role);
@@ -435,7 +447,7 @@ const ChatInterface: React.FC = () => {
 
                     // Local confirmation message
                     const confirmationText =
-                      widgetLanguage === 'es'
+                      widgetLanguageForMsg === 'es'
                         ? 'Perfecto, a partir de ahora voy a adaptar las respuestas a tu rol y al tipo de organización que tienes.'
                         : "Great, I'll tailor my answers to your role and organization from now on.";
 

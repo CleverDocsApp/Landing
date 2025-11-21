@@ -1,15 +1,29 @@
 import React, { useState } from 'react';
 import './TimeSavingsWidget.css';
 
+type ConversationLanguage = 'en' | 'es';
+
 interface TimeSavingsFormWidgetProps {
+  language: ConversationLanguage;
   onSubmitStructured: (widgetId: string, payload: any) => void;
 }
 
-const TimeSavingsFormWidget: React.FC<TimeSavingsFormWidgetProps> = ({ onSubmitStructured }) => {
+const TimeSavingsFormWidget: React.FC<TimeSavingsFormWidgetProps> = ({ language, onSubmitStructured }) => {
   const [notesPerDay, setNotesPerDay] = useState('');
   const [minutesPerNote, setMinutesPerNote] = useState('');
   const [daysPerWeek, setDaysPerWeek] = useState('');
   const [cliniciansCount, setCliniciansCount] = useState('1');
+
+  const isEs = language === 'es';
+
+  const labels = {
+    title: isEs ? 'Cálculo rápido de tiempo' : 'Quick time estimate',
+    notesPerDay: isEs ? 'Notas por día' : 'Notes per day',
+    minutesPerNote: isEs ? 'Minutos por nota' : 'Minutes per note',
+    daysPerWeek: isEs ? 'Días por semana' : 'Days per week',
+    cliniciansIncluded: isEs ? 'Clínicos incluidos' : 'Clinicians included',
+    submit: isEs ? 'Calcular' : 'Calculate',
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,12 +41,12 @@ const TimeSavingsFormWidget: React.FC<TimeSavingsFormWidgetProps> = ({ onSubmitS
     <div className="time-savings-widget time-savings-widget--form">
       <div className="time-savings-widget-content">
         <h3 className="time-savings-widget-title">
-          Quick time estimate
+          {labels.title}
         </h3>
         <form className="time-savings-form" onSubmit={handleSubmit}>
           <div className="time-savings-form-row">
             <label className="time-savings-form-label">
-              <span className="time-savings-label">Notes per day</span>
+              <span className="time-savings-label">{labels.notesPerDay}</span>
               <input
                 className="time-savings-form-input"
                 type="number"
@@ -43,7 +57,7 @@ const TimeSavingsFormWidget: React.FC<TimeSavingsFormWidgetProps> = ({ onSubmitS
               />
             </label>
             <label className="time-savings-form-label">
-              <span className="time-savings-label">Minutes per note</span>
+              <span className="time-savings-label">{labels.minutesPerNote}</span>
               <input
                 className="time-savings-form-input"
                 type="number"
@@ -56,7 +70,7 @@ const TimeSavingsFormWidget: React.FC<TimeSavingsFormWidgetProps> = ({ onSubmitS
           </div>
           <div className="time-savings-form-row">
             <label className="time-savings-form-label">
-              <span className="time-savings-label">Days per week</span>
+              <span className="time-savings-label">{labels.daysPerWeek}</span>
               <input
                 className="time-savings-form-input"
                 type="number"
@@ -68,7 +82,7 @@ const TimeSavingsFormWidget: React.FC<TimeSavingsFormWidgetProps> = ({ onSubmitS
               />
             </label>
             <label className="time-savings-form-label">
-              <span className="time-savings-label">Clinicians included</span>
+              <span className="time-savings-label">{labels.cliniciansIncluded}</span>
               <input
                 className="time-savings-form-input"
                 type="number"
@@ -80,7 +94,7 @@ const TimeSavingsFormWidget: React.FC<TimeSavingsFormWidgetProps> = ({ onSubmitS
             </label>
           </div>
           <button type="submit" className="time-savings-form-submit">
-            Calculate
+            {labels.submit}
           </button>
         </form>
       </div>

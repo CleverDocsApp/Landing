@@ -1,8 +1,11 @@
 import React from 'react';
 import './TimeSavingsWidget.css';
 
+type ConversationLanguage = 'en' | 'es';
+
 interface TimeSavingsWidgetProps {
   messageText: string;
+  language: ConversationLanguage;
   className?: string;
 }
 
@@ -13,7 +16,22 @@ interface TimeSavingsData {
   savingsTeamTotal: string;
 }
 
-const TimeSavingsWidget: React.FC<TimeSavingsWidgetProps> = ({ messageText, className = '' }) => {
+const TimeSavingsWidget: React.FC<TimeSavingsWidgetProps> = ({ messageText, language, className = '' }) => {
+  const isEs = language === 'es';
+
+  const labels = {
+    title: isEs
+      ? 'Análisis de tiempo (estimado)'
+      : 'Time analysis (estimated)',
+    currentTitle: isEs ? 'Tiempo actual' : 'Current time',
+    potentialTitle: isEs ? 'Tiempo potencialmente liberado' : 'Potential time saved',
+    perClinician: isEs ? 'Por clínico' : 'Per clinician',
+    teamTotal: isEs ? 'Equipo total' : 'Team total',
+    disclaimer: isEs
+      ? 'Esto es un ejemplo ilustrativo, no una promesa de ahorro concreto.'
+      : 'This is an illustrative example, not a guarantee of specific time savings.',
+  };
+
   const parseTimeSavings = (): TimeSavingsData | null => {
     try {
       const lines = messageText.split('\n');
@@ -77,32 +95,32 @@ const TimeSavingsWidget: React.FC<TimeSavingsWidgetProps> = ({ messageText, clas
   return (
     <div className={`time-savings-widget ${className}`}>
       <div className="time-savings-widget-content">
-        <h3 className="time-savings-widget-title">Análisis de tiempo (estimado)</h3>
+        <h3 className="time-savings-widget-title">{labels.title}</h3>
 
         <div className="time-savings-grid">
           <div className="time-savings-section">
-            <div className="time-savings-section-title">Tiempo actual</div>
+            <div className="time-savings-section-title">{labels.currentTitle}</div>
             <div className="time-savings-metric">
-              <div className="time-savings-label">Por clínico</div>
+              <div className="time-savings-label">{labels.perClinician}</div>
               <div className="time-savings-value">{data.currentPerClinician}</div>
             </div>
             {data.currentTeamTotal && (
               <div className="time-savings-metric">
-                <div className="time-savings-label">Equipo total</div>
+                <div className="time-savings-label">{labels.teamTotal}</div>
                 <div className="time-savings-value">{data.currentTeamTotal}</div>
               </div>
             )}
           </div>
 
           <div className="time-savings-section time-savings-section-highlight">
-            <div className="time-savings-section-title">Tiempo potencialmente liberado</div>
+            <div className="time-savings-section-title">{labels.potentialTitle}</div>
             <div className="time-savings-metric">
-              <div className="time-savings-label">Por clínico</div>
+              <div className="time-savings-label">{labels.perClinician}</div>
               <div className="time-savings-value time-savings-value-highlight">{data.savingsPerClinician}</div>
             </div>
             {data.savingsTeamTotal && (
               <div className="time-savings-metric">
-                <div className="time-savings-label">Equipo total</div>
+                <div className="time-savings-label">{labels.teamTotal}</div>
                 <div className="time-savings-value time-savings-value-highlight">{data.savingsTeamTotal}</div>
               </div>
             )}
@@ -110,7 +128,7 @@ const TimeSavingsWidget: React.FC<TimeSavingsWidgetProps> = ({ messageText, clas
         </div>
 
         <div className="time-savings-disclaimer">
-          Esto es un ejemplo ilustrativo, no una promesa de ahorro concreto.
+          {labels.disclaimer}
         </div>
       </div>
     </div>
