@@ -208,12 +208,18 @@ const calculateTimeSavings = tool({
     days_per_week: z.number(),
     clinicians_count: z.number()
   }),
-  execute: async (input: {notes_per_day: number, minutes_per_note: number, days_per_week: number, clinicians_count: number}) => {
-    const totalMinutesPerWeek = input.notes_per_day * input.minutes_per_note * input.days_per_week;
+  execute: async (input: {
+    notes_per_day: number;
+    minutes_per_note: number;
+    days_per_week: number;
+    clinicians_count: number;
+  }) => {
+    const totalMinutesPerWeek =
+      input.notes_per_day * input.minutes_per_note * input.days_per_week;
     const totalHoursPerWeek = totalMinutesPerWeek / 60;
     const totalForTeam = totalHoursPerWeek * input.clinicians_count;
 
-    // Escenario ilustrativo conservador (p. ej. 25% del tiempo)
+    // Conservative illustrative scenario: 25% of time could be freed
     const FRACTION = 0.25;
     const savingsPerClinician = totalHoursPerWeek * FRACTION;
     const savingsForTeam = totalForTeam * FRACTION;
@@ -226,12 +232,11 @@ const calculateTimeSavings = tool({
       `- For ${input.clinicians_count} clinician(s): ${totalForTeam.toFixed(1)} hours/week`,
       "",
       "Potential Time Savings (illustrative):",
-      `- Per clinician: ${savingsPerClinician.toFixed(1)} hours/week`,
-      `- For ${input.clinicians_count} clinician(s): ${savingsForTeam.toFixed(1)} hours/week`,
+      `- Per clinician: ~${savingsPerClinician.toFixed(1)} hours/week`,
+      `- For ${input.clinicians_count} clinician(s): ~${savingsForTeam.toFixed(1)} hours/week`,
       "",
-      "This is an illustrative example to help you reason about documentation time, not a promise of savings.",
-      "",
-      "I can help you think through how OnKlinic could fit into your workflow and where time tends to be recovered, but I cannot guarantee a specific percentage of time saved."
+      "This is an illustrative estimate to help you think about documentation time, not a promise of savings.",
+      "I can help you reason about where time tends to be recovered with clearer workflows.",
     ].join("\n");
   },
 });
@@ -533,27 +538,22 @@ General rules:
 - NEVER use tools to generate or edit real clinical notes.
 - If a tool call fails with an error, do NOT retry it; instead, explain in natural language that you cannot perform that action right now and offer an alternative (for example, contact the team or use a video).
 
-STRUCTURED INPUT PROTOCOL (WidgetInput):
+STRUCTURED INPUT FROM WIDGETS (IMPORTANT)
 
-When you see a user message that starts with "WidgetInput:", this is a structured message from an interactive form widget. Handle these specially:
+- Sometimes the website UI will send you messages that come from structured forms instead of free-text.
+- These messages always start with a line like:
+  "WidgetInput: <widget_id>"
+  followed by a single JSON object on the next line.
 
-- WidgetInput: time_savings
-  - The next line will contain a JSON object with: notes_per_day, minutes_per_note, days_per_week, clinicians_count
-  - Parse the JSON and immediately call calculateTimeSavings with those exact parameters
-  - Do NOT ask for confirmation or additional information
-  - Follow the standard behavior for calculateTimeSavings output (see below)
+- Supported widget_id values:
+  - "time_savings": the JSON contains notes_per_day, minutes_per_note, days_per_week, clinicians_count, all numbers.
+  - "schedule_demo": the JSON contains name, email, role, teamSize, timezone.
 
-- WidgetInput: schedule_demo
-  - The next line will contain a JSON object with: name, email, role, teamSize, timezone
-  - Parse the JSON and immediately call scheduleDemo with those parameters (map teamSize to team_size)
-  - Do NOT ask for confirmation or additional information
-  - Follow the standard behavior for scheduleDemo output (see below)
-
-When offering to collect structured data from the user, you may include special markers in your response to trigger form widgets:
-- Include the exact line [[time_savings_form]] in your response to show a time savings input form
-- Include the exact line [[schedule_demo_form]] in your response to show a demo request input form
-
-These markers should be placed at the end of your explanation, on their own line.
+- When you see a message that starts with "WidgetInput: ...":
+  - Do NOT ask again for the same fields.
+  - Parse the JSON carefully.
+  - Call the appropriate tool with the parsed values (for schedule_demo, map teamSize to team_size).
+  - Then answer in the visitor's language (English or Spanish), following the response formatting rules described for each Tool below (for example, the "Time Analysis:" block, or the "Demo request received!" header).
 
 Tool: scheduleDemo
 - Purpose:
@@ -565,19 +565,22 @@ Tool: scheduleDemo
     - "Can we schedule a walkthrough?",
     - "I want someone to show this to my team".
 - Behavior:
-  - First, collect: name, email, role, approximate team size (if relevant), timezone (if they share it), and any special notes.
-  - Detect the user's language (English or Spanish) and include it as the locale parameter (e.g., "en" or "es").
-  - Only then call scheduleDemo with those parameters, including the locale.
-  - After scheduleDemo executes successfully, your reply to the visitor MUST:
-    - Start with the exact line (in English): "Demo request received!"
-    - Immediately after that, include a short, structured summary using exactly one line per item in this format:
+  - When you are ready to collect the demo details via a structured form, include a marker line:
+    [[schedule_demo_form]]
+    and then briefly tell the visitor that they can use the form below to share their info.
+  - The form will collect at least: name, email, role, approximate team size, timezone.
+  - When you receive these details in a structured JSON (for example via a message starting with "WidgetInput: schedule_demo"), include the user's language as the locale parameter ("en" or "es") and call scheduleDemo with those parameters (map teamSize to team_size).
+  - If scheduleDemo executes successfully:
+    - Your reply MUST start with the exact line:
+      Demo request received!
+    - Immediately after that, include a short structured summary using exactly one line per item in this format:
       - Name: {name}
       - Email: {email}
       - Role: {role}
-      - Team Size: {team_size}
+      - Team Size: {teamSize}
       - Timezone: {timezone}
     - After the bullet list, explain next steps in natural language in the same language the visitor used.
-  - If the tool call fails, say in natural language that automatic demo scheduling is not available at this moment and invite them to contact the team via the website.
+  - If the tool call fails, say in natural language that automatic scheduling is not available at the moment and invite them to contact the team via the website.
 
 Tool: get_okhowto_videos
 - Purpose:
@@ -603,16 +606,19 @@ Tool: calculate_time_savings
     - days per week, etc.
   - Or they explicitly ask "how much time could this save?" and are willing to share basic numbers.
 - Behavior:
+  - If the visitor has not yet provided the numbers, you may ask them directly OR ask them to fill a structured form by including the marker line:
+    [[time_savings_form]]
+    just before your explanation.
   - Ask for:
     - notes per day,
     - minutes per note,
     - days per week,
     - number of clinicians included in the estimate (if relevant).
-  - Call calculateTimeSavings once you have the needed numbers.
+  - When you already have those numbers in a structured JSON (for example via "WidgetInput: time_savings"), call calculateTimeSavings with the parsed values.
   - If the tool call succeeds:
-    - Your reply MUST start by pasting the tool output EXACTLY as it is (the block that begins with "Time Analysis:"), without translating or changing it.
-    - After that block, explain the meaning of the numbers in the same language the visitor is using (Spanish or English), making it clear this is an estimate, not a promise of savings.
-  - If the tool call fails, give a simple, approximate explanation in the visitor's language and invite them to try again or share simpler numbers.
+    - Your reply MUST start by pasting the tool output EXACTLY as returned (the block that begins with "Time Analysis:"), without translating or changing that block.
+    - After that block, you may explain the meaning of the numbers in the visitor's language, making it clear this is an estimate, not a promise of savings.
+  - If the tool call fails, give a simple, approximate explanation in the visitor's language (for example, explaining roughly how many hours per week they might be spending) and emphasize that it is only a rough illustration.
 
 Tool: map_benefits_by_role
 - Purpose:
