@@ -156,7 +156,8 @@ const ChatInterface: React.FC = () => {
         .map(msg => {
           let content = msg.text;
 
-          // Add metadata to the last user message if we have context
+          // Add metadata to ALL user messages if we have context
+          // (but only to the current message being sent, since historical ones already went through)
           if (msg.sender === 'user' && msg.id === userMessage.id && (userSegment || userRole)) {
             const metaLines: string[] = [];
             if (userSegment) {
@@ -273,6 +274,9 @@ const ChatInterface: React.FC = () => {
           const showDemoForm =
             msg.sender === 'bot' && textLower.includes('[[schedule_demo_form]]');
 
+          const showUserContextWidget =
+            msg.sender === 'bot' && msg.id === contextWidgetMessageId && !userSegment && !userRole;
+
           return (
             <React.Fragment key={msg.id}>
               <ChatMessage message={msg} />
@@ -295,7 +299,7 @@ const ChatInterface: React.FC = () => {
               )}
 
               {/* User context widget */}
-              {contextWidgetMessageId === msg.id && (
+              {showUserContextWidget && (
                 <UserContextWidget
                   language={conversationLanguage}
                   onSubmitContext={handleContextSubmit}
