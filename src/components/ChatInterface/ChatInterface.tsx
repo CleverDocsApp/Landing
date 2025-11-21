@@ -36,8 +36,8 @@ const exampleQuestions: Option[] = [
   },
   {
     id: 'q2',
-    text: 'Does OnKlinic support Joint Commission documentation standards?',
-    value: 'Does OnKlinic support Joint Commission documentation standards?'
+    text: 'How much time could I save on documentation?',
+    value: 'How much time could I save on documentation?'
   },
   {
     id: 'q3',
@@ -53,6 +53,11 @@ const exampleQuestions: Option[] = [
     id: 'q5',
     text: 'How does it support prior authorizations?',
     value: 'How does it support prior authorizations?'
+  },
+  {
+    id: 'q6',
+    text: 'What are the differences between plans?',
+    value: 'What are the differences between plans?'
   }
 ];
 
