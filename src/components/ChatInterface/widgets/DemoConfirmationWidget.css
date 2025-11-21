@@ -11,6 +11,23 @@
   border-radius: 16px;
   padding: 20px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.demo-confirmation-widget-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg,
+    rgba(32, 189, 170, 0.03) 0%,
+    rgba(32, 189, 170, 0.01) 50%,
+    rgba(255, 255, 255, 0.05) 100%);
+  z-index: 0;
+  pointer-events: none;
 }
 
 .demo-confirmation-widget-title {
@@ -18,6 +35,33 @@
   font-weight: 700;
   color: #1a202c;
   margin: 0 0 12px 0;
+  position: relative;
+  z-index: 1;
+  letter-spacing: 0.02em;
+  padding-bottom: 12px;
+}
+
+.demo-confirmation-widget-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(90deg, #20BDAA 0%, #1AA192 100%);
+  border-radius: 3px;
+  animation: successPulse 2s ease-in-out infinite;
+}
+
+@keyframes successPulse {
+  0%, 100% {
+    opacity: 0.6;
+    width: 50px;
+  }
+  50% {
+    opacity: 1;
+    width: 60px;
+  }
 }
 
 .demo-confirmation-body {
@@ -25,11 +69,20 @@
   color: #1a202c;
   line-height: 1.6;
   margin: 0 0 8px 0;
+  position: relative;
+  z-index: 1;
 }
 
 .demo-confirmation-highlight {
   color: #1AA192;
   font-weight: 600;
+  background: linear-gradient(135deg,
+    rgba(32, 189, 170, 0.08) 0%,
+    rgba(32, 189, 170, 0.12) 100%);
+  padding: 2px 8px;
+  border-radius: 6px;
+  display: inline-block;
+  box-shadow: 0 1px 3px rgba(32, 189, 170, 0.15);
 }
 
 .demo-confirmation-subtext {
@@ -37,6 +90,12 @@
   color: #64748b;
   margin: 0;
   font-style: italic;
+  position: relative;
+  z-index: 1;
+  padding: 8px 12px;
+  background: rgba(100, 116, 139, 0.05);
+  border-radius: 6px;
+  border-left: 3px solid rgba(32, 189, 170, 0.3);
 }
 
 .demo-confirmation-details {
@@ -196,6 +255,15 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  position: relative;
+  z-index: 1;
+}
+
+.demo-confirmation-form-label .demo-confirmation-label {
+  font-weight: 500;
+  color: #64748b;
+  font-size: 13px;
+  letter-spacing: 0.01em;
 }
 
 .demo-confirmation-form-input {
@@ -205,45 +273,94 @@
   font-size: 14px;
   color: #1a202c;
   background: white;
-  transition: border-color 0.2s;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.demo-confirmation-form-input:hover {
+  border-color: rgba(32, 189, 170, 0.3);
 }
 
 .demo-confirmation-form-input:focus {
   outline: none;
-  border-color: #1AA192;
-  box-shadow: 0 0 0 3px rgba(32, 189, 170, 0.1);
+  border-color: rgba(32, 189, 170, 0.5);
+  box-shadow:
+    0 0 0 3px rgba(32, 189, 170, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+.demo-confirmation-form-input::placeholder {
+  color: #cbd5e1;
 }
 
 .demo-confirmation-form-submit {
   margin-top: 8px;
   padding: 12px 24px;
-  background: #1AA192;
+  background: linear-gradient(135deg, #20BDAA 0%, #1AA192 100%);
   color: white;
   border: none;
   border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(32, 189, 170, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.demo-confirmation-form-submit::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 100%);
+  transition: left 0.5s ease;
 }
 
 .demo-confirmation-form-submit:hover {
-  background: #158f81;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(26, 161, 146, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(32, 189, 170, 0.3);
+}
+
+.demo-confirmation-form-submit:hover::before {
+  left: 100%;
 }
 
 .demo-confirmation-form-submit:active {
   transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(32, 189, 170, 0.2);
 }
 
 .demo-confirmation-hint {
-  margin-top: 8px;
+  margin-top: 12px;
   font-size: 12px;
   color: #64748b;
   font-style: italic;
   text-align: center;
   line-height: 1.4;
+  padding: 10px 14px;
+  background: rgba(32, 189, 170, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(32, 189, 170, 0.15);
+  animation: fadeIn 0.4s ease-out 0.2s both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (max-width: 640px) {
