@@ -182,6 +182,14 @@ const ChatInterface: React.FC = () => {
 
       <div className="chat-messages" ref={messagesContainerRef}>
         {messages.map((msg) => {
+          // Do not render synthetic structured-input messages
+          if (
+            msg.sender === 'user' &&
+            msg.text.trim().startsWith('WidgetInput:')
+          ) {
+            return null;
+          }
+
           const widgetType = msg.sender === 'bot' ? classifyAssistantMessage(msg.text) : 'none';
 
           const textLower = msg.text.toLowerCase();

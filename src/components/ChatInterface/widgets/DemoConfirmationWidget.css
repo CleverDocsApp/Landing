@@ -17,7 +17,26 @@
   font-size: 16px;
   font-weight: 700;
   color: #1a202c;
-  margin: 0 0 16px 0;
+  margin: 0 0 12px 0;
+}
+
+.demo-confirmation-body {
+  font-size: 14px;
+  color: #1a202c;
+  line-height: 1.6;
+  margin: 0 0 8px 0;
+}
+
+.demo-confirmation-highlight {
+  color: #1AA192;
+  font-weight: 600;
+}
+
+.demo-confirmation-subtext {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0;
+  font-style: italic;
 }
 
 .demo-confirmation-details {
@@ -98,6 +117,14 @@
     font-size: 15px;
   }
 
+  .demo-confirmation-body {
+    font-size: 13px;
+  }
+
+  .demo-confirmation-subtext {
+    font-size: 11px;
+  }
+
   .demo-confirmation-details {
     padding: 12px;
   }
@@ -124,6 +151,14 @@
 
   .demo-confirmation-widget-title {
     font-size: 14px;
+  }
+
+  .demo-confirmation-body {
+    font-size: 13px;
+  }
+
+  .demo-confirmation-subtext {
+    font-size: 11px;
   }
 
   .demo-confirmation-detail {

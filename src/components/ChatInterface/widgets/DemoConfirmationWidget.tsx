@@ -72,42 +72,24 @@ const DemoConfirmationWidget: React.FC<DemoConfirmationWidgetProps> = ({ message
   return (
     <div className={`demo-confirmation-widget ${className}`}>
       <div className="demo-confirmation-widget-content">
-        <h3 className="demo-confirmation-widget-title">Tu solicitud de demo fue recibida</h3>
-
-        <div className="demo-confirmation-details">
-          <div className="demo-confirmation-detail">
-            <span className="demo-confirmation-label">Nombre:</span>
-            <span className="demo-confirmation-value">{data.name}</span>
-          </div>
-          <div className="demo-confirmation-detail">
-            <span className="demo-confirmation-label">Email:</span>
-            <span className="demo-confirmation-value">{data.email}</span>
-          </div>
-          <div className="demo-confirmation-detail">
-            <span className="demo-confirmation-label">Rol:</span>
-            <span className="demo-confirmation-value">{data.role}</span>
-          </div>
-          <div className="demo-confirmation-detail">
-            <span className="demo-confirmation-label">Tamaño del equipo:</span>
-            <span className="demo-confirmation-value">{data.teamSize}</span>
-          </div>
-          <div className="demo-confirmation-detail">
-            <span className="demo-confirmation-label">Zona horaria:</span>
-            <span className="demo-confirmation-value">{data.timezone}</span>
-          </div>
-        </div>
-
-        <div className="demo-confirmation-message">
-          {isSoloProvider ? (
-            <p>
-              Mientras nuestro equipo revisa tu interés, también puedes empezar con un free trial desde el landing.
-            </p>
-          ) : (
-            <p>
-              Nuestro equipo te contactará para coordinar un live demo enfocado en la versión Enterprise.
-            </p>
-          )}
-        </div>
+        <h3 className="demo-confirmation-widget-title">
+          Tu demo está en camino
+        </h3>
+        <p className="demo-confirmation-body">
+          Nos pondremos en contacto a{' '}
+          <span className="demo-confirmation-highlight">
+            {data.email}
+          </span>{' '}
+          para coordinar un live demo
+          {isSoloProvider
+            ? ' enfocado en tu práctica.'
+            : ' enfocado en tu equipo.'}
+        </p>
+        {data.timezone && data.timezone !== 'No especificada' && (
+          <p className="demo-confirmation-subtext">
+            Zona horaria: {data.timezone}
+          </p>
+        )}
       </div>
     </div>
   );
