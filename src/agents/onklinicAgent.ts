@@ -35,9 +35,9 @@ const scheduleDemo = tool({
     timezone: z.string(),
     preferred_slots: z.array(z.string()),
     notes: z.string(),
-    locale: z.string().optional()
+    locale: z.string().describe("Language code such as 'en' or 'es'")
   }),
-  execute: async (input: {name: string, email: string, role: string, team_size: number, timezone: string, preferred_slots: string[], notes: string, locale?: string}) => {
+  execute: async (input: {name: string, email: string, role: string, team_size: number, timezone: string, preferred_slots: string[], notes: string, locale: string}) => {
     const summary = [
       "New OnKlinic demo request",
       "",
@@ -62,7 +62,7 @@ const scheduleDemo = tool({
         timezone: input.timezone,
         preferred_slots: input.preferred_slots,
         notes: input.notes,
-        locale: input.locale || 'en'
+        locale: input.locale
       });
       console.log('[scheduleDemo] Demo request saved:', savedDemo.id);
     } catch (err) {
