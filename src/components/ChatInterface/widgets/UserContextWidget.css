@@ -1,0 +1,118 @@
+.user-context-widget {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.user-context-widget-content {
+  border-radius: 0.75rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(0, 0, 0, 0.35);
+  font-size: 0.85rem;
+}
+
+.user-context-title {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+.user-context-subtitle {
+  margin: 0 0 0.75rem 0;
+  opacity: 0.85;
+}
+
+.user-context-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.user-context-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.user-context-label {
+  font-size: 0.8rem;
+  opacity: 0.85;
+}
+
+.user-context-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.context-pill {
+  border-radius: 999px;
+  padding: 0.2rem 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: transparent;
+  font-size: 0.78rem;
+  cursor: pointer;
+  color: inherit;
+  transition: all 0.2s ease;
+}
+
+.context-pill:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.context-pill--active {
+  border-color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.user-context-input {
+  margin-top: 0.25rem;
+  width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.3rem 0.5rem;
+  background: rgba(0, 0, 0, 0.4);
+  color: inherit;
+  font-size: 0.8rem;
+}
+
+.user-context-input:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.user-context-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.user-context-confirm {
+  border-radius: 999px;
+  padding: 0.25rem 0.9rem;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  background: #1AA192;
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.user-context-confirm:hover {
+  background: #158b7e;
+}
+
+.user-context-skip {
+  background: transparent;
+  border: none;
+  font-size: 0.78rem;
+  opacity: 0.8;
+  cursor: pointer;
+  text-decoration: underline;
+  color: inherit;
+}
+
+.user-context-skip:hover {
+  opacity: 1;
+}

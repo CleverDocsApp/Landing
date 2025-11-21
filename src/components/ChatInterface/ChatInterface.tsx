@@ -10,9 +10,14 @@ import TimeSavingsWidget from './widgets/TimeSavingsWidget';
 import DemoConfirmationWidget from './widgets/DemoConfirmationWidget';
 import TimeSavingsFormWidget from './widgets/TimeSavingsFormWidget';
 import DemoFormWidget from './widgets/DemoFormWidget';
+import UserContextWidget from './widgets/UserContextWidget';
 import './ChatInterface.css';
 
 type WidgetSubmitHandler = (widgetId: string, payload: any) => void;
+
+type UserSegment = 'solo_clinician' | 'small_practice' | 'clinic_enterprise' | 'other';
+type UserRole = 'clinician' | 'rbt' | 'supervisor' | 'clinical_director' | 'other';
+type ConversationLanguage = 'en' | 'es';
 
 const initialMessages: Message[] = [
   {
@@ -51,6 +56,20 @@ const exampleQuestions: Option[] = [
   }
 ];
 
+const detectLanguage = (text: string): ConversationLanguage => {
+  const lower = text.toLowerCase();
+
+  // crude but effective heuristic for ES vs EN
+  const hasSpanishAccent = /[áéíóúñü]/.test(lower);
+  const spanishHints = [' hola', ' clínica', ' clinica', ' notas', ' semana', ' equipo', 'documentación', 'documentacion', 'gracias'];
+
+  if (hasSpanishAccent || spanishHints.some((w) => lower.includes(w))) {
+    return 'es';
+  }
+
+  return 'en';
+};
+
 const ChatInterface: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [input, setInput] = useState('');
@@ -58,6 +77,12 @@ const ChatInterface: React.FC = () => {
   const [showSuggestions, setShowSuggestions] = useState(true);
   const [showSuggestionsButton, setShowSuggestionsButton] = useState(false);
   const [askedQuestionsIds, setAskedQuestionsIds] = useState<Set<string>>(new Set());
+
+  const [userSegment, setUserSegment] = useState<UserSegment | null>(null);
+  const [userRole, setUserRole] = useState<UserRole | null>(null);
+  const [userMessageCount, setUserMessageCount] = useState(0);
+  const [contextWidgetMessageId, setContextWidgetMessageId] = useState<string | null>(null);
+  const [conversationLanguage, setConversationLanguage] = useState<ConversationLanguage>('en');
 
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -75,9 +100,31 @@ const ChatInterface: React.FC = () => {
     void handleSend(structuredText);
   };
 
+  const handleContextSubmit = (context: {
+    segment: UserSegment;
+    role: UserRole;
+    customSegment?: string;
+    customRole?: string;
+  }) => {
+    setUserSegment(context.segment);
+    setUserRole(context.role);
+    setContextWidgetMessageId(null);
+  };
+
+  const handleContextSkip = () => {
+    setContextWidgetMessageId(null);
+  };
+
   const handleSend = async (messageToSend?: string, optionId?: string) => {
     const messageText = messageToSend || input.trim();
     if (!messageText) return;
+
+    // Track user message count and language (only for real user messages, not WidgetInput)
+    const isWidgetInput = messageText.trim().startsWith('WidgetInput:');
+    if (!isWidgetInput) {
+      setUserMessageCount((prev) => prev + 1);
+      setConversationLanguage(detectLanguage(messageText));
+    }
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -106,10 +153,26 @@ const ChatInterface: React.FC = () => {
       // Convert to API format (role + content)
       const historyForAPI = slicedMessages
         .filter(msg => msg.sender === 'user' || msg.sender === 'bot')
-        .map(msg => ({
-          role: msg.sender === 'user' ? 'user' : 'assistant',
-          content: msg.text
-        }));
+        .map(msg => {
+          let content = msg.text;
+
+          // Add metadata to the last user message if we have context
+          if (msg.sender === 'user' && msg.id === userMessage.id && (userSegment || userRole)) {
+            const metaLines: string[] = [];
+            if (userSegment) {
+              metaLines.push(`UserSegment: ${userSegment}`);
+            }
+            if (userRole) {
+              metaLines.push(`UserRole: ${userRole}`);
+            }
+            content = `${metaLines.join('\n')}\n${content}`;
+          }
+
+          return {
+            role: msg.sender === 'user' ? 'user' : 'assistant',
+            content
+          };
+        });
 
       const res = await fetch('/.netlify/functions/onklinic-agent', {
         method: 'POST',
@@ -129,6 +192,18 @@ const ChatInterface: React.FC = () => {
           timestamp: new Date().toISOString(),
         };
         setMessages((prev) => [...prev, botMessage]);
+
+        // Show UserContextWidget after the second user message's response
+        // if we don't have segment/role yet and haven't shown it already
+        if (
+          userMessageCount + 1 >= 2 && // +1 because we just incremented
+          !userSegment &&
+          !userRole &&
+          !contextWidgetMessageId &&
+          !isWidgetInput
+        ) {
+          setContextWidgetMessageId(botMessage.id);
+        }
       } else {
         throw new Error("No reply received from agent.");
       }
@@ -217,6 +292,15 @@ const ChatInterface: React.FC = () => {
               )}
               {showDemoForm && (
                 <DemoFormWidget onSubmitStructured={handleWidgetSubmit} />
+              )}
+
+              {/* User context widget */}
+              {contextWidgetMessageId === msg.id && (
+                <UserContextWidget
+                  language={conversationLanguage}
+                  onSubmitContext={handleContextSubmit}
+                  onSkip={handleContextSkip}
+                />
               )}
             </React.Fragment>
           );
