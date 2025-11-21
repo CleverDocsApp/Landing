@@ -209,21 +209,29 @@ const calculateTimeSavings = tool({
     clinicians_count: z.number()
   }),
   execute: async (input: {notes_per_day: number, minutes_per_note: number, days_per_week: number, clinicians_count: number}) => {
-    // Real calculation implementation
     const totalMinutesPerWeek = input.notes_per_day * input.minutes_per_note * input.days_per_week;
     const totalHoursPerWeek = totalMinutesPerWeek / 60;
     const totalForTeam = totalHoursPerWeek * input.clinicians_count;
 
+    // Escenario ilustrativo conservador (p. ej. 25% del tiempo)
+    const FRACTION = 0.25;
+    const savingsPerClinician = totalHoursPerWeek * FRACTION;
+    const savingsForTeam = totalForTeam * FRACTION;
+
     return [
       "Time Analysis:",
       "",
-      "Current documentation time (based on what you shared):",
+      "Current Time Spent:",
       `- Per clinician: ${totalHoursPerWeek.toFixed(1)} hours/week`,
       `- For ${input.clinicians_count} clinician(s): ${totalForTeam.toFixed(1)} hours/week`,
       "",
-      "This gives you a concrete baseline. Any meaningful reduction in documentation time (even a few hours per week) can free capacity for patient care, supervision, or simply reduce end-of-day overload.",
+      "Potential Time Savings (illustrative):",
+      `- Per clinician: ${savingsPerClinician.toFixed(1)} hours/week`,
+      `- For ${input.clinicians_count} clinician(s): ${savingsForTeam.toFixed(1)} hours/week`,
       "",
-      "I can help you think through how OnKlinic could fit into your current workflow, but I cannot guarantee a specific percentage of time saved."
+      "This is an illustrative example to help you reason about documentation time, not a promise of savings.",
+      "",
+      "I can help you think through how OnKlinic could fit into your workflow and where time tends to be recovered, but I cannot guarantee a specific percentage of time saved."
     ].join("\n");
   },
 });
@@ -578,10 +586,11 @@ Tool: calculate_time_savings
     - minutes per note,
     - days per week,
     - number of clinicians included in the estimate (if relevant).
-  - Call calculate_time_savings once you have the needed numbers.
-  - If the tool call succeeds, use the human-friendly summary returned by the tool, make it clear that this is an illustrative estimate (not a guarantee), and connect the estimate back to their reality (for example, "this is roughly half a day per week you could get back").
-  - If the tool call fails, give a simple, approximate explanation using the numbers they provided (for example: "Just multiplying notes per day × minutes per note × days per week, it's easy to reach several hours per week…") and emphasize that it is only a rough illustration.
-- When you present time-savings, you may compute the current documentation load in hours, but avoid giving a specific percentage or an exact number of hours saved unless that information is explicitly provided by a tool. Prefer neutral language such as "part of that time could be reduced with a clearer workflow" instead of "you will save X%".
+  - Call calculateTimeSavings once you have the needed numbers.
+  - If the tool call succeeds:
+    - Your reply MUST start by pasting the tool output EXACTLY as it is (the block that begins with "Time Analysis:"), without translating or changing it.
+    - After that block, explain the meaning of the numbers in the same language the visitor is using (Spanish or English), making it clear this is an estimate, not a promise of savings.
+  - If the tool call fails, give a simple, approximate explanation in the visitor's language and invite them to try again or share simpler numbers.
 
 Tool: map_benefits_by_role
 - Purpose:

@@ -17,62 +17,53 @@ const TimeSavingsWidget: React.FC<TimeSavingsWidgetProps> = ({ messageText, clas
   const parseTimeSavings = (): TimeSavingsData | null => {
     try {
       const lines = messageText.split('\n');
+      const data: Partial<TimeSavingsData> = {};
 
-      let currentPerClinician = '';
-      let currentTeamTotal = '';
+      let inCurrentSection = false;
+      let inSavingsSection = false;
 
-      const perClinicianRegex = /-+\s*Per clinician:\s*(.+)/i;
-      const teamTotalRegex = /-+\s*For\s+\d+\s+clinician\(s\):\s*(.+)/i;
+      for (const line of lines) {
+        const trimmed = line.trim();
 
-      for (const raw of lines) {
-        const trimmed = raw.trim();
-        if (!currentPerClinician) {
-          const m = trimmed.match(perClinicianRegex);
-          if (m) currentPerClinician = m[1].trim();
+        if (trimmed.includes('Current Time Spent:')) {
+          inCurrentSection = true;
+          inSavingsSection = false;
+          continue;
         }
-        if (!currentTeamTotal) {
-          const m = trimmed.match(teamTotalRegex);
-          if (m) currentTeamTotal = m[1].trim();
+
+        if (trimmed.includes('Potential Time Savings')) {
+          inCurrentSection = false;
+          inSavingsSection = true;
+          continue;
+        }
+
+        if (inCurrentSection && trimmed.startsWith('- Per clinician:')) {
+          const match = trimmed.match(/:\s*(.+)/);
+          if (match) data.currentPerClinician = match[1];
+        }
+
+        if (inCurrentSection && trimmed.match(/For\s+\d+\s+clinician/)) {
+          const match = trimmed.match(/:\s*(.+)/);
+          if (match) data.currentTeamTotal = match[1];
+        }
+
+        if (inSavingsSection && trimmed.startsWith('- Per clinician:')) {
+          const match = trimmed.match(/:\s*(.+)/);
+          if (match) data.savingsPerClinician = match[1];
+        }
+
+        if (inSavingsSection && trimmed.match(/For\s+\d+\s+clinician/)) {
+          const match = trimmed.match(/:\s*(.+)/);
+          if (match) data.savingsTeamTotal = match[1];
         }
       }
 
-      // Si no encontramos al menos el dato por clínico, no mostramos widget
-      if (!currentPerClinician) {
-        return null;
+      if (data.currentPerClinician && data.savingsPerClinician) {
+        return data as TimeSavingsData;
       }
 
-      const numericFromHours = (value: string): number | null => {
-        const match = value.match(/([0-9]+(?:[.,][0-9]+)?)/);
-        if (!match) return null;
-        return parseFloat(match[1].replace(',', '.'));
-      };
-
-      const perClinicianHours = numericFromHours(currentPerClinician);
-      const teamTotalHours = currentTeamTotal ? numericFromHours(currentTeamTotal) : null;
-
-      // Escenario hipotético: liberar ~25% del tiempo
-      const FRACTION = 0.25;
-
-      let savingsPerClinician = '';
-      let savingsTeamTotal = '';
-
-      if (perClinicianHours != null) {
-        const savings = perClinicianHours * FRACTION;
-        savingsPerClinician = `~${savings.toFixed(1)} hours/week`;
-      }
-
-      if (teamTotalHours != null) {
-        const teamSavings = teamTotalHours * FRACTION;
-        savingsTeamTotal = `~${teamSavings.toFixed(1)} hours/week`;
-      }
-
-      return {
-        currentPerClinician,
-        currentTeamTotal,
-        savingsPerClinician,
-        savingsTeamTotal,
-      };
-    } catch {
+      return null;
+    } catch (error) {
       return null;
     }
   };
