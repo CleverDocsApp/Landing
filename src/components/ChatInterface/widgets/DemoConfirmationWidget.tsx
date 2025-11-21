@@ -22,30 +22,41 @@ const DemoConfirmationWidget: React.FC<DemoConfirmationWidgetProps> = ({ message
 
       for (const line of lines) {
         const trimmed = line.trim();
+        if (!trimmed) continue;
 
-        if (trimmed.startsWith('- Name:')) {
-          data.name = trimmed.replace('- Name:', '').trim();
-        } else if (trimmed.startsWith('- Email:')) {
-          data.email = trimmed.replace('- Email:', '').trim();
-        } else if (trimmed.startsWith('- Role:')) {
-          data.role = trimmed.replace('- Role:', '').trim();
-        } else if (trimmed.startsWith('- Team Size:')) {
-          const teamSizeStr = trimmed.replace('- Team Size:', '').trim();
-          const teamSizeMatch = teamSizeStr.match(/\d+/);
-          if (teamSizeMatch) {
-            data.teamSize = parseInt(teamSizeMatch[0], 10);
+        // Quitar posible "- " al inicio
+        const normalized = trimmed.replace(/^-+\s*/, '');
+        const lower = normalized.toLowerCase();
+
+        if (lower.startsWith('name:')) {
+          data.name = normalized.split(':')[1].trim();
+        } else if (lower.startsWith('email:')) {
+          data.email = normalized.split(':')[1].trim();
+        } else if (lower.startsWith('role:')) {
+          data.role = normalized.split(':')[1].trim();
+        } else if (lower.startsWith('team size:')) {
+          const numMatch = normalized.match(/(\d+)/);
+          if (numMatch) {
+            data.teamSize = parseInt(numMatch[1], 10);
           }
-        } else if (trimmed.startsWith('- Timezone:')) {
-          data.timezone = trimmed.replace('- Timezone:', '').trim();
+        } else if (lower.startsWith('timezone:')) {
+          data.timezone = normalized.split(':')[1].trim();
         }
       }
 
-      if (data.name && data.email && data.role && data.teamSize !== undefined && data.timezone) {
-        return data as DemoData;
+      // Necesitamos al menos nombre y email para que tenga sentido el widget
+      if (!data.name || !data.email) {
+        return null;
       }
 
-      return null;
-    } catch (error) {
+      return {
+        name: data.name,
+        email: data.email,
+        role: data.role || 'No especificado',
+        teamSize: data.teamSize ?? 1,
+        timezone: data.timezone || 'No especificada',
+      };
+    } catch {
       return null;
     }
   };
