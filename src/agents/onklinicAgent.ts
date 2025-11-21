@@ -30,23 +30,23 @@ const scheduleDemo = tool({
   parameters: z.object({
     name: z.string(),
     email: z.string(),
-    role: z.string(),
-    team_size: z.number(),
-    timezone: z.string(),
-    preferred_slots: z.array(z.string()),
-    notes: z.string(),
-    locale: z.string().describe("Language code such as 'en' or 'es'")
+    role: z.string().optional().default(''),
+    team_size: z.number().optional().default(1),
+    timezone: z.string().optional().default(''),
+    preferred_slots: z.array(z.string()).optional().default([]),
+    notes: z.string().optional().default(''),
+    locale: z.string().optional().default('en').describe("Language code such as 'en' or 'es'")
   }),
-  execute: async (input: {name: string, email: string, role: string, team_size: number, timezone: string, preferred_slots: string[], notes: string, locale: string}) => {
+  execute: async (input: {name: string, email: string, role?: string, team_size?: number, timezone?: string, preferred_slots?: string[], notes?: string, locale?: string}) => {
     const summary = [
       "New OnKlinic demo request",
       "",
       `Name: ${input.name}`,
       `Email: ${input.email}`,
-      `Role: ${input.role}`,
-      `Team size: ${input.team_size}`,
-      `Timezone: ${input.timezone}`,
-      `Preferred slots: ${input.preferred_slots.join(", ") || "Not specified"}`,
+      `Role: ${input.role || 'Not specified'}`,
+      `Team size: ${input.team_size || 1}`,
+      `Timezone: ${input.timezone || 'Not specified'}`,
+      `Preferred slots: ${(input.preferred_slots || []).join(", ") || "Not specified"}`,
       "",
       "Notes:",
       input.notes || "(none)"
@@ -57,12 +57,12 @@ const scheduleDemo = tool({
       const savedDemo = await saveDemoRequest({
         name: input.name,
         email: input.email,
-        role: input.role,
-        team_size: input.team_size,
-        timezone: input.timezone,
-        preferred_slots: input.preferred_slots,
-        notes: input.notes,
-        locale: input.locale
+        role: input.role || '',
+        team_size: input.team_size || 1,
+        timezone: input.timezone || '',
+        preferred_slots: input.preferred_slots || [],
+        notes: input.notes || '',
+        locale: input.locale || 'en'
       });
       console.log('[scheduleDemo] Demo request saved:', savedDemo.id);
     } catch (err) {
@@ -532,6 +532,28 @@ General rules:
 - NEVER call tools to process real patient data or PHI.
 - NEVER use tools to generate or edit real clinical notes.
 - If a tool call fails with an error, do NOT retry it; instead, explain in natural language that you cannot perform that action right now and offer an alternative (for example, contact the team or use a video).
+
+STRUCTURED INPUT PROTOCOL (WidgetInput):
+
+When you see a user message that starts with "WidgetInput:", this is a structured message from an interactive form widget. Handle these specially:
+
+- WidgetInput: time_savings
+  - The next line will contain a JSON object with: notes_per_day, minutes_per_note, days_per_week, clinicians_count
+  - Parse the JSON and immediately call calculateTimeSavings with those exact parameters
+  - Do NOT ask for confirmation or additional information
+  - Follow the standard behavior for calculateTimeSavings output (see below)
+
+- WidgetInput: schedule_demo
+  - The next line will contain a JSON object with: name, email, role, teamSize, timezone
+  - Parse the JSON and immediately call scheduleDemo with those parameters (map teamSize to team_size)
+  - Do NOT ask for confirmation or additional information
+  - Follow the standard behavior for scheduleDemo output (see below)
+
+When offering to collect structured data from the user, you may include special markers in your response to trigger form widgets:
+- Include the exact line [[time_savings_form]] in your response to show a time savings input form
+- Include the exact line [[schedule_demo_form]] in your response to show a demo request input form
+
+These markers should be placed at the end of your explanation, on their own line.
 
 Tool: scheduleDemo
 - Purpose:

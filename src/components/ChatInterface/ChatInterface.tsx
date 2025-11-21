@@ -8,7 +8,11 @@ import { classifyAssistantMessage } from './classifyAssistantMessage';
 import HowToWidget from './widgets/HowToWidget';
 import TimeSavingsWidget from './widgets/TimeSavingsWidget';
 import DemoConfirmationWidget from './widgets/DemoConfirmationWidget';
+import TimeSavingsFormWidget from './widgets/TimeSavingsFormWidget';
+import DemoFormWidget from './widgets/DemoFormWidget';
 import './ChatInterface.css';
+
+type WidgetSubmitHandler = (widgetId: string, payload: any) => void;
 
 const initialMessages: Message[] = [
   {
@@ -63,6 +67,13 @@ const ChatInterface: React.FC = () => {
       container.scrollTop = container.scrollHeight;
     }
   }, [messages]);
+
+  const handleWidgetSubmit: WidgetSubmitHandler = (widgetId, payload) => {
+    const structuredText =
+      `WidgetInput: ${widgetId}\n` + JSON.stringify(payload);
+
+    void handleSend(structuredText);
+  };
 
   const handleSend = async (messageToSend?: string, optionId?: string) => {
     const messageText = messageToSend || input.trim();
@@ -173,12 +184,32 @@ const ChatInterface: React.FC = () => {
         {messages.map((msg) => {
           const widgetType = msg.sender === 'bot' ? classifyAssistantMessage(msg.text) : 'none';
 
+          const textLower = msg.text.toLowerCase();
+          const showTimeSavingsForm =
+            msg.sender === 'bot' && textLower.includes('[[time_savings_form]]');
+          const showDemoForm =
+            msg.sender === 'bot' && textLower.includes('[[schedule_demo_form]]');
+
           return (
             <React.Fragment key={msg.id}>
               <ChatMessage message={msg} />
+
+              {/* Output widgets (result) */}
               {widgetType === 'howto' && <HowToWidget />}
-              {widgetType === 'time_savings' && <TimeSavingsWidget messageText={msg.text} />}
-              {widgetType === 'demo_confirmation' && <DemoConfirmationWidget messageText={msg.text} />}
+              {widgetType === 'time_savings' && (
+                <TimeSavingsWidget messageText={msg.text} />
+              )}
+              {widgetType === 'demo_confirmation' && (
+                <DemoConfirmationWidget messageText={msg.text} />
+              )}
+
+              {/* Input widgets (forms) */}
+              {showTimeSavingsForm && (
+                <TimeSavingsFormWidget onSubmitStructured={handleWidgetSubmit} />
+              )}
+              {showDemoForm && (
+                <DemoFormWidget onSubmitStructured={handleWidgetSubmit} />
+              )}
             </React.Fragment>
           );
         })}
