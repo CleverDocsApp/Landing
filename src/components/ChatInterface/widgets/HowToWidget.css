@@ -1,0 +1,104 @@
+.howto-widget {
+  margin-top: 16px;
+  margin-left: 68px;
+  max-width: 65%;
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.howto-widget-content {
+  background: rgba(248, 250, 252, 0.9);
+  border: 1px solid rgba(32, 189, 170, 0.2);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.howto-widget-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0 0 8px 0;
+}
+
+.howto-widget-description {
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.5;
+  margin: 0 0 16px 0;
+}
+
+.howto-widget-button {
+  background: linear-gradient(135deg, #20BDAA 0%, #1AA192 100%);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(32, 189, 170, 0.2);
+}
+
+.howto-widget-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(32, 189, 170, 0.3);
+}
+
+.howto-widget-button:active {
+  transform: translateY(0);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .howto-widget {
+    margin-left: 62px;
+    max-width: calc(100% - 62px);
+  }
+
+  .howto-widget-content {
+    padding: 16px;
+  }
+
+  .howto-widget-title {
+    font-size: 15px;
+  }
+
+  .howto-widget-description {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 640px) {
+  .howto-widget {
+    margin-left: 0;
+    max-width: 100%;
+  }
+
+  .howto-widget-content {
+    padding: 14px;
+  }
+
+  .howto-widget-title {
+    font-size: 14px;
+  }
+
+  .howto-widget-description {
+    font-size: 12px;
+  }
+
+  .howto-widget-button {
+    width: 100%;
+    padding: 12px;
+  }
+}

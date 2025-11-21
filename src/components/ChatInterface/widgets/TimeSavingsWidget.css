@@ -1,0 +1,143 @@
+.time-savings-widget {
+  margin-top: 16px;
+  margin-left: 68px;
+  max-width: 65%;
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.time-savings-widget-content {
+  background: rgba(248, 250, 252, 0.9);
+  border: 1px solid rgba(32, 189, 170, 0.2);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.time-savings-widget-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0 0 16px 0;
+}
+
+.time-savings-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.time-savings-section {
+  background: white;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.time-savings-section-highlight {
+  background: rgba(32, 189, 170, 0.05);
+  border-color: rgba(32, 189, 170, 0.3);
+}
+
+.time-savings-section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.time-savings-metric {
+  margin-bottom: 8px;
+}
+
+.time-savings-metric:last-child {
+  margin-bottom: 0;
+}
+
+.time-savings-label {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-bottom: 4px;
+}
+
+.time-savings-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a202c;
+}
+
+.time-savings-value-highlight {
+  color: #1AA192;
+}
+
+.time-savings-disclaimer {
+  font-size: 11px;
+  color: #94a3b8;
+  font-style: italic;
+  text-align: center;
+  line-height: 1.4;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .time-savings-widget {
+    margin-left: 62px;
+    max-width: calc(100% - 62px);
+  }
+
+  .time-savings-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .time-savings-widget-content {
+    padding: 16px;
+  }
+
+  .time-savings-widget-title {
+    font-size: 15px;
+  }
+
+  .time-savings-section {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 640px) {
+  .time-savings-widget {
+    margin-left: 0;
+    max-width: 100%;
+  }
+
+  .time-savings-widget-content {
+    padding: 14px;
+  }
+
+  .time-savings-widget-title {
+    font-size: 14px;
+  }
+
+  .time-savings-section-title {
+    font-size: 12px;
+  }
+
+  .time-savings-value {
+    font-size: 14px;
+  }
+
+  .time-savings-disclaimer {
+    font-size: 10px;
+  }
+}

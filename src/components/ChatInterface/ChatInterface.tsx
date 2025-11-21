@@ -4,6 +4,10 @@ import ChatMessage from './ChatMessage';
 import ChatOptions from './ChatOptions';
 import TypingIndicator from './TypingIndicator';
 import { Message, Option } from '../../types/chat';
+import { classifyAssistantMessage } from './classifyAssistantMessage';
+import HowToWidget from './widgets/HowToWidget';
+import TimeSavingsWidget from './widgets/TimeSavingsWidget';
+import DemoConfirmationWidget from './widgets/DemoConfirmationWidget';
 import './ChatInterface.css';
 
 const initialMessages: Message[] = [
@@ -166,9 +170,18 @@ const ChatInterface: React.FC = () => {
       </div>
 
       <div className="chat-messages" ref={messagesContainerRef}>
-        {messages.map((msg) => (
-          <ChatMessage key={msg.id} message={msg} />
-        ))}
+        {messages.map((msg) => {
+          const widgetType = msg.sender === 'bot' ? classifyAssistantMessage(msg.text) : 'none';
+
+          return (
+            <React.Fragment key={msg.id}>
+              <ChatMessage message={msg} />
+              {widgetType === 'howto' && <HowToWidget />}
+              {widgetType === 'time_savings' && <TimeSavingsWidget messageText={msg.text} />}
+              {widgetType === 'demo_confirmation' && <DemoConfirmationWidget messageText={msg.text} />}
+            </React.Fragment>
+          );
+        })}
         {isTyping && <TypingIndicator />}
       </div>
 
