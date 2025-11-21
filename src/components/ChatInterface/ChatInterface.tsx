@@ -71,7 +71,8 @@ const ChatInterface: React.FC = () => {
       timestamp: new Date().toISOString(),
     };
 
-    setMessages((prev) => [...prev, userMessage]);
+    const newMessages = [...messages, userMessage];
+    setMessages(newMessages);
     setInput('');
     setIsTyping(true);
     setShowSuggestions(false);
@@ -83,11 +84,23 @@ const ChatInterface: React.FC = () => {
     }
 
     try {
+      // Limit history to last 12 messages to manage tokens
+      const MAX_HISTORY = 12;
+      const slicedMessages = newMessages.slice(-MAX_HISTORY);
+
+      // Convert to API format (role + content)
+      const historyForAPI = slicedMessages
+        .filter(msg => msg.sender === 'user' || msg.sender === 'bot')
+        .map(msg => ({
+          role: msg.sender === 'user' ? 'user' : 'assistant',
+          content: msg.text
+        }));
+
       const res = await fetch('/.netlify/functions/onklinic-agent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: messageText
+          messages: historyForAPI
         }),
       });
 
