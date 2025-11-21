@@ -20,6 +20,9 @@ function formatDuration(seconds?: number): string {
   return `${mins}:${secs.toString().padStart(2, '0')} min`;
 }
 
+const DEMO_REQUEST_TO = process.env.DEMO_REQUEST_TO || "demos@onklinic.com";
+const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
+
 // Tool definitions
 const scheduleDemo = tool({
   name: "scheduleDemo",
@@ -35,8 +38,22 @@ const scheduleDemo = tool({
     locale: z.string().optional()
   }),
   execute: async (input: {name: string, email: string, role: string, team_size: number, timezone: string, preferred_slots: string[], notes: string, locale?: string}) => {
+    const summary = [
+      "New OnKlinic demo request",
+      "",
+      `Name: ${input.name}`,
+      `Email: ${input.email}`,
+      `Role: ${input.role}`,
+      `Team size: ${input.team_size}`,
+      `Timezone: ${input.timezone}`,
+      `Preferred slots: ${input.preferred_slots.join(", ") || "Not specified"}`,
+      "",
+      "Notes:",
+      input.notes || "(none)"
+    ].join("\n");
+
+    // Save to Netlify Blobs (non-blocking)
     try {
-      // Save demo request to Netlify Blobs
       const savedDemo = await saveDemoRequest({
         name: input.name,
         email: input.email,
@@ -47,30 +64,57 @@ const scheduleDemo = tool({
         notes: input.notes,
         locale: input.locale || 'en'
       });
-
       console.log('[scheduleDemo] Demo request saved:', savedDemo.id);
-
-      // Return confirmation message in appropriate language
-      const isSpanish = input.locale?.toLowerCase().includes('es') || input.locale?.toLowerCase().includes('spanish');
-
-      if (isSpanish) {
-        return `¡Solicitud de demo recibida!\n\nDetalles:\n- Nombre: ${input.name}\n- Email: ${input.email}\n- Rol: ${input.role}\n- Tamaño del equipo: ${input.team_size}\n- Zona horaria: ${input.timezone}\n- Horarios preferidos: ${input.preferred_slots.join(', ')}\n- Notas: ${input.notes}\n\nAlguien de nuestro equipo te contactará en las próximas 24 horas para coordinar tu demo personalizada.`;
-      } else {
-        return `Demo request received!\n\nDetails:\n- Name: ${input.name}\n- Email: ${input.email}\n- Role: ${input.role}\n- Team Size: ${input.team_size}\n- Timezone: ${input.timezone}\n- Preferred Slots: ${input.preferred_slots.join(', ')}\n- Notes: ${input.notes}\n\nSomeone from our team will contact you within 24 hours to schedule your personalized demo.`;
-      }
     } catch (err) {
       console.error('[scheduleDemo] Error saving demo request:', err);
-
-      // Even if save fails, return a confirmation message
-      // The user's request was processed, we just couldn't persist it
-      const isSpanish = input.locale?.toLowerCase().includes('es') || input.locale?.toLowerCase().includes('spanish');
-
-      if (isSpanish) {
-        return `Tu solicitud de demo ha sido recibida. Alguien de nuestro equipo te contactará pronto. Si no recibes respuesta en 24 horas, por favor contáctanos directamente a través del sitio web.`;
-      } else {
-        return `Your demo request has been received. Someone from our team will contact you soon. If you don't hear back within 24 hours, please contact us directly through the website.`;
-      }
     }
+
+    // Attempt to send email, but never break the agent response
+    if (SENDGRID_API_KEY) {
+      try {
+        const resp = await fetch("https://api.sendgrid.com/v3/mail/send", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${SENDGRID_API_KEY}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            personalizations: [
+              {
+                to: [{ email: DEMO_REQUEST_TO }],
+                subject: "New OnKlinic demo request"
+              }
+            ],
+            from: {
+              email: "no-reply@onklinic.com",
+              name: "OnKlinic Website"
+            },
+            reply_to: {
+              email: input.email,
+              name: input.name
+            },
+            content: [
+              {
+                type: "text/plain",
+                value: summary
+              }
+            ]
+          })
+        });
+
+        if (!resp.ok) {
+          const text = await resp.text().catch(() => "");
+          console.error("[scheduleDemo] SendGrid error", resp.status, text);
+        }
+      } catch (err) {
+        console.error("[scheduleDemo] Error sending email", err);
+      }
+    } else {
+      console.warn("[scheduleDemo] SENDGRID_API_KEY not configured; skipping email");
+    }
+
+    // Internal text that the model will use to respond to the user
+    return "Demo request captured successfully for the OnKlinic team.";
   },
 });
 
