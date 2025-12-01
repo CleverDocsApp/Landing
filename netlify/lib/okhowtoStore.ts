@@ -1,4 +1,5 @@
 import { getStore } from "@netlify/blobs";
+import { randomUUID } from "node:crypto";
 
 export type Video = {
   id: string;
@@ -79,7 +80,7 @@ export async function saveDemoRequest(request: Omit<DemoRequest, 'id' | 'created
 
     // Create new demo request
     const newDemo: DemoRequest = {
-      id: crypto.randomUUID(),
+      id: randomUUID(),
       createdAt: new Date().toISOString(),
       source: "landing-chat",
       ...request
@@ -131,7 +132,7 @@ export async function saveContactFormSubmission(submission: Omit<ContactFormSubm
     const contactsList = Array.isArray(existingData) ? existingData : [];
 
     const newContact: ContactFormSubmission = {
-      id: crypto.randomUUID(),
+      id: randomUUID(),
       createdAt: new Date().toISOString(),
       ...submission
     };
