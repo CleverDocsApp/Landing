@@ -80,7 +80,7 @@ const Footer: React.FC = () => {
               </div>
               <div className="contact-item">
                 <MapPin size={16} />
-                <span>501 Mokena Dr<br />Miami Springs FL, 33166</span>
+                <span>280 Westward Dr<br />Miami Springs FL, 33166</span>
               </div>
             </div>
           </div>
