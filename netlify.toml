@@ -11,6 +11,13 @@
   node_bundler = "esbuild"
   external_node_modules = ["@netlify/blobs"]
 
+# Protect Netlify Functions from SPA redirect
+[[redirects]]
+  from = "/.netlify/functions/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+  force = true
+
 # SPA rewrite - ensures all routes serve index.html
 [[redirects]]
   from = "/*"
