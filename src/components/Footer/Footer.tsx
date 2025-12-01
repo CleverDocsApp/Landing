@@ -76,7 +76,7 @@ const Footer: React.FC = () => {
               </div>
               <div className="contact-item">
                 <Phone size={16} />
-                <span>+1 (305) 905 3330</span>
+                <span>+1 (305) 909 4588</span>
               </div>
               <div className="contact-item">
                 <MapPin size={16} />
