@@ -72,7 +72,7 @@ const Footer: React.FC = () => {
             <div className="contact-info">
               <div className="contact-item">
                 <Mail size={16} />
-                <span>abel@onklinic.com</span>
+                <span>support@onklinic.com</span>
               </div>
               <div className="contact-item">
                 <Phone size={16} />
