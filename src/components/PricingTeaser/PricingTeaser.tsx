@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Check, Building2, Sparkles, Brain, Zap, HelpCircle, CreditCard, Calendar, RefreshCw, Shield, MessageCircle } from 'lucide-react';
+import { Check, Building2, Sparkles, Brain, Zap, HelpCircle, CreditCard, Calendar, RefreshCw, Shield, Mail } from 'lucide-react';
 import { useModal } from '../../contexts/ModalContext';
 import './PricingTeaser.css';
 
@@ -205,7 +205,7 @@ const PricingTeaser: React.FC<PricingTeaserProps> = ({ activeSection }) => {
               className="faq-contact-button"
               onClick={() => openContactModal('chat-with-our-team-pricing-teaser')}
             >
-              <MessageCircle size={20} />
+              <Mail size={20} />
               Chat with our team
             </button>
           </div>
