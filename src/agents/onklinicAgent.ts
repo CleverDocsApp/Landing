@@ -1,6 +1,7 @@
 import { tool, fileSearchTool, Agent, AgentInputItem, Runner, withTrace } from "@openai/agents";
 import { z } from "zod";
 import { saveDemoRequest } from "../../netlify/lib/okhowtoStore";
+import { sendNotificationEmail } from "../../netlify/lib/emailNotifications";
 
 interface Video {
   id: string | number;
@@ -21,7 +22,6 @@ function formatDuration(seconds?: number): string {
 }
 
 const DEMO_REQUEST_TO = process.env.DEMO_REQUEST_TO || "demos@onklinic.com";
-const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
 
 // Tool definitions
 const scheduleDemo = tool({
@@ -70,47 +70,17 @@ const scheduleDemo = tool({
     }
 
     // Attempt to send email, but never break the agent response
-    if (SENDGRID_API_KEY) {
-      try {
-        const resp = await fetch("https://api.sendgrid.com/v3/mail/send", {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${SENDGRID_API_KEY}`,
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            personalizations: [
-              {
-                to: [{ email: DEMO_REQUEST_TO }],
-                subject: "New OnKlinic demo request"
-              }
-            ],
-            from: {
-              email: "no-reply@onklinic.com",
-              name: "OnKlinic Website"
-            },
-            reply_to: {
-              email: input.email,
-              name: input.name
-            },
-            content: [
-              {
-                type: "text/plain",
-                value: summary
-              }
-            ]
-          })
-        });
+    const emailResult = await sendNotificationEmail({
+      subject: "New OnKlinic demo request",
+      summary: summary,
+      toEnvVar: "DEMO_REQUEST_TO",
+      fallbackTo: DEMO_REQUEST_TO,
+      replyToEmail: input.email,
+      replyToName: input.name
+    });
 
-        if (!resp.ok) {
-          const text = await resp.text().catch(() => "");
-          console.error("[scheduleDemo] SendGrid error", resp.status, text);
-        }
-      } catch (err) {
-        console.error("[scheduleDemo] Error sending email", err);
-      }
-    } else {
-      console.warn("[scheduleDemo] SENDGRID_API_KEY not configured; skipping email");
+    if (!emailResult.success) {
+      console.error("[scheduleDemo] Email notification failed:", emailResult.error);
     }
 
     // Internal text that the model will use to respond to the user

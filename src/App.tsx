@@ -7,6 +7,9 @@ import MetricsSection from './components/MetricsSection/MetricsSection';
 import FeaturesSection from './components/FeaturesSection/FeaturesSection';
 import PricingTeaser from './components/PricingTeaser/PricingTeaser';
 import Footer from './components/Footer/Footer';
+import { ModalProvider } from './contexts/ModalContext';
+import ContactModal from './components/ContactModal/ContactModal';
+import { useModal } from './contexts/ModalContext';
 
 const OkHowToPage = lazy(() => import('./pages/OkHowToPage'));
 const OkHowAdminPage = lazy(() => import('./pages/OkHowAdminPage'));
@@ -137,6 +140,16 @@ function App() {
       </>
     );
   }
+
+  return (
+    <ModalProvider>
+      <LandingPageContent />
+    </ModalProvider>
+  );
+}
+
+function LandingPageContent() {
+  const { isContactModalOpen, contactModalSource, closeContactModal } = useModal();
   const [backgroundProgress, setBackgroundProgress] = useState(0);
   const [activeSection, setActiveSection] = useState<string>('');
 
@@ -319,6 +332,11 @@ function App() {
         <PricingTeaser activeSection={activeSection} />
       </main>
       <Footer />
+      <ContactModal
+        isOpen={isContactModalOpen}
+        onClose={closeContactModal}
+        source={contactModalSource}
+      />
     </div>
   );
 }

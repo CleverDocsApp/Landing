@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Check, Building2, Sparkles, Brain, Zap, HelpCircle, CreditCard, Calendar, RefreshCw, Shield, MessageCircle } from 'lucide-react';
+import { useModal } from '../../contexts/ModalContext';
 import './PricingTeaser.css';
 
 interface PricingTeaserProps {
@@ -7,8 +8,9 @@ interface PricingTeaserProps {
 }
 
 const PricingTeaser: React.FC<PricingTeaserProps> = ({ activeSection }) => {
+  const { openContactModal } = useModal();
   const [isAnnual, setIsAnnual] = useState(true);
-  
+
   const togglePricing = () => {
     setIsAnnual(!isAnnual);
   };
@@ -199,7 +201,10 @@ const PricingTeaser: React.FC<PricingTeaserProps> = ({ activeSection }) => {
           
           <div className="faq-contact">
             <p>Still have questions? We're here to help!</p>
-            <button className="faq-contact-button">
+            <button
+              className="faq-contact-button"
+              onClick={() => openContactModal('chat-with-our-team-pricing-teaser')}
+            >
               <MessageCircle size={20} />
               Chat with our team
             </button>
