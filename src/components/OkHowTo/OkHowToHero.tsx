@@ -10,14 +10,12 @@ const OkHowToHero: React.FC<OkHowToHeroProps> = ({ videoCount = 0 }) => {
     <section className="okhowto-hero">
       <div className="container mx-auto px-4 text-center">
         <h1 className="hero-title">
-          How To
+          <span className="title-welcome">Welcome to</span> <span className="title-howto">How To</span>
           <div className="title-accent-line"></div>
         </h1>
 
         <p className="hero-description">
-          Learn how to get the most out of <span className="ok-highlight">OK</span> with our comprehensive video library.
-          <br />
-          From getting started to advanced features, we've got you covered.
+          The intelligent platform that helps healthcare practices save time, reduce costs, and deliver better patient care.
         </p>
       </div>
     </section>
