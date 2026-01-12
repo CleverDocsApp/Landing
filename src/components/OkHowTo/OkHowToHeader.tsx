@@ -33,7 +33,7 @@ const OkHowToHeader: React.FC<OkHowToHeaderProps> = ({ videoCount = 0 }) => {
         <div className="header-left">
           <a href="/" className="header-logo-link" aria-label="Go to homepage">
             <img
-              src="/images/logo-default.svg"
+              src="/images/logo-scrolled.svg"
               alt="OnKlinic Logo"
               className="header-logo"
             />
