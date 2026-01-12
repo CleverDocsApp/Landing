@@ -98,7 +98,7 @@ const getOkhowtoVideos = tool({
   }),
   execute: async (input: {topic: string, limit: number, language: string}) => {
     try {
-      const feedUrl = process.env.OK_FEED_URL ?? "https://onkliniclp.netlify.app/.netlify/functions/okhowto-feed";
+      const feedUrl = process.env.OK_FEED_URL ?? "/.netlify/functions/okhowto-feed";
       const res = await fetch(feedUrl);
 
       if (!res.ok) {

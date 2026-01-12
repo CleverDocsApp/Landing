@@ -7,13 +7,6 @@
 
 .okhowto-main {
   flex: 1;
-  padding-top: 70px;
-}
-
-@media (max-width: 768px) {
-  .okhowto-main {
-    padding-top: 60px;
-  }
 }
 
 .okhowto-content {
