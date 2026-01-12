@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
+import OkHowToHeader from '../components/OkHowTo/OkHowToHeader';
 import OkHowToHero from '../components/OkHowTo/OkHowToHero';
 import SearchBar from '../components/OkHowTo/SearchBar';
 import CategoryFilter from '../components/OkHowTo/CategoryFilter';
@@ -185,7 +185,7 @@ const OkHowToPage: React.FC = () => {
   if (error) {
     return (
       <div className="okhowto-page">
-        <Header hideTopLogo={true} showNavigation={false} />
+        <OkHowToHeader videoCount={0} />
         <main className="okhowto-main">
           <div className="error-container">
             <h2 className="error-title">Oops! Something went wrong</h2>
@@ -200,7 +200,7 @@ const OkHowToPage: React.FC = () => {
   if (!data) {
     return (
       <div className="okhowto-page">
-        <Header hideTopLogo={true} showNavigation={false} />
+        <OkHowToHeader videoCount={0} />
         <main className="okhowto-main">
           <div className="loading-container">
             <div className="loading-spinner"></div>
@@ -221,7 +221,7 @@ const OkHowToPage: React.FC = () => {
 
   return (
     <div className="okhowto-page">
-      <Header hideTopLogo={true} showNavigation={false} />
+      <OkHowToHeader videoCount={data.videos.length} />
       <main className="okhowto-main">
         <OkHowToHero />
 
