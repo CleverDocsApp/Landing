@@ -4,7 +4,7 @@ import './OkHowToHero.css';
 const OkHowToHero: React.FC = () => {
   return (
     <section className="okhowto-hero">
-      <div className="container mx-auto px-4 py-10 md:py-14 text-center">
+      <div className="container mx-auto px-4 text-center">
         <h1 className="hero-title">
           <span className="gradient-text">How To</span>
         </h1>

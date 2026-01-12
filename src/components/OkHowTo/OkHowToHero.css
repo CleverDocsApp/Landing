@@ -2,6 +2,7 @@
   background: linear-gradient(to bottom, #f8fafc 0%, #ffffff 100%);
   position: relative;
   overflow: hidden;
+  padding: 80px 0 60px;
 }
 
 .okhowto-hero::before {
@@ -14,6 +15,10 @@
   background: radial-gradient(circle, rgba(32, 189, 170, 0.08) 0%, transparent 70%);
   border-radius: 50%;
   pointer-events: none;
+}
+
+.okhowto-hero .container {
+  max-width: 1280px;
 }
 
 .hero-logo-container {
@@ -30,15 +35,15 @@
 }
 
 .hero-title {
-  font-size: 4.5rem;
+  font-size: 3.5rem;
   font-weight: 800;
-  margin-bottom: 1rem;
-  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
   letter-spacing: -0.02em;
 }
 
 .hero-description {
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   line-height: 1.6;
   color: #5F6C7B;
   max-width: 720px;
@@ -47,17 +52,21 @@
 }
 
 @media (max-width: 768px) {
+  .okhowto-hero {
+    padding: 60px 0 40px;
+  }
+
   .hero-logo {
     height: 48px;
   }
 
   .hero-title {
-    font-size: 2.5rem;
+    font-size: 2.25rem;
     letter-spacing: -0.01em;
   }
 
   .hero-description {
-    font-size: 1.0625rem;
+    font-size: 1rem;
     line-height: 1.65;
   }
 }
