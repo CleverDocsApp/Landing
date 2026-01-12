@@ -17,13 +17,6 @@ const OkHowToHero: React.FC<OkHowToHeroProps> = ({ videoCount = 0 }) => {
       </div>
 
       <div className="container mx-auto px-4 text-center">
-        {videoCount > 0 && (
-          <div className="hero-badge">
-            <Video size={14} />
-            <span>{videoCount} Videos Available</span>
-          </div>
-        )}
-
         <h1 className="hero-title">
           <span className="gradient-text">How To</span>
         </h1>
