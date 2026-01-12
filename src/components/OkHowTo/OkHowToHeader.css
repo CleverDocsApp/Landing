@@ -98,24 +98,6 @@
   gap: 1.25rem;
 }
 
-.video-count-badge {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background: linear-gradient(135deg, rgba(32, 189, 170, 0.1) 0%, rgba(32, 189, 170, 0.05) 100%);
-  border: 1px solid rgba(32, 189, 170, 0.2);
-  border-radius: 9999px;
-  color: var(--primary);
-  font-size: 0.875rem;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.video-icon {
-  color: var(--primary);
-}
-
 .back-button {
   display: flex;
   align-items: center;
@@ -169,10 +151,6 @@
   }
 
   .header-breadcrumb {
-    display: none;
-  }
-
-  .video-count-badge {
     display: none;
   }
 
