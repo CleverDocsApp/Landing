@@ -223,10 +223,10 @@ const OkHowToPage: React.FC = () => {
     <div className="okhowto-page">
       <OkHowToHeader videoCount={data.videos.length} />
       <main className="okhowto-main">
-        <OkHowToHero />
+        <OkHowToHero videoCount={data.videos.length} />
 
         <section className="okhowto-content">
-          <div className="container mx-auto px-4 py-12">
+          <div className="container mx-auto px-4 py-6">
             <SearchBar onSearch={handleSearch} />
 
             <CategoryFilter
