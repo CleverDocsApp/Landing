@@ -1,45 +1,7 @@
 .okhowto-hero {
-  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #f8fafc 100%);
+  background: #ffffff;
   position: relative;
-  overflow: hidden;
-  padding: 32px 0 30px;
-}
-
-.okhowto-hero::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -10%;
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(32, 189, 170, 0.12) 0%, transparent 70%);
-  border-radius: 50%;
-  pointer-events: none;
-  animation: pulse 8s ease-in-out infinite;
-}
-
-.okhowto-hero::after {
-  content: '';
-  position: absolute;
-  bottom: -50%;
-  left: -10%;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(32, 189, 170, 0.08) 0%, transparent 70%);
-  border-radius: 50%;
-  pointer-events: none;
-  animation: pulse 8s ease-in-out infinite reverse;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.1);
-    opacity: 0.8;
-  }
+  padding: 48px 0 40px;
 }
 
 .okhowto-hero .container {
@@ -62,9 +24,20 @@
 .hero-title {
   font-size: 3.5rem;
   font-weight: 800;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
   line-height: 1.2;
   letter-spacing: -0.02em;
+  color: #0f172a;
+  position: relative;
+  display: inline-block;
+}
+
+.title-accent-line {
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, #20BDAA 0%, #1AA192 100%);
+  margin: 16px auto 0;
+  border-radius: 2px;
 }
 
 .hero-description {
@@ -76,46 +49,6 @@
   font-weight: 400;
 }
 
-.hero-decorative-icons {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.hero-icon {
-  position: absolute;
-  color: rgba(32, 189, 170, 0.15);
-  opacity: 0;
-  animation: floatIn 1s ease-out forwards;
-}
-
-.hero-icon-1 {
-  top: 20%;
-  left: 15%;
-  animation-delay: 0.3s;
-}
-
-.hero-icon-2 {
-  top: 25%;
-  right: 20%;
-  animation-delay: 0.5s;
-}
-
-.hero-icon-3 {
-  bottom: 30%;
-  left: 10%;
-  animation-delay: 0.7s;
-}
-
-.hero-icon-4 {
-  bottom: 25%;
-  right: 15%;
-  animation-delay: 0.9s;
-}
 
 .ok-highlight {
   background: linear-gradient(135deg, #20BDAA 0%, #1AA192 100%);
@@ -127,31 +60,10 @@
   display: inline-block;
 }
 
-@keyframes fadeInDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes floatIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px) scale(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
 
 @media (max-width: 768px) {
   .okhowto-hero {
-    padding: 24px 0 20px;
+    padding: 32px 0 24px;
   }
 
   .hero-logo {
@@ -163,12 +75,14 @@
     letter-spacing: -0.01em;
   }
 
+  .title-accent-line {
+    width: 60px;
+    height: 3px;
+    margin: 12px auto 0;
+  }
+
   .hero-description {
     font-size: 1rem;
     line-height: 1.65;
-  }
-
-  .hero-icon {
-    display: none;
   }
 }
