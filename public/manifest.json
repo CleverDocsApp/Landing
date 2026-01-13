@@ -1,0 +1,23 @@
+{
+  "name": "On Klinic",
+  "short_name": "On Klinic",
+  "description": "AI assistant for mental health clinicians. Save time on documentation, improve compliance, and focus on patient care.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#10b981",
+  "icons": [
+    {
+      "src": "/favicon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
