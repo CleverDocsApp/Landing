@@ -56,7 +56,7 @@ export default function UnderConstructionBanner() {
               Early Access - Site Under Construction
             </span>
             <span className="under-construction-subtitle">
-              You're seeing our platform as we build it. Thanks for being an early visitor!
+              You're seeing our platform as we build it. All prices, testimonials, and metrics are for demonstration purposes. Thanks for being an early visitor!
             </span>
           </div>
         </div>
