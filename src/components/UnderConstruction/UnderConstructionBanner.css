@@ -1,0 +1,125 @@
+.under-construction-banner {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9998;
+  background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+  border-bottom: 2px solid #F59E0B;
+  padding: 12px 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  animation: slideDown 0.4s ease-out;
+}
+
+.under-construction-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.under-construction-text {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.under-construction-icon {
+  color: #D97706;
+  flex-shrink: 0;
+}
+
+.under-construction-message {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.under-construction-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #92400E;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+}
+
+.under-construction-subtitle {
+  font-size: 13px;
+  color: #78350F;
+  line-height: 1.5;
+}
+
+.under-construction-close {
+  background: transparent;
+  border: none;
+  color: #92400E;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.under-construction-close:hover {
+  background: rgba(146, 64, 14, 0.1);
+  transform: scale(1.1);
+}
+
+.under-construction-close:active {
+  transform: scale(0.95);
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .under-construction-banner {
+    padding: 10px 12px;
+  }
+
+  .under-construction-text {
+    gap: 8px;
+  }
+
+  .under-construction-title {
+    font-size: 13px;
+  }
+
+  .under-construction-subtitle {
+    font-size: 11px;
+  }
+
+  .under-construction-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .under-construction-content {
+    gap: 8px;
+  }
+
+  .under-construction-message {
+    gap: 1px;
+  }
+
+  .under-construction-subtitle {
+    display: none;
+  }
+}

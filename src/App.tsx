@@ -10,6 +10,8 @@ import Footer from './components/Footer/Footer';
 import { ModalProvider } from './contexts/ModalContext';
 import ContactModal from './components/ContactModal/ContactModal';
 import { useModal } from './contexts/ModalContext';
+import UnderConstructionBanner from './components/UnderConstruction/UnderConstructionBanner';
+import { FEATURE_FLAGS } from './config/features';
 
 const OkHowToPage = lazy(() => import('./pages/OkHowToPage'));
 const OkHowAdminPage = lazy(() => import('./pages/OkHowAdminPage'));
@@ -72,6 +74,7 @@ function App() {
 
     return (
       <>
+        {FEATURE_FLAGS.SHOW_CONSTRUCTION_BANNER && <UnderConstructionBanner />}
         <DebugBanner />
         <Suspense fallback={
           <div style={{
@@ -108,6 +111,7 @@ function App() {
   if (path === '/ok-how-to') {
     return (
       <>
+        {FEATURE_FLAGS.SHOW_CONSTRUCTION_BANNER && <UnderConstructionBanner />}
         <DebugBanner />
         <Suspense fallback={
           <div style={{
@@ -257,14 +261,16 @@ function LandingPageContent() {
   const heroDescColor = interpolateColor([229, 231, 235], [75, 85, 99], backgroundProgress);
 
   return (
-    <div 
-      className="app min-h-screen transition-container"
-      style={{ 
-        background: currentBackground,
-        transition: 'background 0.4s ease-out'
-      }}
-    >
-      <Header />
+    <>
+      {FEATURE_FLAGS.SHOW_CONSTRUCTION_BANNER && <UnderConstructionBanner />}
+      <div
+        className="app min-h-screen transition-container"
+        style={{
+          background: currentBackground,
+          transition: 'background 0.4s ease-out'
+        }}
+      >
+        <Header />
       <main className="relative">
         <div className="container mx-auto px-4 pt-20 md:pt-32 pb-4 md:pb-6">
           <div className="flex flex-col md:flex-col-reverse">
@@ -332,12 +338,13 @@ function LandingPageContent() {
         <PricingTeaser activeSection={activeSection} />
       </main>
       <Footer />
-      <ContactModal
-        isOpen={isContactModalOpen}
-        onClose={closeContactModal}
-        source={contactModalSource}
-      />
-    </div>
+        <ContactModal
+          isOpen={isContactModalOpen}
+          onClose={closeContactModal}
+          source={contactModalSource}
+        />
+      </div>
+    </>
   );
 }
 
